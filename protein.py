@@ -8,6 +8,7 @@ class protein:
 		self.p_ad = 0
 		self.transmembrane_doms = None
 		self.tmhmm_seq = None
+        self.transmembrane_flag = 0 # 1 if transmembrane doms > 2
 		self.sapiens_peptides_sum = None
 		self.conservation = None
 		
@@ -19,4 +20,4 @@ class protein:
 		print("   estimated probability to be an adhesin = " + str(self.p_ad))
 		print("   number of transmembrane domains = " + str(self.transmembrane_doms))
 		print("   number of peptides shared with sapiens = " + str(self.sapiens_peptides_sum))
-		print("   number of peptides shared with mhcpep = " + str(self.conservation))
+		print("   number of peptides shared with mhcpep = " + str(self.conservation) +"\n")
