@@ -11,6 +11,7 @@ class protein:
 		self.transmembrane_flag = 0 # 1 if transmembrane doms > 2
 		self.sapiens_peptides_sum = None
 		self.conservation = None
+		self.function = None
 		
 	def print_information(self):
 		print("Information about protein " + str(self.id) + ":")
