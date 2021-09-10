@@ -12,7 +12,7 @@ class protein:
 		self.sapiens_peptides_sum = None
 		self.conservation = None
 		self.function = None
-        	self.scan_prosite_information = None
+		self.scan_prosite_information = None
 		
 	def print_information(self):
 		print("Information about protein " + str(self.id) + ":")
