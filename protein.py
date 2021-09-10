@@ -12,6 +12,7 @@ class protein:
 		self.sapiens_peptides_sum = None
 		self.conservation = None
 		self.function = None
+        self.scan_prosite_information = None
 		
 	def print_information(self):
 		print("Information about protein " + str(self.id) + ":")
@@ -22,3 +23,4 @@ class protein:
 		print("   number of transmembrane domains = " + str(self.transmembrane_doms))
 		print("   number of peptides shared with sapiens = " + str(self.sapiens_peptides_sum))
 		print("   number of peptides shared with mhcpep = " + str(self.conservation) +"\n")
+		print("   putative function of the protein = not yet implemented"\n")        
