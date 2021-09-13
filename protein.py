@@ -23,4 +23,23 @@ class protein:
 		print("   number of transmembrane domains = " + str(self.transmembrane_doms))
 		print("   number of peptides shared with sapiens = " + str(self.sapiens_peptides_sum))
 		print("   number of peptides shared with mhcpep = " + str(self.conservation) +"\n")
-		print("   putative function of the protein = not yet implemented\n")        
+		print("   putative function of the protein = not yet implemented\n")
+	
+	@staticmethod
+	def hsp_match_parser(hsp_match, parsing_window_size=9, max_sub=3, max_mismatch=1):
+	    to_return = []
+	    if max_sub >= parsing_window_size or max_mismatch >= parsing_window_size:
+		print("Error in the match parser. Max substitutions and max mismatches have to be lower than the parsing window size! Return.")
+		return to_return
+	    for i in range(0, len(hsp_match)-(parsing_window_size-1)):
+		tmp = hsp_match[i:i+parsing_window_size]
+		tmp_sub = 0
+		tmp_mismatch = 0
+		for el in tmp:
+		    if el == " ":
+			tmp_mismatch += 1
+		    elif el == "+":
+			tmp_sub += 1
+		if tmp_sub <= max_sub and tmp_mismatch <= max_mismatch:
+		    to_return.append(tmp)
+	    return to_return
