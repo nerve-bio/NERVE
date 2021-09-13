@@ -25,7 +25,7 @@ class protein:
 		print("   number of peptides shared with mhcpep = " + str(self.conservation) +"\n")
 		print("   putative function of the protein = not yet implemented\n")
 	
-	@staticmethod
+	#@staticmethod
 	def hsp_match_parser(hsp_match, parsing_window_size=9, max_sub=3, max_mismatch=1):
 		to_return = []
 		if max_sub >= parsing_window_size or max_mismatch >= parsing_window_size:
