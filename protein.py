@@ -1,4 +1,4 @@
-class protein:
+class Protein:
 	def __init__(self, identifier, sequence_string):
 		self.id = identifier
 		self.accession = identifier.split('|')[1]
