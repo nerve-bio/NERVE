@@ -10,7 +10,7 @@ class Protein:
 		self.tmhmm_seq = None
 		self.transmembrane_flag = 0 # 1 if transmembrane doms > 2
 		self.sapiens_peptides_sum = None
-		self.conservation = None
+		self.conservation_score = None
 		self.function = None
 		self.scan_prosite_information = None
 		self.list_of_shared_human_peps = []
@@ -27,8 +27,9 @@ class Protein:
 		else:
 			print("   list of interesting peptides shared with sapiens = " + str(self.list_of_shared_human_peps))
 		#print("   number of interesting peptides shared with sapiens = " + str(self.sapiens_peptides_sum))
-		print("   number of interesting peptides shared with mhcpep = " + str(self.conservation))
+		print("   conservation with the given proteome blastp score = " + str(self.conservation_score)
 		print("   putative function of the protein = not yet implemented\n")
+		
 	
 	@staticmethod 
 	def hsp_match_parser(hsp_match, parsing_window_size=9, max_sub=3, max_mismatch=1):
