@@ -22,7 +22,7 @@ class Protein:
 		print("   estimated probability to be an adhesin = " + str(self.p_ad))
 		print("   number of transmembrane domains = " + str(self.transmembrane_doms))
 		print("   number of peptides shared with sapiens = " + str(self.sapiens_peptides_sum))
-		print("   number of peptides shared with mhcpep = " + str(self.conservation) +"\n")
+		print("   number of peptides shared with mhcpep = " + str(self.conservation))
 		print("   putative function of the protein = not yet implemented\n")
 	
 	@staticmethod 
