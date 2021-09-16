@@ -13,6 +13,7 @@ class Protein:
 		self.conservation = None
 		self.function = None
 		self.scan_prosite_information = None
+		self.list_of_shared_human_peps = []
 		
 	def print_information(self):
 		print("Information about protein " + str(self.id) + ":")
