@@ -22,7 +22,10 @@ class Protein:
 		print("   localization = " + str(self.localization))
 		print("   estimated probability to be an adhesin = " + str(self.p_ad))
 		print("   number of transmembrane domains = " + str(self.transmembrane_doms))
-		print("   list of interesting peptides shared with sapiens = " + str(self.list_of_shared_human_peps))
+		if len(self.list_of_shared_human_peps) == 0:
+			print("   no interesting peptides shared with sapiens")
+		else:
+			print("   list of interesting peptides shared with sapiens = " + str(self.list_of_shared_human_peps))
 		#print("   number of interesting peptides shared with sapiens = " + str(self.sapiens_peptides_sum))
 		print("   number of interesting peptides shared with mhcpep = " + str(self.conservation))
 		print("   putative function of the protein = not yet implemented\n")
