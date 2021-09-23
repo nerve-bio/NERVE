@@ -8,7 +8,6 @@ class Protein:
 		self.p_ad = 0
 		self.transmembrane_doms = None
 		self.tmhmm_seq = None
-		self.transmembrane_flag = 0 # 1 if transmembrane doms > 2
 		self.sapiens_peptides_sum = None
 		self.conservation_score = None
 		self.function = None
