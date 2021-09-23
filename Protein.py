@@ -34,12 +34,19 @@ class Protein:
 		print("   conservation with the given proteome blastp score = " + str(self.conservation_score))
 		print("   putative function of the protein = not yet implemented\n")
 		
-	def provide_loops(self):
-		return []
-	
-	def check_peptide(self, loop):
-		return False
-	
+	def provide_raw_loops(self):
+		print("Warning: this method uses X as a exclusive symbol to split the final protein. Check if X is used inside the protein sequence!")
+		conds = ['o', 'O']
+		if self.localization == "OuterMembrane":
+			conds += ['i', 'I'] 
+		new_seq = ""
+		for i in range(self.length):
+			if self.tmhmm_seq[i] in conds:
+				new_seq += self.sequence[i]
+			elif len(new_seq) > 0 and not new_seq[len(new_seq)-1] == "X":
+				new_seq += "X"
+		return new_seq.split('X')
+			
 	@staticmethod 
 	def hsp_match_parser(hsp_match, query, parsing_window_size=9, max_sub=3, max_mismatch=1):
 		to_return = []
