@@ -29,7 +29,7 @@ class Protein:
 		if len(self.list_of_peptides_from_comparison_with_mhcpep_sapiens) == 0:
 			print("   no peptides in mhcpep.csv (sapiens)")
 		else:
-			print("   list of peptides found in mhcpep.csv (sapiens) = " + str(list(dict.fromkeys(self.list_of_peptides_from_comparison_with_mhcpep_sapiens)))
+			print("   list of peptides found in mhcpep.csv (sapiens) = " + str(list(dict.fromkeys(self.list_of_peptides_from_comparison_with_mhcpep_sapiens))))
 		print("   conservation with the given proteome blastp score = " + str(self.conservation_score))
 		print("   putative function of the protein = not yet implemented\n")
 		
