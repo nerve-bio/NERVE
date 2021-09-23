@@ -51,7 +51,7 @@ class Protein:
 		return to_return
 	
 	@staticmethod
-	def peptides_comparison(parser_output_seq, peptide):
+	def peptide_comparison(parser_output_seq, peptide):
 		match = parser_output_seq['match']
 		query = parser_outputs_seq['query']
 		starting_position = parser_output_seq['start_pos']
