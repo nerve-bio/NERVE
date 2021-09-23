@@ -62,7 +62,7 @@ class Protein:
 				start_pep, start_query, len_tmp_match = Protein.extendLeft(peptide, i, query, starting_position, len(tmp_match))
 				len_tmp_match = Protein.extendRight(peptide, start_pep, query, start_query, len_tmp_match)
 				extended_matches.append(query[start_query:start_query+len_tmp_match])
-		return list(dict.fromkeys(extended_matches))
+		return extended_matches
 	
 	@staticmethod
 	def extendLeft(peptide, start_pep, real_query, start_q, len_query):
@@ -71,6 +71,7 @@ class Protein:
 			start_q -= 1
 			len_query += 1
 		return start_pep, start_q, len_query
+	
 	@staticmethod
 	def extendRight(peptide, start_pep, real_query, start_q, len_query):
 		while (peptide[start_pep:start_pep+len_query] == real_query[start_q:start_q+len_query]) and (start_pep+len_query<len(peptide)) and (peptide[start_pep:start_pep+len_query+1] == real_query[start_q:start_q+len_query+1]):
