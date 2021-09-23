@@ -47,5 +47,5 @@ class Protein:
 				elif el == "+":
 					tmp_sub += 1
 			if tmp_sub <= max_sub and tmp_mismatch <= max_mismatch:
-				to_return.append({'match': tmp, 'query': query[i:i+parsing_window_size]})
+				to_return.append({'match': tmp, 'query': query, 'start_pos': i})
 		return to_return
