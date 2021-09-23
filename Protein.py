@@ -25,7 +25,7 @@ class Protein:
 		if len(self.list_of_shared_human_peps) == 0:
 			print("   no interesting peptides shared with sapiens")
 		else:
-			print("   list of interesting peptides shared with sapiens = " + str(self.list_of_shared_human_peps))
+			print("   list of interesting peptides shared with sapiens = " + str([el['match'] for el in self.list_of_shared_human_peps]))
 		#print("   number of interesting peptides shared with sapiens = " + str(self.sapiens_peptides_sum))
 		print("   conservation with the given proteome blastp score = " + str(self.conservation_score))
 		print("   putative function of the protein = not yet implemented\n")
