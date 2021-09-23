@@ -32,7 +32,7 @@ class Protein:
 		
 	
 	@staticmethod 
-	def hsp_match_parser(hsp_match, parsing_window_size=9, max_sub=3, max_mismatch=1, query_start):
+	def hsp_match_parser(hsp_match, query, parsing_window_size=9, max_sub=3, max_mismatch=1):
 		to_return = []
 		if max_sub >= parsing_window_size or max_mismatch >= parsing_window_size:
 			print("Error in the match parser. Max substitutions and max mismatches have to be lower than the parsing window size! Return.")
@@ -47,5 +47,5 @@ class Protein:
 				elif el == "+":
 					tmp_sub += 1
 			if tmp_sub <= max_sub and tmp_mismatch <= max_mismatch:
-				to_return.append((tmp, query_start+i))
+				to_return.append(query[i:i+parsing_window_size])
 		return to_return
