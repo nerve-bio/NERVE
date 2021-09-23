@@ -59,8 +59,8 @@ class Protein:
 		extended_matches = []
 		for i in range(len(peptide)-len(tmp_match)+1):
 			if tmp_match == peptide[i:i+len(tmp_match)]:
-				start_pep, start_query, len_tmp_match = extendLeft(peptide, i, query, starting_position, len(tmp_match))
-				len_tmp_match = extendRight(peptide, start_pep, query, start_query, len_tmp_match)
+				start_pep, start_query, len_tmp_match = Protein.extendLeft(peptide, i, query, starting_position, len(tmp_match))
+				len_tmp_match = Protein.extendRight(peptide, start_pep, query, start_query, len_tmp_match)
 				extended_matches.append(query[start_query:start_query+len_tmp_match])
 		return list(dict.fromkeys(extended_matches))
 	
