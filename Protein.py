@@ -8,11 +8,11 @@ class Protein:
 		self.p_ad = 0
 		self.transmembrane_doms = None
 		self.tmhmm_seq = None
-		self.sapiens_peptides_sum = None
+		self.list_of_shared_human_peps = [] # in a dictionary with match, query and starting position (start_pos)
+		self.list_of_peptides_from_comparison_with_mhcpep_sapiens = [] # here a list of mhcpep match
+		#self.sapiens_peptides_sum = None
 		self.conservation_score = None
 		self.function = None
-		self.scan_prosite_information = None
-		self.list_of_shared_human_peps = []
 		
 	def print_information(self):
 		print("Information about protein " + str(self.id) + ":")
@@ -26,6 +26,10 @@ class Protein:
 		else:
 			print("   list of interesting peptides shared with sapiens = " + str([el['match'] for el in self.list_of_shared_human_peps]))
 		#print("   number of interesting peptides shared with sapiens = " + str(self.sapiens_peptides_sum))
+		if len(self.list_of_peptides_from_comparison_with_mhcpep_sapiens) == 0:
+			print("   no peptides in mhcpep.csv (sapiens)")
+		else:
+			print("   list of peptides found in mhcpep.csv (sapiens) = " + str(list(dict.fromkeys(self.list_of_peptides_from_comparison_with_mhcpep_sapiens)))
 		print("   conservation with the given proteome blastp score = " + str(self.conservation_score))
 		print("   putative function of the protein = not yet implemented\n")
 		
