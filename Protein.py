@@ -34,6 +34,11 @@ class Protein:
 		print("   conservation with the given proteome blastp score = " + str(self.conservation_score))
 		print("   putative function of the protein = not yet implemented\n")
 		
+	def provide_loops(self):
+		return []
+	
+	def check_peptide(self, loop):
+		return False
 	
 	@staticmethod 
 	def hsp_match_parser(hsp_match, query, parsing_window_size=9, max_sub=3, max_mismatch=1):
