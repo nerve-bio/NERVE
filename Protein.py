@@ -53,7 +53,7 @@ class Protein:
 	@staticmethod
 	def peptide_comparison(parser_output_seq, peptide):
 		match = parser_output_seq['match']
-		query = parser_outputs_seq['query']
+		query = parser_output_seq['query']
 		starting_position = parser_output_seq['start_pos']
 		tmp_match = query[starting_position:starting_position+len(match)]
 		extended_matches = []
