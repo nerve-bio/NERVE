@@ -128,6 +128,6 @@ class Protein:
 					   'list of peptides shared with mouse', 
 					   'list of peptides in mhcpep_mouse', 
 					   'conservation', 
-					   'putative function']
+					   'putative function'] # add a razor flag that appropriately informs the user 
 		
 				).to_csv('output.csv')
