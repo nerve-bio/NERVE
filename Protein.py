@@ -3,8 +3,8 @@ class Protein:
 		self.id = identifier
 		self.accession = identifier.split('|')[1]
 		self.sequence = sequence_string
-        self.original_sequence_if_razor = None
-        # put the original sequence if razor was performed
+        	self.original_sequence_if_razor = None
+        	# put the original sequence if razor was performed
 		self.length = len(sequence_string)
 		self.localization = None
 		self.p_ad = 0
@@ -21,6 +21,8 @@ class Protein:
 		print("Information about protein " + str(self.id) + ":")
 		print("   accession number = " + str(self.accession))
 		print("   length = " + str(self.length))
+		if self.original_sequence_if_razor is not None:
+			print("   (...this is the cut sequence after razor)")
 		print("   localization = " + str(self.localization))
 		print("   estimated probability to be an adhesin = " + str(self.p_ad))
 		print("   number of transmembrane domains = " + str(self.transmembrane_doms))
