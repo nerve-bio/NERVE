@@ -11,7 +11,9 @@ class Protein:
 		self.transmembrane_doms = None
 		self.tmhmm_seq = None
 		self.list_of_shared_human_peps = [] # in a dictionary with match, query and starting position (start_pos)
+		self.list_of_shared_mouse_peps = []
 		self.list_of_peptides_from_comparison_with_mhcpep_sapiens = [] # here a list of mhcpep match
+		self.list_of_peptides_from_comparison_with_mhcpep_mouse = [] # here a list of mhcpep match
 		self.razor_loops = []
 		#self.sapiens_peptides_sum = None
 		self.conservation_score = None
