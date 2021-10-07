@@ -1,18 +1,5 @@
 class Protein:
-	
-	columns = ['id', 
-           'accession number', 
-           'length', 
-           'localization', 
-           'P_ad', 
-           'number of transmembrane domains', 
-           'list of peptides shared with sapiens (from a blastp comparison)', 
-           'list of peptides in mhcpep_sapiens', 
-           'list of peptides shared with mouse', 
-           'list of peptides in mhcpep_mouse', 
-           'conservation', 
-           'putative function']
-	
+		
 	def __init__(self, identifier, sequence_string):
 		self.id = identifier
 		self.accession = identifier.split('|')[1]
@@ -130,4 +117,17 @@ class Protein:
 				 'unknown'
 				 ] for protein in list_of_proteins
 				], 
-				columns=columns).to_csv('output.csv')
+				columns= ['id', 
+					   'accession number', 
+					   'length', 
+					   'localization', 
+					   'P_ad', 
+					   'number of transmembrane domains', 
+					   'list of peptides shared with sapiens (from a blastp comparison)', 
+					   'list of peptides in mhcpep_sapiens', 
+					   'list of peptides shared with mouse', 
+					   'list of peptides in mhcpep_mouse', 
+					   'conservation', 
+					   'putative function']
+		
+				).to_csv('output.csv')
