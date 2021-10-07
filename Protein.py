@@ -18,6 +18,7 @@ class Protein:
 		#self.sapiens_peptides_sum = None
 		self.conservation_score = None
 		self.function = None
+		self.rank = 0
 		
 	def print_information(self):
 		print("Information about protein " + str(self.id) + ":")
