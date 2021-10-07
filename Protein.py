@@ -97,3 +97,37 @@ class Protein:
 		while (peptide[start_pep:start_pep+len_query] == real_query[start_q:start_q+len_query]) and (start_pep+len_query<len(peptide)) and (peptide[start_pep:start_pep+len_query+1] == real_query[start_q:start_q+len_query+1]):
 			len_query += 1
 		return len_query	
+	
+	columns = ['id', 
+           'accession number', 
+           'length', 
+           'localization', 
+           'P_ad', 
+           'number of transmembrane domains', 
+           'list of peptides shared with sapiens (from a blastp comparison)', 
+           'list of peptides in mhcpep_sapiens', 
+           'list of peptides shared with mouse', 
+           'list of peptides in mhcpep_mouse', 
+           'conservation', 
+           'putative function']
+	
+	@staticmethod
+	def information_to_csv(list_of_proteins):
+		print("information_to_csv method call: this method returns a .csv file with the available information about the given proteins, in the same order as in the list.")
+		from pandas import DataFrame
+		DataFrame([
+				[str(protein.id), 
+				 str(protein.accession), 
+				 str(protein.length), 
+				 str(protein.localization), 
+				 str(protein.p_ad), 
+				 str(protein.transmembrane_doms), 
+				 str(protein.list_of_shared_human_peps), 
+				 str(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens), 
+				 '', 
+				 '', 
+				 '', 
+				 'unknown'
+				 ] for protein in list_of_proteins
+				], 
+				columns=columns).to_csv('output.csv')
