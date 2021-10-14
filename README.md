@@ -14,6 +14,7 @@ Before starting to use NERVE, you should check if you have all the dependencies.
 - Pandas 
 - Bio (Biopython)
 - Tensorflow
+
 Also, you should do:
 `apt-get install ncbi-blast+` for blastp comparisons.
 
