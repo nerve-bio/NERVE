@@ -13,7 +13,7 @@ NERVE accepts a prokaryotic proteome of a bacterium of which the user has to kno
 
 ## Module 1: Subcelloc
 For this module you will need the only external dependency of NERVE (that we are planning to substitute with a more convenient solution): PSORTB. 
-Here a very brief tutorial to have a working PSORTB from Linux command line, through Docker. Here a sequence of commands, starting without Docker. 
+Here a very brief tutorial to have a working PSORTB from Linux command line, through Docker. The sequence of commands, starting without Docker, is:
 
 ```
 sudo snap install docker
