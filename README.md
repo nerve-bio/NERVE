@@ -23,7 +23,7 @@ Also, you should do:
 
 Before describing each module, here a brief description of the parameters to pass:
 - `-proteome1` (mandatory): the path to `.fasta` proteome file;
-- `-gram` (mandatory): the gram (`p` for positive or `n` for negative) of the organism.
+- `-gram` (mandatory): the gram (`p` for positive, `n` for negative or `a` for archea) of the organism.
 
 Then the following parameters are optional:
 - `-proteome2` (default = `None`)
