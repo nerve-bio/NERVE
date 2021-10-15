@@ -7,8 +7,6 @@ Group project with [MOLBINFO](http://www.bio.unipd.it/molbinfo/).
 - [SPAAN](https://github.com/nicolagulmini/spaan) improvement
 - others... 
 
-# Pipeline
-
 ## REQUIREMENTS
 NERVE accepts a prokaryotic proteome of a bacterium of which the user has to know if it is gram positive or gram negative.
 Before starting to use NERVE, you should check if you have all the dependencies. Being a Python program, it imports some libraries, such as:
@@ -23,7 +21,21 @@ Also, you should do:
 
 ## Usage
 
-Before describing each module, here a brief description of parameters to pass at the 
+Before describing each module, here a brief description of the parameters to pass:
+- `-proteome1` (mandatory): the path to `.fasta` proteome file;
+- `-gram` (mandatory): the gram (`p` for positive or `n` for negative) of the organism;
+Then the following parameters are optional:
+- `-proteome2` (default = `None`)
+- `-gram2`(default = `None`)
+- `-p_ad_no_citoplasm_filter` (default = `0.46`)
+- `-p_ad_extracellular_filter` (default = `0.38`)
+- `-transmemb_doms_limit` (default = `3`)
+- `-percentage_of_covered_protein_for_razor` (default = `0.9`)
+- `-e_value` (default = `1e-10`)
+- `-similarity_function` (default = `0.8`)
+- `-verbose` (default = `0`). Set to `1` if you what the program to print the protein information during the computation (pay attention: could be a lot of data!).
+
+Note that some of the listed parameters are involved to the final scoring of the proteins, so changing them could deeply change the output of the program: be sure of what you do!
 
 ## Module 1: Subcelloc
 For this module you will need the only external dependency of NERVE (that we are planning to substitute with a more convenient solution): PSORTB. 
