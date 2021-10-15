@@ -1,10 +1,10 @@
 # NERVE
 
 Group project with [MOLBINFO](http://www.bio.unipd.it/molbinfo/). 
-[NERVE](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1570458/) means 'New Enhanced Reverse Vaccinology Environment'. The purpose of this project is to update it and to develop new modules. In particular this project includes:
+[NERVE](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1570458/) means '*New Enhanced Reverse Vaccinology Environment*', and the purpose of this project is to update it and develop new modules. In particular this project includes:
 - Perl to Python translation
 - obsolete programs substitution
-- [SPAAN](https://github.com/nicolagulmini/spaan) improvement
+- [SPAAN](https://github.com/nicolagulmini/spaan) C to Python translation and improvement
 - others... 
 
 ## REQUIREMENTS
@@ -21,7 +21,7 @@ Also, you should do:
 
 ## Usage
 
-Before describing each module, here a brief description of the parameters to pass:
+Before describing each module, here a brief description of the parameters to pass. Some of them will be clear during the in detail description of the single modules:
 - `-proteome1` (mandatory): the path to `.fasta` proteome file;
 - `-gram` (mandatory): the gram (`p` for positive, `n` for negative or `a` for archea) of the organism.
 
@@ -40,7 +40,7 @@ Then the following parameters are optional:
 Note that some of the listed parameters are involved to the final scoring of the proteins, so changing them could deeply change the output of the program: be sure of what you do!
 
 ## Module 1: Subcelloc
-For this module you will need the only external dependency of NERVE (that we are planning to substitute with a more convenient solution): PSORTB. 
+For this module you will need the only external dependency of NERVE (that we are planning to substitute with a more convenient solution): [PSORTB](https://www.psort.org/psortb/). 
 Here a very brief tutorial to have a working PSORTB from Linux command line, through Docker. The sequence of commands, starting without Docker, is:
 
 ```
@@ -49,7 +49,8 @@ sudo docker pull brinkmanlab/psortb_commandline:1.0.2
 wget https://raw.githubusercontent.com/brinkmanlab/psortb_commandline_docker/master/psortb
 chmod +x psortb
 ```
-once you have PSORTB, you are able to produce a file with the subcellular localization prediction of each of the proteins in you `.fasta` input file. If you do it before launching NERVE, then you should pass to it the path to the output file, specifying it to the `-psortb_output_path` parameter. Note: *you must produce a `terse` output!*
+
+once you have PSORTB, you are able to produce a file with the subcellular localization prediction of each of the proteins in your `.fasta` input file. If you do it before launching NERVE, then you should pass to it the path to the output file, specifying it to the `-psortb_output_path` parameter. Note: **you must produce a `terse` output!**
 
 ## Module 2: Adhesin
 ## Module 3: Tmhelices
