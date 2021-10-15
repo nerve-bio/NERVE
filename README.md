@@ -26,15 +26,16 @@ Before describing each module, here a brief description of the parameters to pas
 - `-gram` (mandatory): the gram (`p` for positive, `n` for negative or `a` for archea) of the organism.
 
 Then the following parameters are optional:
-- `-proteome2` (default = `None`)
-- `-gram2`(default = `None`)
-- `-p_ad_no_citoplasm_filter` (default = `0.46`)
-- `-p_ad_extracellular_filter` (default = `0.38`)
-- `-transmemb_doms_limit` (default = `3`)
-- `-percentage_of_covered_protein_for_razor` (default = `0.9`)
-- `-e_value` (default = `1e-10`)
-- `-similarity_function` (default = `0.8`)
-- `-verbose` (default = `0`). Set to `1` if you what the program to print the protein information during the computation (pay attention: could be a lot of data!).
+- `-proteome2` (default = `None`) ...
+- `-gram2` (default = `None`) ...
+- `-psortb_output_path` (default = `None`) ...
+- `-p_ad_no_citoplasm_filter` (default = `0.46`) ...
+- `-p_ad_extracellular_filter` (default = `0.38`) ...
+- `-transmemb_doms_limit` (default = `3`) ...
+- `-percentage_of_covered_protein_for_razor` (default = `0.9`) ...
+- `-e_value` (default = `1e-10`) ...
+- `-similarity_function` (default = `0.8`) ...
+- `-verbose` (default = `0`). Set to `1` (or any other symbol different from zero) if you what the program to print the protein information during the computation. Pay attention: could be a lot of data!
 
 Note that some of the listed parameters are involved to the final scoring of the proteins, so changing them could deeply change the output of the program: be sure of what you do!
 
@@ -48,7 +49,7 @@ sudo docker pull brinkmanlab/psortb_commandline:1.0.2
 wget https://raw.githubusercontent.com/brinkmanlab/psortb_commandline_docker/master/psortb
 chmod +x psortb
 ```
-once you have PSORTB, you are able to produce a file with the subcellular localization prediction of each of the proteins in you `.fasta` input file. If you do it before launching NERVE, then you should pass to it the path to the output file. Note: you must produce a `terse` output!
+once you have PSORTB, you are able to produce a file with the subcellular localization prediction of each of the proteins in you `.fasta` input file. If you do it before launching NERVE, then you should pass to it the path to the output file, specifying it to the `-psortb_output_path` parameter. Note: *you must produce a `terse` output!*
 
 ## Module 2: Adhesin
 ## Module 3: Tmhelices
