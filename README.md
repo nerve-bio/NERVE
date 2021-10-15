@@ -9,6 +9,7 @@ Group project with [MOLBINFO](http://www.bio.unipd.it/molbinfo/).
 
 # Pipeline
 
+## REQUIREMENTS
 NERVE accepts a prokaryotic proteome of a bacterium of which the user has to know if it is gram positive or gram negative.
 Before starting to use NERVE, you should check if you have all the dependencies. Being a Python program, it imports some libraries, such as:
 - Pandas 
@@ -16,7 +17,13 @@ Before starting to use NERVE, you should check if you have all the dependencies.
 - Tensorflow
 
 Also, you should do:
-`apt-get install ncbi-blast+` for blastp comparisons.
+- `apt-get install ncbi-blast+` for blastp comparisons;
+- `git clone git://github.com/nicolagulmini/NERVE` to import the modules (could be useful to periodically remove and reinstall this folder, to keep the program updated. To remove it, it is sufficient to run `rm -r NERVE` before cloning it);
+- `python -m pip install git+https://github.com/nicolagulmini/tmhmm.py` for the third module, which needs tmhmm to compute the transmembrane domains. 
+
+## Usage
+
+Before describing each module, here a brief description of parameters to pass at the 
 
 ## Module 1: Subcelloc
 For this module you will need the only external dependency of NERVE (that we are planning to substitute with a more convenient solution): PSORTB. 
