@@ -59,4 +59,5 @@ once you have PSORTB, you are able to produce a file with the subcellular locali
 ### Module 4.1: Mouse immunity
 ## Module 5: Conservation (optional)
 ## Module 6: Function
-## Module 7: Select
+## Module 7: Virulence
+## Module 8: Select
