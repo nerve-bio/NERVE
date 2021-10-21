@@ -71,14 +71,14 @@ For outermembrane proteins consider both the 'i' and 'o' loops, otherwise only t
 Then take the longest out-membrane piece and replace the original sequence with it to perform the following analyses
 (only if the longest piece is reasonably long...).
 
-## Module 4: Autoimmunity
+## Module 4: Autoimmunity (approx 10 min for blastp on sapiens, 10 sec for parsing, >30 min for comparison
 
 ### Module 4.1: Mouse immunity
 
 ## Module 5: Conservation (optional)
 
 ## Module 6: Function
-Still implementing it. We wanto to include [DeepGO](https://github.com/bio-ontology-research-group/deepgo) in this module.
+Still implementing it. We want to include [DeepGO](https://github.com/bio-ontology-research-group/deepgo) in this module.
 
 ## Module 7: Virulence
 You can find more details about this module [here](https://github.com/nicolagulmini/virulent_factor_classification). In this case, for each protein some features are computed through `iFeature`, and then given to the already trained neural network in order to compute the probability to be a virulence factor. 
