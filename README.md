@@ -35,6 +35,7 @@ Then the following parameters are optional:
 - `-verbose` (default = `0`). Set to `1` (or any other symbol different from zero) if you what the program to print the protein information during the computation. Pay attention: could be a lot of data!
 
 Note that some of the listed parameters are involved to the final scoring of the proteins, so changing them could deeply change the output of the program: be sure of what you do!
+Moreover it can also happen that the program asks you for the `[sudo] user password`, it does this to launch the commands that will be described later.
 
 ## Module 1: Subcelloc (still do not know the time to perform the computation on a realistic proteome)
 For this module you will need the only external dependency of NERVE (that we are planning to substitute with a more convenient solution): [PSORTB](https://www.psort.org/psortb/). 
