@@ -54,6 +54,11 @@ once you have PSORTB, you are able to produce a file with the subcellular locali
 ```
 where if your proteome is of a gram negative or archea bacteria, instead of putting `p` you should put `n` or `a`; and `-r ./` tells psortb to produce the output file in the same folder. 
 
+Also, we report the limitations of psortb:
+- *Proteins resident at multiple localization sites*. Many proteins can exist at multiple localization sites. Examples of such proteins include integral membrane proteins with large periplasmic domains, or autotransporters, which contain an outer membrane pore domain and a cleaved extracellular domain. The current version of PSORTb handles this situation by flagging proteins which show a distribution of localization scores favouring two sites, rather than one. It is important to examine the distribution of localization scores carefully in order to determine if your submitted protein may have multiple localization sites and if so, which two sites are involved.
+- *Lipoproteins*: The current version of PSORTb does not detect lipoprotein motifs.
+- *Precision vs. Recall*: PSORTb is designed to emphasize precision (or specificity) over recall (or sensitivity). Programs which make predictions at all costs often provide incorrect or incomplete results, which can be propagated through annotated databases, datasets and reports in the literature. We believe that a confident prediction is more valuable than any prediction, and we have designed the program to this end. Note, however, that a user may choose to use their own reduced cutoff score in generating final predictions.
+
 ## Module 2: Adhesin (approx 8 min for a realistic proteome)
 You can find more details about this module [here](https://github.com/nicolagulmini/spaan). Here, for each protein, a probability value is computed, through an already trained neural network. That probability is the probability of the protein to be an adhesin. Take into account that the neural network has an accuracy of about 80%. Further improvements will be made, and this is one of the reasons why you should keep updated the nerve folder. 
 
