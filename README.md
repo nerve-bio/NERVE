@@ -8,7 +8,7 @@ NERVE accepts a prokaryotic proteome of a bacterium of which the user has to kno
 Before starting to use NERVE, you should check if you have all the dependencies. Being a Python program, it imports some libraries, such as:
 - Pandas 
 - Bio (Biopython)
-- Tensorflow
+- Tensorflow (**pay attention: you must install the keras 2.6.0 version!**)
 
 Also, you should do:
 - `apt-get install ncbi-blast+` for blastp comparisons;
