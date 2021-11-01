@@ -7,6 +7,7 @@ Group project with [MOLBINFO](http://www.bio.unipd.it/molbinfo/).
 NERVE accepts a prokaryotic proteome of a bacterium of which the user has to know if it is gram positive or gram negative.
 Before starting to use NERVE, you should check if you have all the dependencies. Being a Python program, it imports some libraries, such as:
 - Pandas 
+- Numpy
 - Bio (Biopython)
 - Tensorflow (**pay attention: you must install the 2.6.0 version!**)
 
