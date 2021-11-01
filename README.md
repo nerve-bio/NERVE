@@ -14,7 +14,7 @@ Also, you should do:
 - `apt-get install ncbi-blast+` for blastp comparisons;
 - `git clone https://github.com/Superzchen/iFeature` for features computation;
 - `git clone git://github.com/nicolagulmini/NERVE` to import the modules (could be useful to periodically remove and reinstall this folder, to keep the program updated. To remove it, it is sufficient to run `rm -r NERVE` before cloning it);
-- `python -m pip install git+https://github.com/nicolagulmini/tmhmm` for the third module, which needs tmhmm to compute the transmembrane domains. 
+- `python3 -m pip install git+https://github.com/nicolagulmini/tmhmm.py` for the third module, which needs tmhmm to compute the transmembrane domains. 
 
 ## Usage
 
