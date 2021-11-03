@@ -54,7 +54,7 @@ class Protein:
 		print("   putative function of the protein = not yet implemented\n")
 		
 	def provide_raw_loops(self):
-		print("Warning: this method uses X as a exclusive symbol to split the final protein. Check if X is used inside the protein sequence!")
+		#print("Warning: this method uses X as a exclusive symbol to split the final protein. Check if X is used inside the protein sequence!")
 		conds = ['o', 'O']
 		if self.localization == "OuterMembrane":
 			conds += ['i', 'I'] 
