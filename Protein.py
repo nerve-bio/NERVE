@@ -15,6 +15,7 @@ class Protein:
 		self.list_of_peptides_from_comparison_with_mhcpep_sapiens = [] # here a list of mhcpep match
 		self.list_of_peptides_from_comparison_with_mhcpep_mouse = [] # here a list of mhcpep match
 		self.razor_loops = []
+		self.p_vir = 0
 		#self.sapiens_peptides_sum = None
 		self.conservation_score = None
 		self.function = None
@@ -28,6 +29,7 @@ class Protein:
 			print("   (...this is the cut sequence after razor)")
 		print("   localization = " + str(self.localization))
 		print("   estimated probability to be an adhesin = " + str(self.p_ad))
+		print("   estimated probability to be a virulence factor = " + str(self.p_vir))
 		print("   number of transmembrane domains = " + str(self.transmembrane_doms))
 		# human
 		if len(self.list_of_shared_human_peps) == 0:
