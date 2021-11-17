@@ -149,4 +149,5 @@ class Protein:
 					   'conservation', 
 					   'putative function'] # add a razor flag that appropriately informs the user 
 		
-				).to_csv('output.csv')
+				).to_csv('output.csv') # stampa nel csv anche i peptidi condivisi
+    # evidenzia se è stato eseguito il taglio
