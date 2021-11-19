@@ -20,9 +20,8 @@ class Protein:
 		self.sapiens_peptides_sum = None
 		self.mouse_peptides_sum = None
 		self.conservation_score = None
-		self.function = None
-		self.rank = 0
-		
+		#self.function = None
+	'''
 	def print_information(self):
 		print("Information about protein " + str(self.id) + ":")
 		print("   accession number = " + str(self.accession))
@@ -56,7 +55,26 @@ class Protein:
 			print("   number of peptides in mhcpep mouse = " + str(len(list(dict.fromkeys(self.list_of_peptides_from_comparison_with_mhcpep_mouse)))))
 		print("   conservation with the given proteome blastp score = " + str(self.conservation_score))
 		print("   putative function of the protein = not yet implemented\n")
-		
+	'''
+	
+	def print_information(self):
+		print('id:', self.id)
+		print('accession:', self.accession)
+		print('length of the sequence:', self.length)
+		print('localization:', self.localization)
+		print('P_ad:', self.p_ad)
+		print('transmembrane doms:', self.transmembrane_doms)
+		print('number of shared human peps:', len(self.list_of_shared_human_peps))
+		print('number of shared mouse peps:', len(self.list_of_shared_mouse_peps))
+		print('number of conservation peps:', len(self.list_of_shared_conserv_proteome_peps))
+		print('number of peps from comparison with mhcpep sapiens:', len(self.list_of_peptides_from_comparison_with_mhcpep_sapiens))
+		print('number of peps from comparison with mhcpep mouse:', len(self.list_of_peptides_from_comparison_with_mhcpep_mouse))
+		print('razor loops:', self.razor_loops) = []
+		print('P_vir:', self.p_vir) = 0
+		print('autoimmunity score:', self.sapiens_peptides_sum)
+		print('mouse immunity score:', self.mouse_peptides_sum)
+		print('conservation score:', self.conservation_score)
+		      
 	def provide_raw_loops(self):
 		#print("Warning: this method uses X as a exclusive symbol to split the final protein. Check if X is used inside the protein sequence!")
 		conds = ['o', 'O']
