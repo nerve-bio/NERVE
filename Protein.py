@@ -20,7 +20,7 @@ class Protein:
 		self.sapiens_peptides_sum = None
 		self.mouse_peptides_sum = None
 		self.conservation_score = None
-		#self.function = None
+
 	'''
 	def print_information(self):
 		print("Information about protein " + str(self.id) + ":")
@@ -140,32 +140,46 @@ class Protein:
 		print("information_to_csv method call: this method returns a .csv file with the available information about the given proteins, in the same order as in the list.")
 		from pandas import DataFrame
 		DataFrame([
-				[str(protein.id), 
-				 str(protein.accession), 
-				 str(protein.length), 
-				 str(protein.localization), 
-				 str(protein.p_ad), 
-				 str(protein.transmembrane_doms), 
-				 str(protein.list_of_shared_human_peps), 
-				 str(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens), 
-				 '', 
-				 '', 
-				 '', 
-				 'unknown'
+				[str(protein.id),
+				 str(protein.accession),
+				 str(protein.sequence),
+				 str(protein.original_sequence_if_razor),
+				 str(protein.length),
+				 str(protein.localization),
+				 str(protein.p_ad),
+				 str(protein.transmembrane_doms),
+				 str(protein.tmhmm_seq),
+				 str(protein.list_of_shared_human_peps),
+				 str(protein.list_of_shared_mouse_peps),
+				 str(protein.list_of_shared_conserv_proteome_peps),
+				 str(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens),
+				 str(protein.list_of_peptides_from_comparison_with_mhcpep_mouse),
+				 str(protein.razor_loops),
+				 str(protein.p_vir),
+				 str(protein.sapiens_peptides_sum),
+				 str(protein.mouse_peptides_sum),
+				 str(protein.conservation_score)
 				 ] for protein in list_of_proteins
 				], 
-				columns= ['id', 
-					   'accession number', 
-					   'length', 
-					   'localization', 
-					   'P_ad', 
-					   'number of transmembrane domains', 
-					   'list of peptides shared with sapiens (from a blastp comparison)', 
-					   'list of peptides in mhcpep_sapiens', 
-					   'list of peptides shared with mouse', 
-					   'list of peptides in mhcpep_mouse', 
-					   'conservation', 
-					   'putative function'] # add a razor flag that appropriately informs the user 
+				columns= ['id ',
+				 	'accession',
+				 	'sequence',
+				 	'original_sequence_if_razor',
+				 	'length',
+				 	'localization',
+				 	'p_ad',
+				 	'transmembrane_doms',
+				 	'tmhmm_seq',
+				 	'list_of_shared_human_peps',
+				 	'list_of_shared_mouse_peps',
+				 	'list_of_shared_conserv_proteome_peps',
+				 	'list_of_peptides_from_comparison_with_mhcpep_sapiens',
+				 	'list_of_peptides_from_comparison_with_mhcpep_mouse',
+				 	'razor_loops',
+				 	'p_vir',
+				 	'sapiens_peptides_sum',
+				 	'mouse_peptides_sum',
+				 	'conservation_score'
+					 ]
 		
-				).to_csv('output.csv') # stampa nel csv anche i peptidi condivisi
-    # evidenzia se è stato eseguito il taglio
+				).to_csv('output.csv') 
