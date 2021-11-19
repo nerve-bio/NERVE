@@ -58,22 +58,22 @@ class Protein:
 	'''
 	
 	def print_information(self):
-		print('id:', self.id)
-		print('accession:', self.accession)
-		print('length of the sequence:', self.length)
-		print('localization:', self.localization)
-		print('P_ad:', self.p_ad)
-		print('transmembrane doms:', self.transmembrane_doms)
-		print('number of shared human peps:', len(self.list_of_shared_human_peps))
-		print('number of shared mouse peps:', len(self.list_of_shared_mouse_peps))
-		print('number of conservation peps:', len(self.list_of_shared_conserv_proteome_peps))
-		print('number of peps from comparison with mhcpep sapiens:', len(self.list_of_peptides_from_comparison_with_mhcpep_sapiens))
-		print('number of peps from comparison with mhcpep mouse:', len(self.list_of_peptides_from_comparison_with_mhcpep_mouse))
-		print('razor loops:', self.razor_loops) = []
-		print('P_vir:', self.p_vir) = 0
-		print('autoimmunity score:', self.sapiens_peptides_sum)
-		print('mouse immunity score:', self.mouse_peptides_sum)
-		print('conservation score:', self.conservation_score)
+		print("Information about protein " + str(self.id) + ":")
+		print('	accession:', self.accession)
+		print('	length of the sequence:', self.length)
+		print('	localization:', self.localization)
+		print('	P_ad:', self.p_ad)
+		print('	transmembrane doms:', self.transmembrane_doms)
+		print('	number of shared human peps:', len(self.list_of_shared_human_peps))
+		print('	number of shared mouse peps:', len(self.list_of_shared_mouse_peps))
+		print('	number of conservation peps:', len(self.list_of_shared_conserv_proteome_peps))
+		print('	number of peps from comparison with mhcpep sapiens:', len(self.list_of_peptides_from_comparison_with_mhcpep_sapiens))
+		print('	number of peps from comparison with mhcpep mouse:', len(self.list_of_peptides_from_comparison_with_mhcpep_mouse))
+		print('	razor loops:', self.razor_loops) = []
+		print('	P_vir:', self.p_vir) = 0
+		print('	autoimmunity score:', self.sapiens_peptides_sum)
+		print('	mouse immunity score:', self.mouse_peptides_sum)
+		print('	conservation score:', self.conservation_score)
 		      
 	def provide_raw_loops(self):
 		#print("Warning: this method uses X as a exclusive symbol to split the final protein. Check if X is used inside the protein sequence!")
