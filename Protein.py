@@ -69,8 +69,8 @@ class Protein:
 		print('	number of conservation peps:', len(self.list_of_shared_conserv_proteome_peps))
 		print('	number of peps from comparison with mhcpep sapiens:', len(self.list_of_peptides_from_comparison_with_mhcpep_sapiens))
 		print('	number of peps from comparison with mhcpep mouse:', len(self.list_of_peptides_from_comparison_with_mhcpep_mouse))
-		print('	razor loops:', self.razor_loops) = []
-		print('	P_vir:', self.p_vir) = 0
+		print('	razor loops:', self.razor_loops)
+		print('	P_vir:', self.p_vir)
 		print('	autoimmunity score:', self.sapiens_peptides_sum)
 		print('	mouse immunity score:', self.mouse_peptides_sum)
 		print('	conservation score:', self.conservation_score)
