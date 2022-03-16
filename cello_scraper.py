@@ -15,12 +15,6 @@ class Args(NamedTuple):
     path_to_fastas:str
     gram_type:str
 
-class DeepFriEntry(NamedTuple):
-    '''Handles DeepFri entry'''
-    id_:str
-    score:float
-    GO:str
-
 def get_args() -> Args:
     '''Get command-line arguments'''
     parser = argparse.ArgumentParser(
@@ -83,7 +77,7 @@ def cello_scraper(gramtype:str, infile:str) -> str:
 def cello_output_parser(cello_text_output:str)->pd.DataFrame():
   """Parses cello output"""
   # define class to handle predictions
-  Localization = namedtuple('Localization',['localization','reliability'])
+  Localization = NamedTuple('Localization',['localization','reliability'])
   outlist=[]
   for line in (cello_text_output.split('*********************************************************************************')):
     if 'Documentation' not in line:
