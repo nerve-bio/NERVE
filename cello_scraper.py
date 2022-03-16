@@ -9,6 +9,7 @@ from typing import NamedTuple
 from operator import attrgetter
 import pandas as pd
 import argparse
+from collections import namedtuple
 
 class Args(NamedTuple):
     '''Command-line arguments'''
@@ -77,7 +78,7 @@ def cello_scraper(gramtype:str, infile:str) -> str:
 def cello_output_parser(cello_text_output:str)->pd.DataFrame():
   """Parses cello output"""
   # define class to handle predictions
-  Localization = NamedTuple('Localization',['localization','reliability'])
+  Localization = namedtuple('Localization',['localization','reliability'])
   outlist=[]
   for line in (cello_text_output.split('*********************************************************************************')):
     if 'Documentation' not in line:
