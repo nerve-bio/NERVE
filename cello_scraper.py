@@ -53,7 +53,7 @@ def cello_scraper(gramtype:str, infile:str) -> str:
   curlConnector.setopt(pycurl.TIMEOUT, 3600)
   # set variables
   gramtype = 'pro' if gramtype == 'p' else 'gramp' if gramtype == 'n' else None
-  infile = infile.readlines() # infile is already "open" at this point
+  #infile = infile.readlines() # infile is already "open" at this point
   proteome = "".join(infile)
   # pycurl recipe from http://pycurl.io/docs/latest/quickstart.html:
   b_obj = BytesIO() 
