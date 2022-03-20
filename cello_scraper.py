@@ -29,7 +29,7 @@ def get_args() -> Args:
                         )
     parser.add_argument('-gram_type',
                         metavar='--gram-type', 
-                        help='Negative/Positive',
+                        help='n/p',
                         type=str,
                         required=True,
                         )
@@ -45,14 +45,14 @@ def main():
 
 def cello_scraper(gramtype:str, infile:str) -> str:
   """Downloads protein localization predictions from CELLO (http://cello.life.nctu.edu.tw/) webpage
-  param: gramtype: 'Negative' or 'Positive'
+  param: gramtype: 'n' or 'p'
   param: inifle: path to input fasta file"""
   # set connection time and operation time to 1 hour
   curlConnector = pycurl.Curl()
   curlConnector.setopt(pycurl.CONNECTTIMEOUT, 3600)
   curlConnector.setopt(pycurl.TIMEOUT, 3600)
   # set variables
-  gramtype = 'pro' if gramtype == 'Positive' else 'gramp' if gramtype == 'Negative' else None
+  gramtype = 'pro' if gramtype == 'p' else 'gramp' if gramtype == 'n' else None
   infile = infile.readlines() # infile is already "open" at this point
   proteome = "".join(infile)
   # pycurl recipe from http://pycurl.io/docs/latest/quickstart.html:
