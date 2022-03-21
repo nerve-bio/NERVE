@@ -21,42 +21,6 @@ class Protein:
 		self.mouse_peptides_sum = None
 		self.conservation_score = None
 
-	'''
-	def print_information(self):
-		print("Information about protein " + str(self.id) + ":")
-		print("   accession number = " + str(self.accession))
-		print("   length = " + str(self.length))
-		if self.original_sequence_if_razor is not None:
-			print("   (...this is the cut sequence after razor)")
-		print("   localization = " + str(self.localization))
-		print("   estimated probability to be an adhesin = " + str(self.p_ad))
-		print("   estimated probability to be a virulence factor = " + str(self.p_vir))
-		print("   number of transmembrane domains = " + str(self.transmembrane_doms))
-		# human
-		if len(self.list_of_shared_human_peps) == 0:
-			print("   no interesting peptides shared with sapiens")
-		else:
-			#print("   list of interesting peptides shared with sapiens = " + str([el['match'] for el in self.list_of_shared_human_peps])) # put a verbose option
-			print("   number of interesting peptides shared with sapiens = " + str(len(self.list_of_shared_human_peps)))
-		#print("   number of interesting peptides shared with sapiens = " + str(self.sapiens_peptides_sum))
-		if len(self.list_of_peptides_from_comparison_with_mhcpep_sapiens) == 0:
-			print("   no peptides in mhcpep.csv (sapiens)")
-		else:
-			#print("   list of peptides found in mhcpep.csv (sapiens) = " + str(list(dict.fromkeys(self.list_of_peptides_from_comparison_with_mhcpep_sapiens))))
-			print("   number of peptides in mhcpep.csv = " + str(len(list(dict.fromkeys(self.list_of_peptides_from_comparison_with_mhcpep_sapiens)))))
-		# mouse
-		if len(self.list_of_shared_mouse_peps) == 0:
-			print("   no interesting peptides shared with mouse")
-		else:
-			print("   number of interesting peptides shared with mouse = " + str(len(self.list_of_shared_mouse_peps)))
-		if len(self.list_of_peptides_from_comparison_with_mhcpep_mouse) == 0:
-			print("   no peptides in mhcpep mouse")
-		else:
-			print("   number of peptides in mhcpep mouse = " + str(len(list(dict.fromkeys(self.list_of_peptides_from_comparison_with_mhcpep_mouse)))))
-		print("   conservation with the given proteome blastp score = " + str(self.conservation_score))
-		print("   putative function of the protein = not yet implemented\n")
-	'''
-	
 	def print_information(self):
 		print("Information about protein " + str(self.id) + ":")
 		print('	accession:', self.accession)

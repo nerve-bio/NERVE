@@ -1,4 +1,0 @@
-SeqID	Localization	Score
-sp|P06846|EBGR_ECOLI HTH-type transcriptional regulator EbgR OS=Escherichia coli (strain K12) OX=83333 GN=ebgR PE=4 SV=2	Cytoplasmic	9.97
-sp|P0AAC4|YBHL_ECOLI Inner membrane protein YbhL OS=Escherichia coli (strain K12) OX=83333 GN=ybhL PE=1 SV=1	CytoplasmicMembrane	10.00
-sp|P0AE16|AMPG_ECOLI Anhydromuropeptide permease OS=Escherichia coli (strain K12) OX=83333 GN=ampG PE=1 SV=1	CytoplasmicMembrane	10.00
