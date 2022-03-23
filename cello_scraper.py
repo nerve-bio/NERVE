@@ -1,4 +1,4 @@
-# #!/usr/bin/python3
+#!/usr/bin/python3
 
 import os
 from urllib.parse import urlencode
@@ -24,7 +24,7 @@ def get_args() -> Args:
     parser.add_argument('-path_to_fastas',
                         metavar='--path-to-fastas', 
                         help='Path where sequences to evaluate are stored',
-                        type=open,
+                        type=str,
                         required=True,
                         )
     parser.add_argument('-gram_type',
@@ -53,7 +53,7 @@ def cello_scraper(gramtype:str, infile:str) -> str:
   curlConnector.setopt(pycurl.TIMEOUT, 3600)
   # set variables
   gramtype = 'pro' if gramtype == 'p' else 'gramp' if gramtype == 'n' else None
-  #infile = infile.readlines() # infile is already "open" at this point
+  infile = open(infile, 'r')
   proteome = "".join(infile)
   # pycurl recipe from http://pycurl.io/docs/latest/quickstart.html:
   b_obj = BytesIO() 
@@ -97,3 +97,4 @@ def cello_output_parser(cello_text_output:str)->pd.DataFrame():
     
 if __name__ == "__main__":
     main() 
+
