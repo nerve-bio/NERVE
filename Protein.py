@@ -20,6 +20,7 @@ class Protein:
 		self.sapiens_peptides_sum = None
 		self.mouse_peptides_sum = None
 		self.conservation_score = None
+		self.annotations = None
 
 	def print_information(self):
 		print("Information about protein " + str(self.id) + ":")
@@ -38,6 +39,7 @@ class Protein:
 		print('	autoimmunity score:', self.sapiens_peptides_sum)
 		print('	mouse immunity score:', self.mouse_peptides_sum)
 		print('	conservation score:', self.conservation_score)
+		print('	annotations:', self.annotations)
 		      
 	def provide_raw_loops(self):
 		#print("Warning: this method uses X as a exclusive symbol to split the final protein. Check if X is used inside the protein sequence!")
