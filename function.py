@@ -24,7 +24,7 @@ def get_args() -> Args:
     parser.add_argument('-path_to_fastas',
                         metavar='--path-to-fastas', 
                         help='Path where sequences to evaluate are stored',
-                        type=open,
+                        type=str,
                         required=True,
                         )
     args = parser.parse_args()
@@ -40,19 +40,12 @@ def main() -> None:
     DeepFri_dir = os.path.join(current_dir, "DeepFri")
     
     # interrogate uniprot for function
-    fasta_list = list(SeqIO.parse(args.path_to_fastas, "fasta"))
+    fastas = open(args.path_to_fastas, 'r')
+    fasta_list = list(SeqIO.parse(fastas, "fasta"))
     outfile = os.path.join(current_dir, "deep_fri_input.fa")
-    UniProt_df = retrieve_entry_function(fasta_list, outfile)
+    UniProt_df = retrieve_entry_function(fastas, outfile)
     
-    # launch DeepFri
-    os.chdir(DeepFri_dir)
-    bashCmd = f'python3 predict.py --fasta_fn {os.path.join(current_dir, "deep_fri_input.fa")} -ont mf'
-    process = subprocess.Popen(bashCmd.split(), stdout=subprocess.PIPE)
-    output, error = process.communicate()
-    os.chdir(current_dir)
-    
-    # parse DeepFri results
-    DeepFri_df = DeepFriParser(os.path.join(DeepFri_dir, 'DeepFRI_MF_predictions.csv'))
+    DeepFri_df = deep_fri("deep_fri_input.fa", DeepFri_dir)
     
     # merge the two dfs
     final_df = pd.concat([UniProt_df, DeepFri_df])
@@ -64,12 +57,26 @@ def main() -> None:
     final_df = pd.concat([final_df, missing_df])
     final_df.to_csv(os.path.join(current_dir, 'annotation.csv'), index = False)
     print(f'Results are saved as annotation.csv. This is a preview:\n{final_df}')
+
+def deep_fri(input_fasta, DeepFri_dir):
+    current_dir = os.getcwd()
+    # launch DeepFri
+    os.chdir(DeepFri_dir)
+    bashCmd = f'python3 predict.py --fasta_fn {os.path.join(current_dir, input_fasta)} -ont mf'
+    process = subprocess.Popen(bashCmd.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+    os.chdir(current_dir)
     
-def retrieve_entry_function(fasta_list: list, outfile: str) -> pd.DataFrame: 
+    # parse DeepFri results
+    DeepFri_df = DeepFriParser(os.path.join(DeepFri_dir, 'DeepFRI_MF_predictions.csv'))
+    return DeepFri_df
+
+def retrieve_entry_function(fastas: str, outfile: str) -> pd.DataFrame: 
     '''Retrieves Uniprot annotated entry function of provided ACs and returns the data in a dictionary format
     param: fasta_list: list of Biopython Seq.IO objects containing protein ids and sequences to be evaluated;
     param: outfile: fasta file output containing sequences whose function was not found in the Uniprot
     output: output_df: data frame with Protein and Function fields where protein is the input fasta id and function is the annotated protein function from the uniprot database'''
+    fasta_list = list(SeqIO.parse(fastas, "fasta"))
     dic, tdp, AC, = [{}, [], str()]
     # extract functions from uniprot
     for p in fasta_list:
@@ -88,10 +95,13 @@ def retrieve_entry_function(fasta_list: list, outfile: str) -> pd.DataFrame:
     filename.close()
     # create and rearrange dataframe
     output_df = pd.DataFrame.from_dict(dic, orient='index')
-    index = [i for i in range(len(output_df))]
-    output_df = output_df.reset_index()
-    output_df.columns = ['Protein', 'Function']
-    return output_df
+    if len(output_df.columns) == 2:
+       output_df = output_df.reset_index()
+       output_df.columns = ['Protein', 'Function']
+       return output_df
+    else:
+       print("No Uniprot matches found")
+       return pd.DataFrame([['', '']], columns=['Protein', 'Function'])
 
 def DeepFriParser(path_to_infile: open) -> pd.DataFrame:
     '''Parses DeepFri input file
