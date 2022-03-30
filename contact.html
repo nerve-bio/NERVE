@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Contact us! | NERVE</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Contact us!" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="NERVE is an user-friendly software environment for the in silico identification of the best vaccine candidates from whole proteomes of bacterial pathogens. The purpose of this project is to update it, implementing new modules with machine learning based methods, and improving the performance of the already implemented ones. Future directions of this work include the extensions to other type of proteomes." />
+<meta property="og:description" content="NERVE is an user-friendly software environment for the in silico identification of the best vaccine candidates from whole proteomes of bacterial pathogens. The purpose of this project is to update it, implementing new modules with machine learning based methods, and improving the performance of the already implemented ones. Future directions of this work include the extensions to other type of proteomes." />
+<link rel="canonical" href="https://nicolagulmini.github.io/NERVE/contact.html" />
+<meta property="og:url" content="https://nicolagulmini.github.io/NERVE/contact.html" />
+<meta property="og:site_name" content="NERVE" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Contact us!" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"NERVE is an user-friendly software environment for the in silico identification of the best vaccine candidates from whole proteomes of bacterial pathogens. The purpose of this project is to update it, implementing new modules with machine learning based methods, and improving the performance of the already implemented ones. Future directions of this work include the extensions to other type of proteomes.","headline":"Contact us!","url":"https://nicolagulmini.github.io/NERVE/contact.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/NERVE/assets/css/style.css?v=c4378ed36e4ea140e7b6b7c0146138753763a418">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/NERVE/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="https://nicolagulmini.github.io/NERVE/">NERVE</a></h1>
+
+        
+
+        <p>NERVE is an user-friendly software environment for the in silico identification of the best vaccine candidates from whole proteomes of bacterial pathogens. The purpose of this project is to update it, implementing new modules with machine learning based methods, and improving the performance of the already implemented ones. Future directions of this work include the extensions to other type of proteomes.</p>
+
+        
+        <p class="view"><a href="https://github.com/nicolagulmini/NERVE">View the Project on GitHub <small>nicolagulmini/NERVE</small></a></p>
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <h1 id="contact-us">Contact us!</h1>
+        
+        
+        <?php 
+        if(isset($_POST['submit'])){
+            $to = "nicolagulmini@gmail.com"; // this is your Email address
+            $from = $_POST['email']; // this is the sender's Email address
+            $first_name = $_POST['first_name'];
+            $last_name = $_POST['last_name'];
+            $subject = "Form submission";
+            $subject2 = "Copy of your form submission";
+            $message = $first_name . " " . $last_name . " wrote the following:" . "\n\n" . $_POST['message'];
+            $message2 = "Here is a copy of your message " . $first_name . "\n\n" . $_POST['message'];
+
+            $headers = "From:" . $from;
+            $headers2 = "From:" . $to;
+            mail($to,$subject,$message,$headers);
+            mail($from,$subject2,$message2,$headers2); // sends a copy of the message to the sender
+            echo "Mail Sent. Thank you " . $first_name . ", we will contact you shortly.";
+            // You can also use header('Location: thank_you.php'); to redirect to another page.
+            }
+        ?>
+        <form action="" method="post">
+          First Name: <input type="text" name="first_name"><br>
+          Last Name: <input type="text" name="last_name"><br>
+          Email: <input type="text" name="email"><br>
+          Message:<br><textarea rows="5" name="message" cols="30"></textarea><br>
+          <input type="submit" name="submit" value="Submit">
+        </form>
+
+
+      </section>
+      <footer>
+        
+        <p>This project is maintained by <a href="https://github.com/nicolagulmini">nicolagulmini</a></p>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/NERVE/assets/js/scale.fix.js"></script>
+  </body>
+</html>
