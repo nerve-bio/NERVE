@@ -1,29 +1,17 @@
-## Welcome to GitHub Pages
+## Welcome to NERVE
 
-Simple text
+NERVE (new enhanced reverse vaccinology environment) is an open-source tool to perform analyses on bacteria proteomes in order to get the best candidates to produce a vaccine. 
+The project was initially developed in Perl, and it's still available for [download](http://www.bio.unipd.it/molbinfo/NERVE_download.html). Now, **independently** from the first developer, we are carrying on this project. 
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+You can find all the related information on the [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1570458/). A new paper, describing the new version of NERVE, will be published soon. 
 
-### Title (test)
+### Vision
 
-Simple text
+### Team
+Currently, the following people are actively contributing to this project:
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+- Andrea Conte
+- Nicola Gulmini
+- Francesco Costa
+- Matteo Cartura
+- Prof. Francesco Filippini
