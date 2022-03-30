@@ -7,8 +7,8 @@ Now we are carrying on this project **independently** from the original develope
 You can find all the related information on the [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1570458/). 
 A new paper, describing the new version of NERVE, will be published soon. 
 
-- ## [documentation](https://nicolagulmini.github.io/NERVE/documentation)
-- [state of the work](https://nicolagulmini.github.io/NERVE/state)
-- [vision](https://nicolagulmini.github.io/NERVE/vision)
-- [team](https://nicolagulmini.github.io/NERVE/team)
-- [contact us](https://nicolagulmini.github.io/NERVE/contact)
+- ### [documentation](https://nicolagulmini.github.io/NERVE/documentation)
+- ### [state of the work](https://nicolagulmini.github.io/NERVE/state)
+- ### [vision](https://nicolagulmini.github.io/NERVE/vision)
+- ### [team](https://nicolagulmini.github.io/NERVE/team)
+- ### [contact us](https://nicolagulmini.github.io/NERVE/contact)
