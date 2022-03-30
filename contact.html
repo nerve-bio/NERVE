@@ -60,11 +60,19 @@
 
       <h2 id="contact-us">Contact us!</h2>
         
-        <a href = "mailto:nicolagulmini@gmail.com?subject = NERVE_contact_us&body = Message">
-        Send Feedback
-        </a>
+        <form action=”mailto:nicolagulmini@gmail.com” method=”POST” enctype=”multipart/form-data” name=”NERVE_contact_us”>
+          Name:
+          <br>
+          <input type=”text” size=”24″ name=”VisitorName”>
+          <br><br>  
+          Message:
+          <br> 
+          <textarea name=”VisitorComment” rows=”4″ cols=”20″>
+          </textarea>
+          <br><br> 
+          <input type=”submit” value=”Submit”> 
+        </form>
         
-
       </section>
       <footer>
         
