@@ -5,6 +5,10 @@ The project was initially developed in Perl, and it's still available for [downl
 
 You can find all the related information on the [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1570458/). A new paper, describing the new version of NERVE, will be published soon. 
 
+### State of the work
+
+Implementing a public user-friendly colab version of the program.
+
 ### Vision
 
 ### Team
