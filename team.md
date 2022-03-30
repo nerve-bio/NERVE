@@ -1,4 +1,4 @@
-## Team
+# Team
 Currently, the following people are actively contributing to this project:
 
 - Andrea Conte, MSc at University of Padua (Italy)
