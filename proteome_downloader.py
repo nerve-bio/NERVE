@@ -8,6 +8,7 @@ class Args(NamedTuple):
     '''Command-line arguments'''
     proteome_id:str
     output_dir:str
+    out_filename:str
 
 def get_args() -> Args:
     '''Get command-line arguments'''
@@ -24,33 +25,44 @@ def get_args() -> Args:
                         metavar='--output-dir', 
                         help='Output directory',
                         type=str,
+                        default=os.getcwd(),
+                        required=False,
+                        )
+    parser.add_argument('-out_filename',
+                        metavar='--output-filename', 
+                        help='Output filename',
+                        default='input_proteome.fasta',
+                        type=str,
                         required=False,
                         )
     args = parser.parse_args()
-    return Args(args.proteome_id, args.output_dir)
+    return Args(args.proteome_id, args.output_dir, args.out_filename)
 
 def main():
     args = get_args()
-    proteome_downloader(args.proteome_id, args.output_dir)
+    proteome_downloader(args.proteome_id, args.out_filename, args.output_dir)
 
-def proteome_downloader(proteome_id, output_dir = None, format = "fasta") -> None:
-  """Downloads proteome from uniprot database
-  param: proteome_id: uniprot unique proteome id"""
+def proteome_downloader(proteome_id, filename='input_proteome.fasta', output_dir=os.getcwd(), format = "fasta") -> None:
+  """Downloads proteome from uniprot database into output multifasta file
+  param: proteome_id: uniprot unique proteome id, not case-sensitive
+  param: output_dir: output directory (default: current directory)
+  param: format: uniprot API required format (default:fasta)
+  param: filename: output proteome filename (default: input_proteome.fasta)
+  """
   url = f'https://www.uniprot.org/uniprot/?query=proteome:{proteome_id}&format={format}' 
-  filename = f'{proteome_id}_proteome.fasta'
-  output_dir = output_dir if output_dir != None else os.getcwd()
-  try:
-     response = requests.get(url, stream = True)
-     text_file = open(os.path.join(output_dir, filename), 'wb')
-     for chunk in response.iter_content(chunk_size=1024):
+  #filename = filename
+  #output_dir = output_dir if output_dir != None else os.getcwd()
+  response = requests.get(url, stream = True)
+  text_file = open(os.path.join(output_dir, filename), 'wb')
+  for chunk in response.iter_content(chunk_size=1024):
         text_file.write(chunk)
-     text_file.close()
-     print(f'Proteome {proteome_id} downloaded succesfully')
-     #output = open(os.path.join(output_dir, filename), 'r').readlines()
-     #return output
-  except Exception as e:
-    print(f'An error has occured:\n{e}')
-    return None
+  # raise an AssertionError if the given proteome ID is not valid
+  assert text_file.tell() > 0, f'{proteome_id} is not a valid Uniprot id'
+  text_file.close()
+  #print(f'Proteome {proteome_id} downloaded succesfully')
+  #output = open(os.path.join(output_dir, filename), 'r').readlines()
+  #return output
+  return None
     
 if __name__ == "__main__":
     main()
