@@ -5,16 +5,16 @@ At the beginning of the developement, NERVE was a modular program, which means t
 ## Modules
 
 ### Intro
-To complete
+This module installs all the dependencies of the program, such as [iFeature](https://github.com/Superzchen/iFeature), [tmhmm.py](https://github.com/dansondergaard/tmhmm.py), [Biopython](https://biopython.org/), [PycURL](http://pycurl.io/), [DeepFRI](https://github.com/flatironinstitute/DeepFRI) and many others...
 
 ### Parameters
-To complete
+This module contains all the parameters (mandatory or not) which could be modified by the user, like the input, the verbose, or more technical ones like thresholds for models' predictions. 
 
 ### Subcelloc
-Predicts the subcellular localization of the pathogen's proteins using CELLO predictor.
+Predicts the subcellular localization of the pathogen's proteins using [CELLO](http://cello.life.nctu.edu.tw/) predictor.
 
 ### Adhesin
-Predicts the probability to be an adhesin protein with ESPAAN.
+Predicts the probability to be an adhesin protein with [ESPAAN](https://github.com/nicolagulmini/spaan).
 
 ### Tmhelices
 Predicts the topology of your pathogen's proteins, in particular considering the number of transmembrane domains.
@@ -39,3 +39,6 @@ Predicts the probability to be considered as a virulence factor, based on the pa
 
 ### Annotation
 Functionally annotates the pathogen protein sequences retrieving info from Uniprot KB or using DeepFRI predictor, which assigns a GO term to each protein.
+
+### Select
+The final module which selects the proteine which are considered good candidates, and sorts them according to the similarity with the other given proteome. At the end, a .csv file is returned with all the computed information.
