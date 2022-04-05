@@ -9,5 +9,4 @@ A new paper, describing the new version of NERVE, will be published soon.
 
 - ### [documentation](https://nicolagulmini.github.io/NERVE/documentation)
 - ### [state of the work](https://nicolagulmini.github.io/NERVE/state)
-- ### [vision](https://nicolagulmini.github.io/NERVE/vision)
 - ### [team](https://nicolagulmini.github.io/NERVE/team)
