@@ -9,7 +9,7 @@ Thanks to the collaboration it is possible to figure out what are the needs of t
 Currently, the following people are actively contributing to this project:
 
 - Andrea Conte, MSc in Industrial Biotechnology at University of Padua (Italy)
-- [Felix Bröhl](https://broehl.dev/), master's student in Computer Science at University of Bonn (Germany)
+- [Felix Bröhl](https://broehl.dev/), master's student in Computer Science at University of [Applied Sciences of Bonn-Rhein-Sieg](https://www.h-brs.de/en) (Germany)
 - [Francesco Costa](https://github.com/FranceCosta), research intern at [Khmelinskaia lab](https://www.limes-institut-bonn.de/en/research/research-departments/unit-4/khmelinskaia-lab/khmelinskaia-lab-home/), University of Bonn
 - [Matteo Cartura](https://it.linkedin.com/in/matteo-cartura-927799181), master's student in Industrial Biotechnology at University of Padua
 - [Nicola Gulmini](https://www.linkedin.com/in/nicola-gulmini-576924135/), research intern at [Tyndall National Institute](https://www.tyndall.ie/), University College Cork (Ireland)
