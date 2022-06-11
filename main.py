@@ -244,3 +244,6 @@ def main():
             except:
                 raise logging.error(f'{args.proteome2} rised the following error:\n{e}')
             logging.debug(f'{args.proteome2} succesfully downloaded')
+            
+if __name__ == "__main__":
+    main()
