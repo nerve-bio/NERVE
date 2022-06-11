@@ -68,13 +68,13 @@ def get_args() -> Args:
                         help="Activation or deactivation of annotation module, to retrieve info about protein functions. By default, this module is active. Type True or False to activate or deactivate it, respectively.",
                         type=bool,
                         required=False,
-                        const=True
+                        default=True
                         )
     parser.add_argument('-ev',
                         metavar='--e_value', 
                         help="Set expect-value used in blastp for immunity modules. For example: -ev=0.0001 or -e_value=0.0001",
                         type=float,
-                        const=1e-10,
+                        default=1e-10,
                         required=False,
                         )
     parser.add_argument('-g',
@@ -87,28 +87,28 @@ def get_args() -> Args:
                         metavar='--minlength', 
                         help="minimal length required for shared peptides to be extracted in comparison analyses versus human and/or mouse. For example: -ml=10, -minlength=10",
                         type=int,
-                        const=9,
+                        default=9,
                         required=False,
                         )
     parser.add_argument('-mm',
                         metavar='--mismatch', 
                         help="maximal number of not compatible substitutions allowed in shared peptides alignment windows of 'minlength' size in immunity modules. For example: -mm=2, -mismatch=2",
                         type=int,
-                        const=1,
+                        default=1,
                         required=False,
                         )
     parser.add_argument('-m',
                         metavar='--mouse', 
                         help="Activation or deactivation of the mouse immunity module. This module compares proteome1 with mouse proteome and a further analysis of the eventual shared peptides is carried out as in the autoimmunity module. Type True or False to activate or deactivate it, respectively. For example: -m=True or -mouse=True",
                         type=bool,
-                        const=False,
+                        default=False,
                         required=False,
                         )
     parser.add_argument('-mouse_peptides_sum_limit',
                         metavar='--mouse_peptides_sum_limit', 
                         help="Parameter calculated in mouse module and need to be used in select module. Protein with (sum of shared peptides of the i-protein with mouse proteins/number of aminoacids of the i-protein)<=0.15 and with absence of match mhc-I and Mhc-II mouse ligands are selected. It needs to be calulated for each protein",
                         type=float,
-                        const=0.15,
+                        default=0.15,
                         required=False,
                         )
     parser.add_argument('-p1',
@@ -127,77 +127,77 @@ def get_args() -> Args:
                         metavar='--p_ad_extracellular_filter', 
                         help="Parameter of select module. Extracellular proteins with a pad lower than 0.38 are discarded",
                         type=float,
-                        const=0.38,
+                        default=0.38,
                         required=False,
                         )
     parser.add_argument('-p_ad_no_citoplasm_filter',
                         metavar='--p_ad_no_citoplasm_filter', 
                         help="Parameter of select module. Non-cytoplasmic Proteins with a pad lower than 0.46 are discarded.",
                         type=float,
-                        const=0.46,
+                        default=0.46,
                         required=False,
                         )    
     parser.add_argument('-padlimit',
                         metavar='--padlimit', 
                         help="Set the PAD value cut-off for proteins with 'Unknown' localization in the select module. Thus, these proteins with a PAD value < cut-off are discarded. Set a number between 0 and 1. For example: -pl=0.90, -padlimit=0.90",
                         type=float,
-                        const=0.85,
+                        default=0.85,
                         required=False,
                         )
     parser.add_argument('-rz',
                         metavar='--razor', 
                         help="Activation or deactivation of the loop-razor module. This module allows you to recover protein vaccine candidates, with more than 2 transmembrane domains, that would be discarded in the last module. The longest loop with minimum 50 aa will replace the original protein sequence for next NERVE steps, if it is present. Type True or False to activate or deactivate it, respectively. For example: -rz=True or -razor=True",
                         type=bool,
-                        const=False,
+                        default=False,
                         required=False,
                         )
     parser.add_argument('-rl',
                         metavar='--razlen', 
                         help="Set minimal length of loop considered in loop-razor module. For example: -rl=70 or -razlen=70",
                         type=int,
-                        const=50,
+                        default=50,
                         required=False,
                         )
     parser.add_argument('-s',
                         metavar='--select', 
                         help="Activation or deactivation of select module, which filters PVC from proteome1. Type 'True' or 'False' to activate or deactivate it, respectively. For example: -s='False' or -select='False'",
                         type=bool,
-                        const=True,
+                        default=True,
                         required=False,
                         )
     parser.add_argument('-ss',
                         metavar='--substitution', 
                         help="Maximal number of compatible substitutions allowed in shared peptides alignment windows of 'minlength' size in immunity modules. For example: -ss=4, -substitution=4",
                         type=int,
-                        const=3,
+                        default=3,
                         required=False,
                         )
     parser.add_argument('-transmemb_doms_limit',
                         metavar='--transmemb_doms_limit', 
                         help="Parameter of select module. Proiteins with trasmembrane domains>=3 are discarded.",
                         type=int,
-                        const=3,
+                        default=3,
                         required=True,
                         )
     parser.add_argument('-v',
                         metavar='--verbose', 
                         help='',
                         type=int,
-                        const=10,
+                        default=10,
                         required=False,
                         )
     parser.add_argument('-vl',
                         metavar='--virlimit', 
                         help="Fix a cut-off value for NERVirulent in the select module. Set a number between 0 and 1. (default = 0.5) For example: -vl=0.60 -virlimit=0.60",
                         type=float,
-                        const=0.5,
+                        default=0.5,
                         required=True,
                         )    
     parser.add_argument('-virulent',
                         metavar='--virulent', 
                         help="Activation or deactivation of NERVirulent module, involved in the prediction of the probability of being a virulence factor through protein sequence analysis. Type True or False to activate or deactivate it, respectively. For example: -virulent=True",
                         type=bool,
-                        const=False,
+                        default=False,
                         required=False,
                         )
      
@@ -206,14 +206,14 @@ def get_args() -> Args:
                         help='Working directory',
                         type=dir_path,
                         required=False,
-                        const='./'
+                        default='./'
                         )
     parser.add_argument('-NERVE_dir',
                         metavar='--NERVE_dir', 
                         help='NERVE folder',
                         type=dir_path,
                         required=False,
-                        const='../NERVE'
+                        default='../NERVE'
                         )
     
     args = parser.parse_args()
