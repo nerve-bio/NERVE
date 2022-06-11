@@ -73,17 +73,17 @@ def main() -> None:
     final_df.to_csv(os.path.join(current_dir, 'annotation.csv'), index = False)
     #print(f'Results are saved as annotation.csv. This is a preview:\n{final_df}')
 
-def deep_fri(input_fasta, DeepFri_dir):
+def deep_fri(input_fasta, DeepFri_dir, working_dir):
     current_dir = os.getcwd()
     # launch DeepFri
     os.chdir(DeepFri_dir)
-    bashCmd = f'python3 predict.py --fasta_fn {os.path.join(current_dir, input_fasta)} -ont mf'
+    bashCmd = f'python3 predict.py --fasta_fn {os.path.join(current_dir, input_fasta)} -ont mf -o {working_dir}'
     process = subprocess.Popen(bashCmd.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
     os.chdir(current_dir)
     
     # parse DeepFri results
-    DeepFri_df = DeepFriParser(os.path.join(DeepFri_dir, 'DeepFRI_MF_predictions.csv'))
+    DeepFri_df = DeepFriParser(os.path.join(working_dir, 'DeepFRI_MF_predictions.csv'))
     return DeepFri_df
 
 def retrieve_entry_function(fastas: str, outfile: str) -> pd.DataFrame: 
