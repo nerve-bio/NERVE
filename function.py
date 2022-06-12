@@ -9,6 +9,8 @@ from operator import attrgetter
 class Args(NamedTuple):
     '''Command-line arguments'''
     path_to_fastas:str
+    DeepFri_dir:str
+    working_dir:str
 
 class DeepFriEntry(NamedTuple):
     '''Handles DeepFri entry'''
@@ -27,8 +29,21 @@ def get_args() -> Args:
                         type=str,
                         required=True,
                         )
+    parser.add_argument('-DeepFri_dir',
+                        metavar='--DeepFri_dir', 
+                        help='Path where DeepFri repository is',
+                        type=str,
+                        required=True,
+                        )
+    parser.add_argument('-working_dir',
+                        metavar='--working_dir', 
+                        help='Working directory path',
+                        type=str,
+                        required=True,
+                        )
+                        
     args = parser.parse_args()
-    return Args(args.path_to_fastas)
+    return Args(args.path_to_fastas, args.DeepFri_dir, args.working_dir)
 
 def main() -> None:
     '''Executes functions of this module'''
@@ -36,13 +51,13 @@ def main() -> None:
     args = get_args()
     
     # set directories
-    current_dir = os.getcwd()
-    DeepFri_dir = os.path.join(current_dir, "DeepFri")
+    #current_dir = os.getcwd()
+    #DeepFri_dir = os.path.join(current_dir, "DeepFri")
     
     # interrogate uniprot for function
     fastas = open(args.path_to_fastas, 'r')
     fasta_list = list(SeqIO.parse(fastas, "fasta"))
-    outfile = os.path.join(current_dir, "deep_fri_input.fa")
+    outfile = os.path.join(working_dir, "deep_fri_input.fa")
     UniProt_df = retrieve_entry_function(fastas, outfile)
     
     DeepFri_df = deep_fri("deep_fri_input.fa", DeepFri_dir)
@@ -56,19 +71,20 @@ def main() -> None:
     missing_df = pd.DataFrame(listout, columns=['Protein', 'Function'])
     final_df = pd.concat([final_df, missing_df])
     final_df.to_csv(os.path.join(current_dir, 'annotation.csv'), index = False)
-    print(f'Results are saved as annotation.csv. This is a preview:\n{final_df}')
+    #print(f'Results are saved as annotation.csv. This is a preview:\n{final_df}')
 
-def deep_fri(input_fasta, DeepFri_dir):
+def deep_fri(path_to_fasta, DeepFri_dir, working_dir):
     current_dir = os.getcwd()
+    working_dir+="/" if working_dir[-1] != "/" else ""
     # launch DeepFri
     os.chdir(DeepFri_dir)
-    bashCmd = f'python3 predict.py --fasta_fn {os.path.join(current_dir, input_fasta)} -ont mf'
+    bashCmd = f'python3 predict.py --fasta_fn {path_to_fasta} -ont mf -o {os.path.join(current_dir, working_dir)}'
     process = subprocess.Popen(bashCmd.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
     os.chdir(current_dir)
     
     # parse DeepFri results
-    DeepFri_df = DeepFriParser(os.path.join(DeepFri_dir, 'DeepFRI_MF_predictions.csv'))
+    DeepFri_df = DeepFriParser(os.path.join(working_dir, '_MF_predictions.csv'))
     return DeepFri_df
 
 def retrieve_entry_function(fastas: str, outfile: str) -> pd.DataFrame: 
