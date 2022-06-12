@@ -636,6 +636,7 @@ def conservation(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, p
     os.remove(os.path.join(working_dir, "comparison.xml")) # delete after the computation
     if os.path.isdir(os.path.join(working_dir, "compare_proteome")):
         rmtree(os.path.join(working_dir, "compare_proteome"))
+    return list_of_proteins
 
 def virulence(list_of_proteins, working_dir, iFeature_dir, proteome1, NERVE_dir)->list:
     """Run virulent factor predictions"""
