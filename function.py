@@ -75,7 +75,9 @@ def main() -> None:
 
 def deep_fri(path_to_fasta, DeepFri_dir, working_dir):
     current_dir = os.getcwd()
-    working_dir+="/" if working_dir[-1] != "/" else ""
+    #working_dir+="/" if working_dir[-1] != "/" else ""
+    if working_dir[0] == ".":
+        working_dir=working_dir[working_dir.find("/")+1:]
     # launch DeepFri
     os.chdir(DeepFri_dir)
     bashCmd = f'python3 predict.py --fasta_fn {path_to_fasta} -ont mf -o {os.path.join(current_dir, working_dir)}'

@@ -317,7 +317,7 @@ def main():
         logging.debug("Done.")
         
     # Conservation
-    logging.debug(f'list of proteins before conservation:\n{list_of_proteins}')
+    #logging.debug(f'list of proteins before conservation:\n{list_of_proteins}')
     if args.proteome2:
         logging.debug("Conservation start...")
         list_of_proteins=conservation(list_of_proteins, args.working_dir, args.NERVE_dir, args.e_value, 
@@ -326,14 +326,14 @@ def main():
         logging.debug("Done.")
         
     # Virulence
-    logging.debug(f'list of proteins before virulence:\n{list_of_proteins}')
+    #logging.debug(f'list of proteins before virulence:\n{list_of_proteins}')
     if args.virulent:
         logging.debug("Virulence start...")
         list_of_proteins=virulence(list_of_proteins, args.working_dir, args.iFeature_dir, args.proteome1, args.NERVE_dir)
         logging.debug("Done.")
         
     # annotation
-    logging.debug(f'list of proteins before annotation:\n{list_of_proteins}')
+    #logging.debug(f'list of proteins before annotation:\n{list_of_proteins}')
     if args.annotation:
         logging.debug("Annotation start...")
         list_of_proteins=annotation(list_of_proteins, args.proteome1, args.working_dir, args.DeepFri_dir)
@@ -517,6 +517,7 @@ def autoimmunity(list_of_proteins, proteome1, working_dir, NERVE_dir, e_value, m
     # sum peptides
     logging.debug('Run sum of peptides')
     for p in list_of_proteins:
+        p.sapiens_peptides_sum=0
         score = 0
         if len(p.list_of_shared_human_peps) > 0:
             prev_match = p.list_of_shared_human_peps[0]['match']
@@ -620,6 +621,7 @@ def conservation(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, p
     # sum peptides
     logging.debug('Run sum of peptides')
     for p in list_of_proteins:
+            p.conservation_score = 0
             score = 0
             if len(p.list_of_shared_conserv_proteome_peps) > 0:
                 prev_match = p.list_of_shared_conserv_proteome_peps[0]['match']
