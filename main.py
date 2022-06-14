@@ -524,7 +524,7 @@ def autoimmunity(list_of_proteins, proteome1, working_dir, NERVE_dir, e_value, m
     # sum peptides
     logging.debug('Run sum of peptides')
     for p in list_of_proteins:
-        p.sapiens_peptides_sum=0
+        #p.sapiens_peptides_sum=0
         score = 0
         if len(p.list_of_shared_human_peps) > 0:
             prev_match = p.list_of_shared_human_peps[0]['match']
@@ -536,7 +536,7 @@ def autoimmunity(list_of_proteins, proteome1, working_dir, NERVE_dir, e_value, m
                 else:
                     score += len(tmp_match)
                 prev_match = tmp_match
-            p.sapiens_peptides_sum = score/p.length
+        p.sapiens_peptides_sum = score/p.length
     mhcpep = pandas.read_csv(os.path.join(NERVE_dir, "mhcpep/mhcpep_sapiens.csv"), skipinitialspace=True)
     number_of_proteins = len(list_of_proteins)
     for p in list_of_proteins:
@@ -628,7 +628,7 @@ def conservation(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, p
     # sum peptides
     logging.debug('Run sum of peptides')
     for p in list_of_proteins:
-            p.conservation_score = 0
+            #p.conservation_score = 0
             score = 0
             if len(p.list_of_shared_conserv_proteome_peps) > 0:
                 prev_match = p.list_of_shared_conserv_proteome_peps[0]['match']
