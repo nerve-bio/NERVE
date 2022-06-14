@@ -211,7 +211,7 @@ def get_args() -> Args:
                         help='NERVE folder',
                         type=dir_path,
                         required=False,
-                        default='../'
+                        default='../iFeature'
                         )
     parser.add_argument('-dfd',
                         metavar='--DeepFri_dir', 
@@ -342,19 +342,26 @@ def main():
     # select
     if args.select:
         logging.debug("Select start...")
-        list_of_proteins=select(list_of_proteins, args.p_ad_no_citoplasm_filter, args.p_ad_extracellular_filter, 
+        final_proteins=select(list_of_proteins, args.p_ad_no_citoplasm_filter, args.p_ad_extracellular_filter, 
                args.transmemb_doms_limit, args.padlimit, args.mouse, 
                args.mouse_peptides_sum_limit, args.virlimit, args.virulent)
         logging.debug("Done.")
 
     # final
     if args.proteome2:
-        list_of_proteins.sort(key=lambda p: p.conservation_score, reverse=True) # ranking
-    # return .csv output
-    output(list_of_proteins, args.working_dir)
+        final_proteins.sort(key=lambda p: p.conservation_score, reverse=True) # ranking
+    # return .csv outputs
+    output(final_proteins, os.path.join(args.working_dir, 'vaccine_candidates.csv'))
+    output(list_of_proteins, os.path.join(args.working_dir, 'discarded_proteins.csv'))
     #Protein.Protein.information_to_csv(list_of_proteins)
     logging.debug("Done: NERVE has finished its analysis!")
     
+def bashCmdMethod(bashCmd):
+    """Run bash commands"""
+    process = subprocess.Popen(bashCmd.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+    return output, error
+
 def quality_control(path_to_fasta:str, working_dir)->None:
     """
     Remove sequences with non-canonical aminoacid symbols. U (Se-Cys) is substituted with C (Cys). Returns
@@ -676,7 +683,7 @@ def virulence(list_of_proteins, working_dir, iFeature_dir, proteome1, NERVE_dir)
     for i in range(len(prediction)):
         list_of_proteins[i].p_vir = prediction[i][0]
     for file in files:
-        os.remove(os.path.join(working_dir, files[i]+extension)) # delete after the computation
+        os.remove(os.path.join(working_dir, file+extension)) # delete after the computation
     return list_of_proteins
 
 def annotation(list_of_proteins, proteome1, working_dir, DeepFri_dir)->list:
@@ -708,7 +715,7 @@ def select(list_of_proteins, p_ad_no_citoplasm_filter, p_ad_extracellular_filter
         final_list.append(protein)
     return final_list
 
-def output(list_of_proteins, working_dir):
+def output(list_of_proteins, outfile):
     pd.DataFrame([[str(protein.id),
                  str(protein.accession),
                  str(protein.sequence),
@@ -727,7 +734,8 @@ def output(list_of_proteins, working_dir):
                  str(protein.p_vir),
                  str(protein.sapiens_peptides_sum),
                  str(protein.mouse_peptides_sum),
-                 str(protein.conservation_score)
+                 str(protein.conservation_score),
+                 str(protein.annotations)
                  ] for protein in list_of_proteins
                 ], 
                 columns= ['id ',
@@ -748,9 +756,10 @@ def output(list_of_proteins, working_dir):
                     'p_vir',
                     'sapiens_peptides_sum',
                     'mouse_peptides_sum',
-                    'conservation_score'
+                    'conservation_score',
+                    'annotations'
                      ]
-                ).to_csv(os.path.join(working_dir,'output.csv')) 
+                ).to_csv(outfile) 
     
 if __name__ == "__main__":
     main()
