@@ -310,6 +310,7 @@ def main():
         p_id = p.id
         p_seq = p.seq
         list_of_proteins.append(Protein.Protein(p_id, p_seq))
+    logging.debug(f'{len(list_of_fasta_proteins)} proteins loaded')
     print("20% done")
             
     # subcellular localization prediction
