@@ -1,6 +1,7 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # disable most of the warnings 
 import time
+import requests
 import argparse
 from typing import NamedTuple
 import tmhmm                                                # to predict transmembrane domains
@@ -251,7 +252,8 @@ def get_args() -> Args:
 def main():
     """Runs NERVE"""
     # to record time:
-    tic = time.time()
+    nerve_start = time.time()
+    print("Start NERVE 1.5")
 
     args=get_args()
     # define log file
@@ -298,6 +300,7 @@ def main():
         logging.debug(f'Start quality control of proteome2 ({args.proteome2})')
         quality_control(args.proteome2, args.working_dir)
         logging.debug(f'Finish quality control of proteome2 ({args.proteome2})')
+    print("10% done")
     
     # extract protein sequences and IDs:
     logging.debug(f'Extract protein sequences and IDs from proteome1')
@@ -307,77 +310,107 @@ def main():
         p_id = p.id
         p_seq = p.seq
         list_of_proteins.append(Protein.Protein(p_id, p_seq))
+    print("20% done")
             
     # subcellular localization prediction
     if args.subcell=='cello':
+        start=time.time()
         logging.debug("Subcelloc start with cello...")
         list_of_proteins=cello(list_of_proteins, args.working_dir, args.gram, args.proteome1)
-        logging.debug("Done.")
+        end=time.time()
+        logging.debug("Done run in: {:.4f} seconds".format(end-start))
     
     if args.subcell=='psortb':
+        start=time.time()
         logging.debug("Subcelloc start with psortb...")
         list_of_proteins=psortb(list_of_proteins, args.working_dir, args.gram, args.proteome1)
-        logging.debug("Done.")
+        end=time.time()
+        logging.debug("Done run in: {:.4f} seconds".format(end-start))
+    print("30% done")
     
     # Adhesin
     logging.debug("Adhesin start...")
+    start=time.time()
     list_of_proteins=adhesin(list_of_proteins, args.working_dir, args.NERVE_dir)
-    logging.debug("Done.")
+    end=time.time()
+    logging.debug("Done run in: {:.4f} seconds".format(end-start))
+    print("40% done")
     
     # Tmhelices
     logging.debug("Tmhelices start...")
+    start=time.time()
     list_of_proteins=Tmhelices(list_of_proteins, args.working_dir)
-    logging.debug("Done.")
+    end=time.time()
+    logging.debug("Done run in: {:.4f} seconds".format(end-start))
+    print("50% done")
     
     # Razor
     if args.razor:
         logging.debug("Loop-razor start...")
+        start=time.time()
         list_of_proteins=razor(list_of_proteins, args.working_dir, args.transmemb_doms_limit, args.razlen)
-        logging.debug("Done.")
+        end=time.time()
+        logging.debug("Done run in: {:.4f} seconds".format(end-start))
     
     # Autoimmunity
     logging.debug("Autoimmunity start...")
+    start=time.time()
     list_of_proteins=autoimmunity(list_of_proteins, args.proteome1, args.working_dir, args.NERVE_dir, args.e_value, args.minlength, 
                                   args.mismatch, args.substitution)
-    logging.debug("Done.")
+    end=time.time()
+    logging.debug("Done run in: {:.4f} seconds".format(end-start))
+    print("60% done")
     
     # Mouse immunity
     if mouse:
+        start=time.time()
         logging.debug("Mouse immunity start...")
         list_of_proteins=mouse(list_of_proteins, args.working_dir, args.NERVE_dir, args.e_value, args.proteome1,
                                args.minlength, args.substitution, args.mismatch)
-        logging.debug("Done.")
-        
+        end=time.time()
+        logging.debug("Done run in: {:.4f} seconds".format(end-start))
+    
     # Conservation
     #logging.debug(f'list of proteins before conservation:\n{list_of_proteins}')
     if args.proteome2:
+        start=time.time()
         logging.debug("Conservation start...")
         list_of_proteins=conservation(list_of_proteins, args.working_dir, args.NERVE_dir, args.e_value, 
                                       args.proteome1, args.proteome2,
                                       args.minlength, args.substitution, args.mismatch)
-        logging.debug("Done.")
+        end=time.time()
+        logging.debug("Done run in: {:.4f} seconds".format(end-start))
+    print("70% done")
         
     # Virulence
     #logging.debug(f'list of proteins before virulence:\n{list_of_proteins}')
     if args.virulent:
+        start=time.time()
         logging.debug("Virulence start...")
         list_of_proteins=virulence(list_of_proteins, args.working_dir, args.iFeature_dir, args.proteome1, args.NERVE_dir)
-        logging.debug("Done.")
+        end=time.time()
+        logging.debug("Done run in: {:.4f} seconds".format(end-start))
+    print("80% done")
         
     # annotation
     #logging.debug(f'list of proteins before annotation:\n{list_of_proteins}')
     if args.annotation:
+        start=time.time()
         logging.debug("Annotation start...")
         list_of_proteins=annotation(list_of_proteins, args.proteome1, args.working_dir, args.DeepFri_dir)
-        logging.debug("Done.")
+        end=time.time()
+        logging.debug("Done run in: {:.4f} seconds".format(end-start))
+    print("90% done")
     
     # select
     if args.select:
         logging.debug("Select start...")
+        start=time.time()
         final_proteins=select(list_of_proteins, args.p_ad_no_citoplasm_filter, args.p_ad_extracellular_filter, 
                args.transmemb_doms_limit, args.padlimit, args.mouse, 
                args.mouse_peptides_sum_limit, args.virlimit, args.virulent)
-        logging.debug("Done.")
+        end=time.time()
+        logging.debug("Done run in: {:.4f} seconds".format(end-start))
 
     # ranking based on proteome2 similarity
     #if args.proteome2:
@@ -389,8 +422,10 @@ def main():
     output(final_proteins, os.path.join(args.working_dir, 'vaccine_candidates.csv'))
     output(list_of_proteins, os.path.join(args.working_dir, 'discarded_proteins.csv'))
     #Protein.Protein.information_to_csv(list_of_proteins)
-    toc = time.time()
-    logging.debug("Done: NERVE has finished its analysis in:\n {:.4f} seconds".format(toc-tic))
+    nerve_end = time.time()
+    logging.debug("Done: NERVE has finished its analysis in: {:.4f} seconds".format(nerve_end-nerve_start))
+    print("100% done")
+    print("End NERVE computation succesfully.")
     
 def bashCmdMethod(bashCmd):
     """Run bash commands"""
@@ -435,7 +470,10 @@ def quality_control(path_to_fasta:str, working_dir)->None:
         for aa in str(record.seq):
             if aa not in aa_dic:
                 flag = False
-                logging.debug(f'Found non-canonical aminoacid named {aa} in sequence {record.id}')
+                logging.debug(f'Found non-canonical aminoacid "{aa}" in sequence {record.id}')
+            elif aa=="U":
+                logging.debug(f'Found non-canonical aminoacid "{aa}" (Selenocysteine) in sequence {record.id}, substituting to Cysteine')
+                new_seq += aa_dic[aa]
             else:
                 new_seq += aa_dic[aa]
         record.seq = Seq(new_seq)
@@ -491,6 +529,8 @@ def psortb(list_of_proteins, working_dir, gram, proteome1)->list:
     infile=open(proteome1, 'r')
     proteome1="".join(infile)
     body={'gram':'n','seq':proteome1}
+    with open('payload.json', 'w') as f:
+        json.dump(body, f)
     url="http://psortb:8080/execute"
     req = urllib.request.Request(url)
     req.add_header('Content-Type', 'application/json; charset=utf-8')
@@ -805,7 +845,7 @@ def select(list_of_proteins, p_ad_no_citoplasm_filter, p_ad_extracellular_filter
 
 def output(list_of_proteins, outfile):
     pd.DataFrame([[str(protein.id),
-                 str("".join([protein.accession if protein.accession!=None else ""])),
+                 str("".join([str(protein.accession) if protein.accession!=None else ""])),
                  str(protein.length),
                  str(protein.transmembrane_doms),
                  str(protein.localization[0].localization),
@@ -814,16 +854,16 @@ def output(list_of_proteins, outfile):
                  str(round(protein.p_vir,2)),
                  str(round(protein.p_ad, 2)),
                  str("".join([str(protein.conservation_score) if protein.conservation_score!=None else ""])),
-                 str(", ".join([dic['match'] for dic in protein.list_of_shared_human_peps if len(protein.list_of_shared_human_peps)>0])),
-                 str(", ".join([dic['match'] for dic in protein.list_of_shared_mouse_peps if len(protein.list_of_shared_mouse_peps)>0])),
-                 str(", ".join([dic['match'] for dic in protein.list_of_shared_conserv_proteome_peps if len(protein.list_of_shared_conserv_proteome_peps)>0])),
+                 str(", ".join([str(dic['match']) for dic in protein.list_of_shared_human_peps if len(protein.list_of_shared_human_peps)>0])),
+                 str(", ".join([str(dic['match']) for dic in protein.list_of_shared_mouse_peps if len(protein.list_of_shared_mouse_peps)>0])),
+                 str(", ".join([str(dic['match']) for dic in protein.list_of_shared_conserv_proteome_peps if len(protein.list_of_shared_conserv_proteome_peps)>0])),
                  str(round(protein.sapiens_peptides_sum,2)),
                  str(round(protein.mouse_peptides_sum,2)),
                  str(protein.annotations),
-                 str(", ".join([dic['match'] for dic in protein.list_of_peptides_from_comparison_with_mhcpep_sapiens if len(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens)>0])),  
-                 str(", ".join([dic['match'] for dic in protein.list_of_peptides_from_comparison_with_mhcpep_mouse if len(protein.list_of_peptides_from_comparison_with_mhcpep_mouse)>0])),  
+                 str(", ".join(list(set(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens)))), 
+                 str(", ".join(list(set(protein.list_of_peptides_from_comparison_with_mhcpep_mouse)))),  
                  str(protein.sequence),
-                 str("".join([protein.original_sequence_if_razor if protein.original_sequence_if_razor!=None else ""])),
+                 str("".join([str(protein.original_sequence_if_razor) if protein.original_sequence_if_razor!=None else ""])),
                  str(protein.tmhmm_seq)
                  ] for protein in list_of_proteins
                 ], 
