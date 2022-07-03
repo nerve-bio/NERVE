@@ -49,8 +49,7 @@ def proteome_downloader(proteome_id, filename='input_proteome.fasta', output_dir
     param: format: uniprot API required format (default:fasta)
     param: filename: output proteome filename (default: input_proteome.fasta)
     """
-    # use updated uniprot api:
-    url=f'https://rest.uniprot.org/uniprotkb/stream?compressed=false&format={format_}&query=%28proteome%3A{proteome}%29'
+    url=f'https://rest.uniprot.org/uniprotkb/stream?compressed=false&format={format_}&query=%28proteome%3A{proteome_id}%29'
     #url = f'https://www.uniprot.org/uniprot/?query=proteome:{proteome_id}&format={format}' 
     #filename = filename
     #output_dir = output_dir if output_dir != None else os.getcwd()
