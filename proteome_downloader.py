@@ -88,7 +88,7 @@ def proteome_downloader(proteome_id, filename='input_proteome.fasta', output_dir
                 # raise an AssertionError if the given proteome ID is not valid
                 assert text_file.tell() > 0, f'28upid is not a valid building block'
                 text_file.close()
-            except AssertException as e:
+            except AssertionError as e:
                 raise SystemExit(e)
         
     #print(f'Proteome {proteome_id} downloaded succesfully')
