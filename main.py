@@ -267,6 +267,7 @@ def main():
         args = args._replace(working_dir=args.working_dir+'/')
     # check input and download proteome:
     logging.debug(f'Looking for {args.proteome1} in {args.working_dir}')
+
     if os.path.isfile(os.path.join(args.working_dir, args.proteome1)) == False:
         logging.debug(f'{args.proteome1} is not a file, download from Uniprot.')
         try:
@@ -278,6 +279,7 @@ def main():
     else:
         logging.debug(f'{args.proteome1} was succesfully found in {args.working_dir}')
         args = args._replace(proteome1=os.path.join(args.working_dir, args.proteome1))
+        print(args.proteome1)
     if args.proteome2:
         logging.debug(f'Looking for {args.proteome2} in {args.working_dir}')
         if os.path.isfile(os.path.join(args.working_dir, args.proteome2)) == False:
