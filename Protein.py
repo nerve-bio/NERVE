@@ -2,7 +2,7 @@ class Protein:
 		
 	def __init__(self, identifier, sequence_string):
 		self.id = identifier
-		self.accession = identifier.split('|')[1]
+		self.accession = identifier.split('|')[1] if '|' in identifier else None
 		self.sequence = sequence_string # the sequence used for the analyses
 		self.original_sequence_if_razor = None # put the original sequence if razor is performed
 		self.length = len(sequence_string)
@@ -17,7 +17,7 @@ class Protein:
 		self.list_of_peptides_from_comparison_with_mhcpep_mouse = [] # here a list of mhcpep match
 		self.razor_loops = []
 		self.p_vir = 0
-		self.sapiens_peptides_sum = 0
+		self.sapiens_peptides_sum = None
 		self.mouse_peptides_sum = None
 		self.conservation_score = None
 		self.annotations = None
