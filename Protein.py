@@ -16,7 +16,7 @@ class Protein:
 		self.list_of_peptides_from_comparison_with_mhcpep_sapiens = [] # here a list of mhcpep match
 		self.list_of_peptides_from_comparison_with_mhcpep_mouse = [] # here a list of mhcpep match
 		self.razor_loops = []
-		self.p_vir = 0
+		self.p_vir = None
 		self.sapiens_peptides_sum = None
 		self.mouse_peptides_sum = None
 		self.conservation_score = None

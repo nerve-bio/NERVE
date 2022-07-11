@@ -347,7 +347,7 @@ def main():
     print("50% done")
     
     # Razor
-    if args.razor:
+    if args.razor=="True":
         logging.debug("Loop-razor start...")
         start=time.time()
         list_of_proteins=razor(list_of_proteins, args.working_dir, args.transmemb_doms_limit, args.razlen)
@@ -364,7 +364,7 @@ def main():
     print("60% done")
     
     # Mouse immunity
-    if mouse:
+    if mouse=="True":
         start=time.time()
         logging.debug("Mouse immunity start...")
         list_of_proteins=mouse(list_of_proteins, args.working_dir, args.NERVE_dir, args.e_value, args.proteome1,
@@ -386,7 +386,7 @@ def main():
         
     # Virulence
     #logging.debug(f'list of proteins before virulence:\n{list_of_proteins}')
-    if args.virulent:
+    if args.virulent=="True":
         start=time.time()
         logging.debug("Virulence start...")
         list_of_proteins=virulence(list_of_proteins, args.working_dir, args.iFeature_dir, args.proteome1, args.NERVE_dir)
@@ -396,7 +396,7 @@ def main():
         
     # annotation
     #logging.debug(f'list of proteins before annotation:\n{list_of_proteins}')
-    if args.annotation:
+    if args.annotation=="True":
         start=time.time()
         logging.debug("Annotation start...")
         list_of_proteins=annotation(list_of_proteins, args.proteome1, args.working_dir, args.DeepFri_dir)
@@ -405,7 +405,8 @@ def main():
     print("90% done")
     
     # select
-    if args.select:
+    final_proteins=list_of_proteins
+    if args.select=="True":
         logging.debug("Select start...")
         start=time.time()
         final_proteins=select(list_of_proteins, args.p_ad_no_citoplasm_filter, args.p_ad_extracellular_filter, 
@@ -418,7 +419,7 @@ def main():
     #if args.proteome2:
     #    final_proteins.sort(key=lambda p: p.conservation_score, reverse=True) # ranking
     # ranking based on virulence probability
-    if args.virulent:
+    if args.virulent=="True":
         final_proteins.sort(key=lambda p: p.p_vir, reverse=True)
     # return .csv outputs
     output(final_proteins, os.path.join(args.working_dir, 'vaccine_candidates.csv'))
@@ -836,12 +837,12 @@ def select(list_of_proteins, p_ad_no_citoplasm_filter, p_ad_extracellular_filter
         if (protein.transmembrane_doms >= transmemb_doms_limit) and (protein.original_sequence_if_razor is None): continue
         if protein.sapiens_peptides_sum > .15: continue
         if len(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens) >= 1: continue
-        if float(protein.localization[0].reliability) < 7.49 and protein.p_ad < padlimit: continue
+        if (float(protein.localization[0].reliability) < 7.49) and (protein.p_ad < padlimit): continue
         #if (protein.localization[0].localization == "Unknown") and (protein.p_ad < padlimit): continue
-        if mouse:
+        if mouse==True:
             if protein.mouse_peptides_sum > mouse_peptides_sum_limit: continue 
             if len(protein.list_of_peptides_from_comparison_with_mhcpep_mouse) >= 1: continue 
-        if virulent:
+        if virulent==True:
             if protein.p_vir < virlimit: continue
         final_list.append(protein)
     return final_list
@@ -854,15 +855,15 @@ def output(list_of_proteins, outfile):
                  str(protein.localization[0].localization),
                  str(protein.localization[0].reliability),
                  #str(", ".join([str(element) for element in protein.localization])),
-                 str(round(protein.p_vir,2)),
-                 str(round(protein.p_ad, 2)),
+                 str("".join([str(round(protein.p_vir,2)) if protein.p_vir!=None else ""])),
+                 str("".join([str(round(protein.p_ad, 2)) if protein.p_ad!=None else ""])),
                  str("".join([str(protein.conservation_score) if protein.conservation_score!=None else ""])),
                  str(", ".join([str(dic['match']) for dic in protein.list_of_shared_human_peps if len(protein.list_of_shared_human_peps)>0])),
                  str(", ".join([str(dic['match']) for dic in protein.list_of_shared_mouse_peps if len(protein.list_of_shared_mouse_peps)>0])),
                  str(", ".join([str(dic['match']) for dic in protein.list_of_shared_conserv_proteome_peps if len(protein.list_of_shared_conserv_proteome_peps)>0])),
-                 str(round(protein.sapiens_peptides_sum,2)),
-                 str(round(protein.mouse_peptides_sum,2)),
-                 str(protein.annotations),
+                 str("".join([str(round(protein.sapiens_peptides_sum,2)) if protein.sapiens_peptides_sum!=None else ""])),
+                 str("".join([str(round(protein.mouse_peptides_sum,2)) if protein.mouse_peptides_sum!=None else ""])),
+                 str("".join([str(protein.annotations) if protein.annotations!=None else ""])),
                  str(", ".join(list(set(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens)))), 
                  str(", ".join(list(set(protein.list_of_peptides_from_comparison_with_mhcpep_mouse)))),  
                  str(protein.sequence),
