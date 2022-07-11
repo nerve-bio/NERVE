@@ -34,7 +34,7 @@ def dir_path(path):
 
 class Args(NamedTuple):
     '''Command-line arguments'''
-    annotation:bool
+    annotation:str
     e_value:float
     gram:str
     minlength:int
@@ -77,7 +77,7 @@ def get_args() -> Args:
     parser.add_argument('-a','--annotation',
                         metavar='\b', 
                         help="Activation or deactivation of annotation module, to retrieve info about protein functions. By default, this module is active. Type True or False to activate or deactivate it, respectively.",
-                        type=bool,
+                        type=str,
                         required=False,
                         default=True
                         )
@@ -111,7 +111,7 @@ def get_args() -> Args:
     parser.add_argument('-m','--mouse',
                         metavar='\b', 
                         help="Activation or deactivation of the mouse immunity module. This module compares proteome1 with mouse proteome and a further analysis of the eventual shared peptides is carried out as in the autoimmunity module. Type True or False to activate or deactivate it, respectively. For example: -m=True or -mouse=True",
-                        type=bool,
+                        type=str,
                         default=True,
                         required=False,
                         )
@@ -149,7 +149,7 @@ def get_args() -> Args:
                         required=False,
                         )    
     parser.add_argument('-pl','--padlimit',
-                        metavar='\b', 
+                        metavar='\b',
                         help="Set the PAD value cut-off for proteins with 'Unknown' localization in the select module. Thus, these proteins with a PAD value < cut-off are discarded. Set a number between 0 and 1. For example: -pl=0.90, -padlimit=0.90",
                         type=float,
                         default=0.85,
@@ -158,7 +158,7 @@ def get_args() -> Args:
     parser.add_argument('-rz','--razor',
                         metavar='\b', 
                         help="Activation or deactivation of the loop-razor module. This module allows the recovery of protein vaccine candidates, with more than 2 transmembrane domains, that would otherwise be discarded in the last module. The longest loop with minimum 50 aa will replace the original protein sequence for following NERVE steps, if it is present. Type True or False to activate or deactivate it, respectively. For example: -rz=True or -razor=True",
-                        type=bool,
+                        type=str,
                         default=True,
                         required=False,
                         )
@@ -172,7 +172,7 @@ def get_args() -> Args:
     parser.add_argument('-s','--select',
                         metavar='\b', 
                         help="Activation or deactivation of select module, which filters PVC from proteome1. Type 'True' or 'False' to activate or deactivate it, respectively. For example: -s='False' or -select='False'",
-                        type=bool,
+                        type=str,
                         default=True,
                         required=False,
                         )
@@ -207,7 +207,7 @@ def get_args() -> Args:
     parser.add_argument('-vir','--virulent',
                         metavar='\b', 
                         help="Activation or deactivation of NERVirulent module, involved in the prediction of the probability of being a virulence factor through protein sequence analysis. Type True or False to activate or deactivate it, respectively. For example: -virulent=True",
-                        type=bool,
+                        type=str,
                         default=True,
                         required=False,
                         )
@@ -248,6 +248,7 @@ def get_args() -> Args:
                 args.p_ad_extracellular_filter, args.p_ad_no_citoplasm_filter, args.padlimit, args.razor, 
                 args.razlen, args.select, args.substitution, args.subcell, args.transmemb_doms_limit, args.virlimit, 
                 args.virulent, args.working_dir, args.NERVE_dir, args.iFeature_dir, args.DeepFri_dir)
+
 
 def main():
     """Runs NERVE"""
@@ -835,7 +836,8 @@ def select(list_of_proteins, p_ad_no_citoplasm_filter, p_ad_extracellular_filter
         if (protein.transmembrane_doms >= transmemb_doms_limit) and (protein.original_sequence_if_razor is None): continue
         if protein.sapiens_peptides_sum > .15: continue
         if len(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens) >= 1: continue
-        if (protein.localization[0].localization == "Unknown") and (protein.p_ad < padlimit): continue
+        if float(protein.localization[0].reliability) < 7.49 and protein.p_ad < padlimit: continue
+        #if (protein.localization[0].localization == "Unknown") and (protein.p_ad < padlimit): continue
         if mouse:
             if protein.mouse_peptides_sum > mouse_peptides_sum_limit: continue 
             if len(protein.list_of_peptides_from_comparison_with_mhcpep_mouse) >= 1: continue 
