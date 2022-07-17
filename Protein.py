@@ -1,8 +1,9 @@
+import re
 class Protein:
 		
 	def __init__(self, identifier, sequence_string):
 		self.id = identifier
-		self.accession = identifier.split('|')[1] if '|' in identifier else None
+		self.accession = identifier.split('|')[1] if len(re.findall("|", identifier))==2 else None
 		self.sequence = sequence_string # the sequence used for the analyses
 		self.original_sequence_if_razor = None # put the original sequence if razor is performed
 		self.length = len(sequence_string)

@@ -13,7 +13,7 @@ from Bio.Blast import NCBIXML                               # to parse the pepti
 from NERVE import Protein                                   # to contain proteins information
 from NERVE.function import deep_fri, retrieve_entry_function
 from NERVE.cello_scraper import *
-from NERVE.proteome_downloader import proteome_downloader
+#from NERVE.proteome_downloader import proteome_downloader
 import numpy as np                                          # to handle vectors and matrices (machine / deep learning modules)
 import tensorflow                                           # for deep learning modules
 from tensorflow import keras                                # to use the spaan model (to predict the probability of a protein to be an adhesin)
@@ -271,7 +271,7 @@ def main():
     if os.path.isfile(os.path.join(args.working_dir, args.proteome1)) == False:
         logging.debug(f'{args.proteome1} is not a file, download from Uniprot.')
         try:
-            proteome_downloader(args.proteome1, filename=os.path.join(args.working_dir,'proteome1.fasta'))
+            proteome_downloader(args.working_dir, args.proteome1, filename=os.path.join(args.working_dir,'proteome1.fasta'))
         except Exception as e:
             raise ValueError(f'{args.proteome1} rised the following error:\n{e}')
         logging.debug(f'{args.proteome1} succesfully downloaded')
@@ -284,7 +284,7 @@ def main():
         if os.path.isfile(os.path.join(args.working_dir, args.proteome2)) == False:
             logging.debug(f'{args.proteome2} is not a file, download from Uniprot.')
             try:
-                proteome_downloader(args.proteome2, filename=os.path.join(args.working_dir,'proteome2.fasta'))
+                proteome_downloader(args.working_dir, args.proteome2, filename=os.path.join(args.working_dir,'proteome2.fasta'))
             except:
                 raise logging.error(f'{args.proteome2} rised the following error:\n{e}')
             logging.debug(f'{args.proteome2} succesfully downloaded')
@@ -295,24 +295,21 @@ def main():
     
     # run quality control
     logging.debug(f'Start quality control of proteome1 ({args.proteome1})')
-    quality_control(args.proteome1, args.working_dir)
+    # during the quality control, upload sequences from proteome1
+    list_of_fasta_proteins=quality_control(args.proteome1, args.working_dir, upload=True)
     logging.debug(f'Finish quality control of proteome1 ({args.proteome1})')
     if args.proteome2:
         logging.debug(f'Start quality control of proteome2 ({args.proteome2})')
         quality_control(args.proteome2, args.working_dir)
         logging.debug(f'Finish quality control of proteome2 ({args.proteome2})')
-    print("10% done")
-    
-    # extract protein sequences and IDs:
     logging.debug(f'Extract protein sequences and IDs from proteome1')
-    list_of_fasta_proteins = list(SeqIO.parse(args.proteome1, "fasta"))
     list_of_proteins = []
     for p in list_of_fasta_proteins:
-        p_id = p.id
-        p_seq = p.seq
+        p_id = str(p.name)
+        p_seq = str(p.seq)
         list_of_proteins.append(Protein.Protein(p_id, p_seq))
     logging.debug(f'{len(list_of_fasta_proteins)} proteins loaded')
-    print("20% done")
+    print("10% done")
             
     # subcellular localization prediction
     if args.subcell=='cello':
@@ -328,7 +325,7 @@ def main():
         list_of_proteins=psortb(list_of_proteins, args.working_dir, args.gram, args.proteome1)
         end=time.time()
         logging.debug("Done run in: {:.4f} seconds".format(end-start))
-    print("30% done")
+    print("20% done")
     
     # Adhesin
     logging.debug("Adhesin start...")
@@ -336,7 +333,7 @@ def main():
     list_of_proteins=adhesin(list_of_proteins, args.working_dir, args.NERVE_dir)
     end=time.time()
     logging.debug("Done run in: {:.4f} seconds".format(end-start))
-    print("40% done")
+    print("30% done")
     
     # Tmhelices
     logging.debug("Tmhelices start...")
@@ -344,7 +341,7 @@ def main():
     list_of_proteins=Tmhelices(list_of_proteins, args.working_dir)
     end=time.time()
     logging.debug("Done run in: {:.4f} seconds".format(end-start))
-    print("50% done")
+    print("40% done")
     
     # Razor
     if args.razor=="True":
@@ -353,6 +350,7 @@ def main():
         list_of_proteins=razor(list_of_proteins, args.working_dir, args.transmemb_doms_limit, args.razlen)
         end=time.time()
         logging.debug("Done run in: {:.4f} seconds".format(end-start))
+    print("50% done")
     
     # Autoimmunity
     logging.debug("Autoimmunity start...")
@@ -431,35 +429,111 @@ def main():
     print("End NERVE computation succesfully.")
     
 def bashCmdMethod(bashCmd):
-    """Run bash commands"""
+    """Run bash commands
+    param: bashCmd: bash command to be run"""
     process = subprocess.Popen(bashCmd.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
     return output, error
 
-def is_fasta(filename:str):
-        """Function that rise an error if the format is not .fasta"""
-        with open(filename, "r") as handle:
-            fasta = list(SeqIO.parse(handle, "fasta"))
-            # biopython silently fails if the format is not fasta returning an empty generator
-            # any() returns False if the list is empty
-            if any(fasta) == True:
-                return fasta
-            else:
-                raise ValueError(f'{filename} is not in fasta format')
+class protein_element:
+    """Class to handle fasta file elements similarly to the biopython fasta file parser"""
+    def __init__(self, name, seq):
+        self.name=name
+        self.seq=seq
 
-def quality_control(path_to_fasta:str, working_dir)->None:
-    """
-    Remove sequences with non-canonical aminoacid symbols. U (Se-Cys) is substituted with C (Cys). Returns
-    "non_filtered_"+input_filename and overwrites input.
-    param: path_to_fasta: full path to fasta file containing the proteome with .fasta extension;
-    param: working_dir: working directory
+def proteome_downloader(working_dir, proteome_id, filename='input_proteome.fasta', output_dir=os.getcwd(), format_ = "fasta") -> None:
+    """Downloads proteome from uniprot database into output multifasta file
+    param: proteome_id: uniprot unique proteome id, not case-sensitive
+    param: output_dir: output directory (default: current directory)
+    param: format: uniprot API required format (default:fasta)
+    param: filename: output proteome filename (default: input_proteome.fasta)
     """
     # define logging file
     logging.basicConfig(filename=os.path.join(working_dir, 'logfile.log'),
                         filemode='a',
                         level=logging.DEBUG,
                         force=True)
-    
+    try: 
+        url=f'https://rest.uniprot.org/uniprotkb/stream?compressed=false&format={format_}&query=%28proteome%3A{proteome_id}%29'
+        response = requests.get(url, stream = True)
+        text_file = open(os.path.join(output_dir, filename), 'wb')
+        for chunk in response.iter_content(chunk_size=1024):
+              text_file.write(chunk)
+        # raise an AssertionError if the given proteome ID is not valid
+        assert text_file.tell() > 0, 'First download attempt failed'
+        text_file.close()
+    except AssertionError: 
+        logging.debug(f'28proteome is not a valid building block')
+        try:
+            url=f'https://rest.uniprot.org/uniprotkb/stream?format={format_}&query=%28proteome%3A{proteome_id}%29'
+            response = requests.get(url, stream = True)
+            text_file = open(os.path.join(output_dir, filename), 'wb')
+            for chunk in response.iter_content(chunk_size=1024):
+                  text_file.write(chunk)
+            # raise an AssertionError if the given proteome ID is not valid
+            assert text_file.tell() > 0, 'Second download attempt failed'
+            text_file.close()
+        except AssertionError:
+            logging.debug(f'avoiding compression is not a valid building block')
+            try:
+                url=f'https://rest.uniprot.org/uniparc/stream?format={format_}&query=%28upid%3A{proteome_id}%29'
+                response = requests.get(url, stream = True)
+                text_file = open(os.path.join(output_dir, filename), 'wb')
+                for chunk in response.iter_content(chunk_size=1024):
+                      text_file.write(chunk)
+                # raise an AssertionError if the given proteome ID is not valid
+                assert text_file.tell() > 0, 'Third download attempt failed'
+                text_file.close()
+            except AssertionError as e:
+                logging.debug(f'28upid is not a valid building block')
+                print(f'Unable to download proteome {proteome_id} due to invalid proteome ID or Uniprot API failure. Provide the proteome as file.')
+                raise SystemExit(e)
+    return None
+
+def proteome_uploader(infile:str)->list:
+    """Function to read and parse fasta files. Bio SeqIO is not suitable because it chops sequence names. It 
+    will be used only to validate fasta file format.
+    param: infile: path to fasta file"""
+    proteome_elements=[]
+    proteome_data={}
+    infile=open(infile, 'r').readlines()
+    for i in range(len(infile)):
+        if infile[i].startswith('>'):
+            name=infile[i].strip()[1:]
+            proteome_data[name]=''
+        if infile[i].startswith('>')==False:
+            proteome_data[name]+=infile[i].strip()
+    for element in proteome_data:
+        proteome_elements.append(protein_element(element, proteome_data[element]))
+    return proteome_elements
+
+def is_fasta(filename:str):
+    """Function that rise an error if the format is not .fasta.
+    param: filename: path to fasta file"""
+    with open(filename, "r") as handle:
+        fasta = list(SeqIO.parse(handle, "fasta"))
+        # biopython silently fails if the format is not fasta returning an empty generator
+        # any() returns False if the list is empty
+        if any(fasta) == True:
+            fasta=proteome_uploader(filename)
+            return fasta
+        else:
+            raise ValueError(f'{filename} is not in fasta format')
+                
+
+def quality_control(path_to_fasta:str, working_dir:str, upload=False)->None:
+    """
+    Remove sequences with non-canonical aminoacid symbols. U (Se-Cys) is substituted with C (Cys). Returns
+    discarded_sequences.fasta containing discarded sequences and overwrites input with non discarded sequences.
+    param: path_to_fasta: full path to fasta file containing the proteome with .fasta extension;
+    param: working_dir: working directory
+    param: upload: if True the function returns a list containing the filtered sequences as protein_element objects
+    """
+    # define logging file
+    logging.basicConfig(filename=os.path.join(working_dir, 'logfile.log'),
+                        filemode='a',
+                        level=logging.DEBUG,
+                        force=True)
     
     aa_dic = {'C': 'C', 'D': 'D', 'S': 'S', 'Q': 'Q', 'K': 'K', 'I': 'I', 'P': 'P', 'T': 'T', 'F': 'F', 'N': 'N', 
               'G': 'G', 'H': 'H', 'L': 'L', 'R': 'R', 'W': 'W', 'A': 'A', 'V': 'V', 'E': 'E', 'Y': 'Y', 'M': 'M', 
@@ -473,9 +547,9 @@ def quality_control(path_to_fasta:str, working_dir)->None:
         for aa in str(record.seq):
             if aa not in aa_dic:
                 flag = False
-                logging.debug(f'Found non-canonical aminoacid "{aa}" in sequence {record.id}')
+                logging.debug(f'Found non-canonical aminoacid "{aa}" in sequence {record.name}')
             elif aa=="U":
-                logging.debug(f'Found non-canonical aminoacid "{aa}" (Selenocysteine) in sequence {record.id}, substituting to Cysteine')
+                logging.debug(f'Found non-canonical aminoacid "{aa}" (Selenocysteine) in sequence {record.name}, substituting to Cysteine')
                 new_seq += aa_dic[aa]
             else:
                 new_seq += aa_dic[aa]
@@ -484,16 +558,23 @@ def quality_control(path_to_fasta:str, working_dir)->None:
             filtered_sequences.append(record)
         else:    
             discarded_sequences.append(record)
-            logging.debug(f'Sequence {record.id} has been discarded for the presence of non-canonical aminoacids.')     
+            logging.debug(f'Sequence {record.name} has been discarded for the presence of non-canonical aminoacids.')     
     # output filtered overwriting input fasta file
     filename = open(path_to_fasta, 'w')
-    SeqIO.write(filtered_sequences, filename, "fasta")
+    for sequence in filtered_sequences:
+        filename.write(f'>{str(sequence.name)}\n')
+        filename.write(f'{str(sequence.seq)}\n')
+    #SeqIO.write(filtered_sequences, filename, "fasta")
     filename.close()
     # output discarded sequences
     filename = open(os.path.join(working_dir, "discarded_sequences.fasta"), 'w')
-    SeqIO.write(discarded_sequences, filename, "fasta")
+    for sequence in discarded_sequences:
+        filename.write(f'>{str(sequence.name)}\n')
+        filename.write(f'{str(sequence.seq)}\n')
+    #SeqIO.write(discarded_sequences, filename, "fasta")
     filename.close()
-    
+    if upload==True:
+        return filtered_sequences
     return None
 
 def cello(list_of_proteins, working_dir, gram, proteome1)->list:
