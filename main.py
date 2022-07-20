@@ -267,8 +267,12 @@ def main():
     if args.working_dir[-1] != '/':
         args = args._replace(working_dir=args.working_dir+'/')
     # check input and download proteome:
-    logging.debug(f'Looking for {args.proteome1} in {args.working_dir}')
-    if os.path.isfile(os.path.join(args.working_dir, args.proteome1)) == False:
+    if os.path.isfile(args.proteome1)==True:
+        logging.debug(f'{args.proteome1} found as {args.proteome1}')
+    elif os.path.isfile(os.path.join(args.working_dir, args.proteome1)) == True:
+        logging.debug(f'{args.proteome1} was found in {args.working_dir}')
+        args = args._replace(proteome1=os.path.join(args.working_dir, args.proteome1))
+    else:
         logging.debug(f'{args.proteome1} is not a file, download from Uniprot.')
         try:
             proteome_downloader(args.working_dir, args.proteome1, filename=os.path.join(args.working_dir,'proteome1.fasta'))
@@ -276,24 +280,25 @@ def main():
             raise ValueError(f'{args.proteome1} rised the following error:\n{e}')
         logging.debug(f'{args.proteome1} succesfully downloaded')
         args = args._replace(proteome1=os.path.join(args.working_dir,'proteome1.fasta'))
-    else:
-        logging.debug(f'{args.proteome1} was succesfully found in {args.working_dir}')
-        args = args._replace(proteome1=os.path.join(args.working_dir, args.proteome1))
+    
     if args.proteome2:
-        logging.debug(f'Looking for {args.proteome2} in {args.working_dir}')
-        if os.path.isfile(os.path.join(args.working_dir, args.proteome2)) == False:
+        if os.path.isfile(args.proteome2)==True:
+            logging.debug(f'{args.proteome2} found as {args.proteome2}')
+        elif os.path.isfile(os.path.join(args.working_dir, args.proteome2)) == True:
+            logging.debug(f'{args.proteome2} was found in {args.working_dir}')
+            args = args._replace(proteome2=os.path.join(args.working_dir, args.proteome2))
+        else:
             logging.debug(f'{args.proteome2} is not a file, download from Uniprot.')
             try:
                 proteome_downloader(args.working_dir, args.proteome2, filename=os.path.join(args.working_dir,'proteome2.fasta'))
             except:
                 raise logging.error(f'{args.proteome2} rised the following error:\n{e}')
             logging.debug(f'{args.proteome2} succesfully downloaded')
-            args = args._replace(proteome2=os.path.join(args.working_dir,'proteome2.fasta'))
-        else:
-            logging.debug(f'{args.proteome2} was succesfully found in {args.working_dir}')
-            args = args._replace(proteome2=os.path.join(args.working_dir, args.proteome2))
+            args = args._replace(proteome2=os.path.join(args.working_dir,'proteome2.fasta'))   
+    print("10% done")
     
     # run quality control
+    start=time.time()
     logging.debug(f'Start quality control of proteome1 ({args.proteome1})')
     # during the quality control, upload sequences from proteome1
     list_of_fasta_proteins=quality_control(args.proteome1, args.working_dir, upload=True)
@@ -308,8 +313,8 @@ def main():
         p_id = str(p.name)
         p_seq = str(p.seq)
         list_of_proteins.append(Protein.Protein(p_id, p_seq))
-    logging.debug(f'{len(list_of_fasta_proteins)} proteins loaded')
-    print("10% done")
+    end=time.time()
+    logging.debug(f'{len(list_of_fasta_proteins)} proteins loaded in {end-start} seconds')
             
     # subcellular localization prediction
     if args.subcell=='cello':
