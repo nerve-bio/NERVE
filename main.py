@@ -79,7 +79,7 @@ def get_args() -> Args:
                         help="Activation or deactivation of annotation module, to retrieve info about protein functions. By default, this module is active. Type True or False to activate or deactivate it, respectively.",
                         type=str,
                         required=False,
-                        default=True
+                        default="True"
                         )
     parser.add_argument('-ev','--e_value',
                         metavar='\b', 
@@ -112,7 +112,7 @@ def get_args() -> Args:
                         metavar='\b', 
                         help="Activation or deactivation of the mouse immunity module. This module compares proteome1 with mouse proteome and a further analysis of the eventual shared peptides is carried out as in the autoimmunity module. Type True or False to activate or deactivate it, respectively. For example: -m=True or -mouse=True",
                         type=str,
-                        default=True,
+                        default="True",
                         required=False,
                         )
     parser.add_argument('-mpsl','--mouse_peptides_sum_limit',
@@ -159,7 +159,7 @@ def get_args() -> Args:
                         metavar='\b', 
                         help="Activation or deactivation of the loop-razor module. This module allows the recovery of protein vaccine candidates, with more than 2 transmembrane domains, that would otherwise be discarded in the last module. The longest loop with minimum 50 aa will replace the original protein sequence for following NERVE steps, if it is present. Type True or False to activate or deactivate it, respectively. For example: -rz=True or -razor=True",
                         type=str,
-                        default=True,
+                        default="True",
                         required=False,
                         )
     parser.add_argument('-rl','--razlen',
@@ -173,7 +173,7 @@ def get_args() -> Args:
                         metavar='\b', 
                         help="Activation or deactivation of select module, which filters PVC from proteome1. Type 'True' or 'False' to activate or deactivate it, respectively. For example: -s='False' or -select='False'",
                         type=str,
-                        default=True,
+                        default="True",
                         required=False,
                         )
     parser.add_argument('-ss','--substitution',
@@ -208,7 +208,7 @@ def get_args() -> Args:
                         metavar='\b', 
                         help="Activation or deactivation of NERVirulent module, involved in the prediction of the probability of being a virulence factor through protein sequence analysis. Type True or False to activate or deactivate it, respectively. For example: -virulent=True",
                         type=str,
-                        default=True,
+                        default="True",
                         required=False,
                         )
      
@@ -269,6 +269,8 @@ def main():
     # check input and download proteome:
     if os.path.isfile(args.proteome1)==True:
         logging.debug(f'{args.proteome1} found as {args.proteome1}')
+        # repath proteome as absolute path
+        args = args._replace(proteome1=os.path.join('/', os.path.relpath(args.proteome1, start = '/')))
     elif os.path.isfile(os.path.join(args.working_dir, args.proteome1)) == True:
         logging.debug(f'{args.proteome1} was found in {args.working_dir}')
         args = args._replace(proteome1=os.path.join(args.working_dir, args.proteome1))
@@ -284,6 +286,8 @@ def main():
     if args.proteome2:
         if os.path.isfile(args.proteome2)==True:
             logging.debug(f'{args.proteome2} found as {args.proteome2}')
+            # repath proteome as absolute path
+            args = args._replace(proteome2=os.path.join('/', os.path.relpath(args.proteome2, start = '/')))
         elif os.path.isfile(os.path.join(args.working_dir, args.proteome2)) == True:
             logging.debug(f'{args.proteome2} was found in {args.working_dir}')
             args = args._replace(proteome2=os.path.join(args.working_dir, args.proteome2))
@@ -491,7 +495,7 @@ def proteome_downloader(working_dir, proteome_id, filename='input_proteome.fasta
                 text_file.close()
             except AssertionError as e:
                 logging.debug(f'28upid is not a valid building block')
-                print(f'Unable to download proteome {proteome_id} due to invalid proteome ID or Uniprot API failure. Provide the proteome as file.')
+                print(f'Unable to download proteome {proteome_id} due to invalid proteome ID Uniprot API failure or wrong path. In case of uniprot API failure provide the proteome as file.')
                 raise SystemExit(e)
     return None
 
@@ -595,7 +599,7 @@ def cello(list_of_proteins, working_dir, gram, proteome1)->list:
     treshold = 1
     for index, row in df.iterrows():
         for p in list_of_proteins:
-            if p.id in row["name"] and row["prediction"][0].reliability >= treshold:
+            if p.id == row["name"] and row["prediction"][0].reliability >= treshold:
                 p.localization=row["prediction"]
                 #p.localization = [pred.localization for pred in row["prediction"]]+[pred.reliability for pred in row["prediction"]]
     # save cello raw predictions
@@ -643,7 +647,7 @@ def psortb(list_of_proteins, working_dir, gram, proteome1)->list:
             localizations=[Localization(element.split()[0], element.split()[1]) for element in predictions]
             #output=[l.localization for l in localizations]+[l.reliability for l in localizations]
             for p in list_of_proteins:
-                if p.id in id_:
+                if p.id == id_:
                     p.localization=localizations
     # save psortb raw predictions
     #df.to_csv(os.path.join(working_dir, 'psortb_predictions.csv'))
@@ -908,7 +912,7 @@ def annotation(list_of_proteins, proteome1, working_dir, DeepFri_dir)->list:
     deepfri_df = deep_fri(proteome1, DeepFri_dir, working_dir)
     for p in list_of_proteins:
         for index, row in deepfri_df.iterrows():
-            if p.id in row['Protein']:
+            if row['Protein'] in p.id:
                 p.annotations = row['Function']
     return list_of_proteins
 
@@ -941,14 +945,14 @@ def output(list_of_proteins, outfile):
                  str(protein.localization[0].localization),
                  str(protein.localization[0].reliability),
                  #str(", ".join([str(element) for element in protein.localization])),
-                 str("".join([str(round(protein.p_vir,2)) if protein.p_vir!=None else ""])),
-                 str("".join([str(round(protein.p_ad, 2)) if protein.p_ad!=None else ""])),
+                 str("".join([str(round(protein.p_vir,4)) if protein.p_vir!=None else ""])),
+                 str("".join([str(round(protein.p_ad, 4)) if protein.p_ad!=None else ""])),
                  str("".join([str(protein.conservation_score) if protein.conservation_score!=None else ""])),
                  str(", ".join([str(dic['match']) for dic in protein.list_of_shared_human_peps if len(protein.list_of_shared_human_peps)>0])),
                  str(", ".join([str(dic['match']) for dic in protein.list_of_shared_mouse_peps if len(protein.list_of_shared_mouse_peps)>0])),
                  str(", ".join([str(dic['match']) for dic in protein.list_of_shared_conserv_proteome_peps if len(protein.list_of_shared_conserv_proteome_peps)>0])),
-                 str("".join([str(round(protein.sapiens_peptides_sum,2)) if protein.sapiens_peptides_sum!=None else ""])),
-                 str("".join([str(round(protein.mouse_peptides_sum,2)) if protein.mouse_peptides_sum!=None else ""])),
+                 str("".join([str(round(protein.sapiens_peptides_sum,4)) if protein.sapiens_peptides_sum!=None else "0"])),
+                 str("".join([str(round(protein.mouse_peptides_sum,4)) if protein.mouse_peptides_sum!=None else "0"])),
                  str("".join([str(protein.annotations) if protein.annotations!=None else ""])),
                  str(", ".join(list(set(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens)))), 
                  str(", ".join(list(set(protein.list_of_peptides_from_comparison_with_mhcpep_mouse)))),  
