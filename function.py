@@ -80,13 +80,13 @@ def deep_fri(path_to_fasta, DeepFri_dir, working_dir):
         working_dir=working_dir[working_dir.find("/")+1:]
     # launch DeepFri
     os.chdir(DeepFri_dir)
-    bashCmd = f'python3 predict.py --fasta_fn {path_to_fasta} -ont mf -o DeepFri'#{os.path.join(current_dir, working_dir)}'
+    bashCmd = f'python3 predict.py --fasta_fn {path_to_fasta} -ont mf -o {os.path.join(current_dir, working_dir)}'
     process = subprocess.Popen(bashCmd.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
     os.chdir(current_dir)
     
     # parse DeepFri results
-    DeepFri_df = DeepFriParser(os.path.join(working_dir, 'DeepFri_MF_predictions.csv'))
+    DeepFri_df = DeepFriParser(os.path.join(working_dir, '_MF_predictions.csv'))
     return DeepFri_df
 
 def retrieve_entry_function(fastas: str, outfile: str) -> pd.DataFrame: 
