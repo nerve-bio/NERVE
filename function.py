@@ -137,7 +137,7 @@ def DeepFriParser(path_to_infile: open) -> pd.DataFrame:
         Protein = row_tuples[0].id_
         sorted_row_tuples = sorted(row_tuples, key=attrgetter('score'), reverse=True)
         # get only gene ontology values
-        GOs = f'DeepFri predictions: {" | ".join([element.GO for element in sorted_row_tuples])}'
+        GOs = f'DeepFri predictions: {" | ".join([element.GO for element in sorted_row_tuples if element.score >=0.3])}'
         listout.append([Protein, GOs])
     output_df = pd.DataFrame(listout, columns = ['Protein', 'Function'])
     return output_df
