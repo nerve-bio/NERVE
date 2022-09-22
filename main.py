@@ -621,7 +621,7 @@ def psortb(list_of_proteins, working_dir, gram, proteome1)->list:
     # read proteome1 file and pass it to json request
     infile=open(proteome1, 'r')
     proteome1="".join(infile)
-    body={'gram':'n','seq':proteome1}
+    body={'gram':gram,'seq':proteome1}
     with open('payload.json', 'w') as f:
         json.dump(body, f)
     url="http://psortb:8080/execute"
@@ -637,7 +637,7 @@ def psortb(list_of_proteins, working_dir, gram, proteome1)->list:
     logging.debug('Parsing psortb output')
     for entry in data_json['result'].split('-------------------------------------------------------------------------------\n\n'):
         split=entry.split('\n')
-        id_=split[0][split[0].find('SeqID: ')+len('SeqID: '):] # protein id
+        id_=split[0][split[0].find('SeqID: ')+len('SeqID: '):].strip() # protein id
         # extract sublocalization predictions:
         if 'Localization Scores:' in entry:
             # get part of the output that define the predictions
@@ -922,6 +922,7 @@ def select(list_of_proteins, p_ad_no_citoplasm_filter, p_ad_extracellular_filter
     final_list = []
     for protein in list_of_proteins:
         if protein.localization[0].localization == "Cytoplasmic": continue 
+        if protein.localization[0].reliability <= 2: continue
         if protein.p_ad < p_ad_no_citoplasm_filter and not protein.localization[0].localization == "Extracellular": continue 
         if protein.p_ad < p_ad_extracellular_filter and protein.localization[0].localization == "Extracellular": continue 
         if (protein.transmembrane_doms >= transmemb_doms_limit) and (protein.original_sequence_if_razor is None): continue
