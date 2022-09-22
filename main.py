@@ -280,7 +280,7 @@ def main():
             proteome_downloader(args.working_dir, args.proteome1, filename=os.path.join(args.working_dir,'proteome1.fasta'))
         except Exception as e:
             raise ValueError(f'{args.proteome1} rised the following error:\n{e}')
-        logging.debug(f'{args.proteome1} succesfully downloaded')
+        logging.debug(f'{args.proteome1} successfully downloaded')
         args = args._replace(proteome1=os.path.join(args.working_dir,'proteome1.fasta'))
     
     if args.proteome2:
@@ -297,7 +297,7 @@ def main():
                 proteome_downloader(args.working_dir, args.proteome2, filename=os.path.join(args.working_dir,'proteome2.fasta'))
             except:
                 raise logging.error(f'{args.proteome2} rised the following error:\n{e}')
-            logging.debug(f'{args.proteome2} succesfully downloaded')
+            logging.debug(f'{args.proteome2} successfully downloaded')
             args = args._replace(proteome2=os.path.join(args.working_dir,'proteome2.fasta'))   
     print("10% done")
     
@@ -435,7 +435,7 @@ def main():
     nerve_end = time.time()
     logging.debug("Done: NERVE has finished its analysis in: {:.4f} seconds".format(nerve_end-nerve_start))
     print("100% done")
-    print("End NERVE computation succesfully.")
+    print("End NERVE computation successfully.")
     
 def bashCmdMethod(bashCmd):
     """Run bash commands
