@@ -26,7 +26,7 @@ import logging
 import subprocess
 import json
 
-def dir_path(path):
+def dir_path(path:str)->str:
     '''Path validator'''
     if os.path.isdir(path) == False:
         raise argparse.ArgumentTypeError(f'{path} is not a valid path')
@@ -214,8 +214,9 @@ def get_args() -> Args:
      
     parser.add_argument('-wd','--working_dir',
                         metavar='\b', 
-                        help='path toorking directory',
-                        type=dir_path,
+                        help='path to working directory. If not existing, a working directory with the given path\
+                        is created',
+                        type=str,
                         required=False,
                         default='./'
                         )
@@ -252,20 +253,23 @@ def get_args() -> Args:
 
 def main():
     """Runs NERVE"""
-    # to record time:
+    # record time:
     nerve_start = time.time()
     print("Start NERVE 1.5")
 
     args=get_args()
+    # init workdir:
+    if args.working_dir[-1] != '/':
+        args=args._replace(working_dir=args.working_dir+'/')
+    # create working directory if does not exist
+    if os.path.isdir(args.working_dir)==False:
+        os.makedirs(args.working_dir)
     # define log file
     logging.basicConfig(filename=os.path.join(args.working_dir, 'logfile.log'),
                         filemode='w',
                         level=logging.DEBUG,
                         force=True)
-    logging.debug(f'Running NERVE with the following parameters:\n{args.print_args()}')
-    # init workdir:
-    if args.working_dir[-1] != '/':
-        args = args._replace(working_dir=args.working_dir+'/')
+    logging.debug(f'Running NERVE with the following parameters:\n{args.print_args()}')    
     # check input and download proteome:
     if os.path.isfile(args.proteome1)==True:
         logging.debug(f'{args.proteome1} found as {args.proteome1}')
@@ -277,7 +281,8 @@ def main():
     else:
         logging.debug(f'{args.proteome1} is not a file, download from Uniprot.')
         try:
-            proteome_downloader(args.working_dir, args.proteome1, filename=os.path.join(args.working_dir,'proteome1.fasta'))
+            proteome_downloader(args.working_dir, args.proteome1, filename=os.path.join(args.working_dir,\
+                                                                                        'proteome1.fasta'))
         except Exception as e:
             raise ValueError(f'{args.proteome1} rised the following error:\n{e}')
         logging.debug(f'{args.proteome1} successfully downloaded')
@@ -294,7 +299,8 @@ def main():
         else:
             logging.debug(f'{args.proteome2} is not a file, download from Uniprot.')
             try:
-                proteome_downloader(args.working_dir, args.proteome2, filename=os.path.join(args.working_dir,'proteome2.fasta'))
+                proteome_downloader(args.working_dir, args.proteome2, filename=os.path.join(args.working_dir,\
+                                                                                            'proteome2.fasta'))
             except:
                 raise logging.error(f'{args.proteome2} rised the following error:\n{e}')
             logging.debug(f'{args.proteome2} successfully downloaded')
@@ -305,12 +311,16 @@ def main():
     start=time.time()
     logging.debug(f'Start quality control of proteome1 ({args.proteome1})')
     # during the quality control, upload sequences from proteome1
-    list_of_fasta_proteins=quality_control(args.proteome1, args.working_dir, upload=True)
-    logging.debug(f'Finish quality control of proteome1 ({args.proteome1})')
+    list_of_fasta_proteins, proteome1_new_path=quality_control(args.proteome1, args.working_dir, upload=True)
+    # update input path of proteome1
+    args=args._replace(proteome1=proteome1_new_path)
+    logging.debug(f'Finish quality control of proteome1. Updated path: ({args.proteome1})')
     if args.proteome2:
         logging.debug(f'Start quality control of proteome2 ({args.proteome2})')
-        quality_control(args.proteome2, args.working_dir)
-        logging.debug(f'Finish quality control of proteome2 ({args.proteome2})')
+        proteome2_new_path=quality_control(args.proteome2, args.working_dir)
+        # update proteome2 new path 
+        args=args._replace(proteome2=proteome2_new_path)
+        logging.debug(f'Finish quality control of proteome2. Updated path: ({args.proteome2})')
     logging.debug(f'Extract protein sequences and IDs from proteome1')
     list_of_proteins = []
     for p in list_of_fasta_proteins:
@@ -364,14 +374,14 @@ def main():
     # Autoimmunity
     logging.debug("Autoimmunity start...")
     start=time.time()
-    list_of_proteins=autoimmunity(list_of_proteins, args.proteome1, args.working_dir, args.NERVE_dir, args.e_value, args.minlength, 
-                                  args.mismatch, args.substitution)
+    list_of_proteins=autoimmunity(list_of_proteins, args.proteome1, args.working_dir, args.NERVE_dir, args.e_value, 
+                                  args.minlength, args.mismatch, args.substitution)
     end=time.time()
     logging.debug("Done run in: {:.4f} seconds".format(end-start))
     print("60% done")
     
     # Mouse immunity
-    if mouse=="True":
+    if args.mouse=="True":
         start=time.time()
         logging.debug("Mouse immunity start...")
         list_of_proteins=mouse(list_of_proteins, args.working_dir, args.NERVE_dir, args.e_value, args.proteome1,
@@ -503,12 +513,17 @@ def proteome_uploader(infile:str)->list:
     """Function to read and parse fasta files. Bio SeqIO is not suitable because it chops sequence names. It 
     will be used only to validate fasta file format.
     param: infile: path to fasta file"""
+    class protein_element:
+        """Class to handle fasta file elements similarly to the biopython fasta file parser"""
+        def __init__(self, name, seq):
+            self.name=name
+            self.seq=seq
     proteome_elements=[]
     proteome_data={}
     infile=open(infile, 'r').readlines()
     for i in range(len(infile)):
+        name=infile[i].strip()[1:]
         if infile[i].startswith('>'):
-            name=infile[i].strip()[1:]
             proteome_data[name]=''
         if infile[i].startswith('>')==False:
             proteome_data[name]+=infile[i].strip()
@@ -528,15 +543,66 @@ def is_fasta(filename:str):
             return fasta
         else:
             raise ValueError(f'{filename} is not in fasta format')
-                
 
-def quality_control(path_to_fasta:str, working_dir:str, upload=False)->None:
+def proteome_uploader(infile:str)->list:
+    """Function to read and parse fasta files. Bio SeqIO is not suitable because it chops sequence names. It 
+    will be used only to validate fasta file format.
+    param: infile: path to fasta file"""
+    class protein_element:
+        """Class to handle fasta file elements similarly to the biopython fasta file parser"""
+        def __init__(self, name, seq):
+            self.name=name
+            self.seq=seq
+    proteome_elements=[]
+    proteome_data={}
+    infile=open(infile, 'r').readlines()
+    for i in range(len(infile)):
+        # init protein name
+        name=''
+        if infile[i].startswith('>'):
+            # upload protein name
+            name=infile[i].strip()[1:]
+            proteome_data[name]=''
+        # upload sequence
+        if infile[i].startswith('>')==False:
+            # in case of wrong name input:
+            if name=="":
+                raise ValueError('Encountered a sequence with wrong name formatting. Possible presence of spaces\
+                before ">" symbol.')
+            proteome_data[name]+=infile[i].strip()
+    for element in proteome_data:
+        proteome_elements.append(protein_element(element, proteome_data[element]))
+    return proteome_elements
+
+def is_fasta(filename:str):
+    """Function that rise an error if the format is not .fasta.
+    param: filename: path to fasta file"""
+    with open(filename, "r") as handle:
+        fasta = list(SeqIO.parse(handle, "fasta"))
+        # biopython silently fails if the format is not fasta returning an empty generator
+        # any() returns False if the list is empty
+        if any(fasta) == True:
+            fasta=proteome_uploader(filename)
+            return fasta
+        else:
+            raise ValueError(f'{filename} is not in fasta format')
+            
+def dir_path(path:str)->str:
+    '''Path validator'''
+    if os.path.isdir(path) == False:
+        raise argparse.ArgumentTypeError(f'{path} is not a valid path')
+    return path
+
+def quality_control(path_to_fasta:str, working_dir:str, upload=False)->dir_path:
     """
     Remove sequences with non-canonical aminoacid symbols. U (Se-Cys) is substituted with C (Cys). Returns
-    discarded_sequences.fasta containing discarded sequences and overwrites input with non discarded sequences.
-    param: path_to_fasta: full path to fasta file containing the proteome with .fasta extension;
-    param: working_dir: working directory
+    {working_dir}/discarded_sequences_{input_fasta_file_name}.fasta containing discarded sequences and\
+    {working_dir}/cleaned_{input_fasta_file_name}.fasta with cleaned sequences
+    param: path_to_fasta: full path to fasta file containing the proteome with .fasta extension. Input fasta file\
+    will not be overwritten
+    param: working_dir: working directory, were cleaned fasta file will be saved
     param: upload: if True the function returns a list containing the filtered sequences as protein_element objects
+    output: path to the cleaned fasta file named as {working_dir}/cleaned_{input_fasta_file_name}.fasta
     """
     # define logging file
     logging.basicConfig(filename=os.path.join(working_dir, 'logfile.log'),
@@ -549,42 +615,53 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False)->None:
               'U':'C'}
     filtered_sequences, discarded_sequences = [],[]
     fasta_list = is_fasta(path_to_fasta)    
-    
+    # filename needed to create the output file
+    file_name = os.path.basename(path_to_fasta)
+    output_file = os.path.join(working_dir, "_".join(["cleaned",file_name]))
+    output_discarded_sequences=os.path.join(working_dir, "_".join(["discarded_sequences",file_name]))
     for record in fasta_list:
         flag = True
-        new_seq =''
+        new_seq = ''
+        # check sequence
         for aa in str(record.seq):
             if aa not in aa_dic:
                 flag = False
                 logging.debug(f'Found non-canonical aminoacid "{aa}" in sequence {record.name}')
-            elif aa=="U":
+            elif aa == "U":
                 logging.debug(f'Found non-canonical aminoacid "{aa}" (Selenocysteine) in sequence {record.name}, substituting to Cysteine')
-                new_seq += aa_dic[aa]
+                new_seq+=aa_dic[aa]
             else:
-                new_seq += aa_dic[aa]
-        record.seq = Seq(new_seq)
-        if flag == True:
+                new_seq+=aa_dic[aa]
+        # check name
+        if ">" in record.name:
+            logging.debug(f'Found non-canonical character ">" in sequence name:\n{record.name}\nSubstituting with "*"')
+            record.name=record.name.replace(">","*")
+        record.seq=Seq(new_seq)
+        
+        if flag==True:
             filtered_sequences.append(record)
         else:    
             discarded_sequences.append(record)
             logging.debug(f'Sequence {record.name} has been discarded for the presence of non-canonical aminoacids.')     
     # output filtered overwriting input fasta file
-    filename = open(path_to_fasta, 'w')
+    filename = open(output_file, 'w')
     for sequence in filtered_sequences:
         filename.write(f'>{str(sequence.name)}\n')
         filename.write(f'{str(sequence.seq)}\n')
     #SeqIO.write(filtered_sequences, filename, "fasta")
     filename.close()
     # output discarded sequences
-    filename = open(os.path.join(working_dir, "discarded_sequences.fasta"), 'w')
+    filename = open(output_discarded_sequences, 'w')
     for sequence in discarded_sequences:
         filename.write(f'>{str(sequence.name)}\n')
         filename.write(f'{str(sequence.seq)}\n')
     #SeqIO.write(discarded_sequences, filename, "fasta")
     filename.close()
     if upload==True:
-        return filtered_sequences
-    return None
+        # return filtered sequnces and the new path
+        return filtered_sequences, output_file
+    # return the path to the cleaned file
+    return output_file
 
 def cello(list_of_proteins, working_dir, gram, proteome1)->list:
     "Run cello scraper for subcellular localization prediction"
@@ -622,7 +699,7 @@ def psortb(list_of_proteins, working_dir, gram, proteome1)->list:
     infile=open(proteome1, 'r')
     proteome1="".join(infile)
     body={'gram':gram,'seq':proteome1}
-    with open('payload.json', 'w') as f:
+    with open(os.path.join(working_dir, 'payload.json'), 'w') as f:
         json.dump(body, f)
     url="http://psortb:8080/execute"
     req = urllib.request.Request(url)
@@ -717,28 +794,32 @@ def autoimmunity(list_of_proteins, proteome1, working_dir, NERVE_dir, e_value, m
                         level=logging.DEBUG,
                         force=True)
     
-    blastx_cline = NcbiblastpCommandline(query=proteome1, db=os.path.join(NERVE_dir, "sapiens_database/sapiens"), evalue=e_value, outfmt=5, out=os.path.join(working_dir,"sapiens.xml")) # 5 is for xml 
+    blastx_cline = NcbiblastpCommandline(query=proteome1, db=os.path.join(NERVE_dir, "sapiens_database/sapiens"), \
+                                         evalue=e_value, outfmt=5, out=os.path.join(working_dir,"sapiens.xml")) # 5 is for xml 
     stdout, stderr = blastx_cline()
     #logging.debug("Warning: you can find a sapiens.xml file on your working directory which is the outputs of the autoimmunity module.\nDo not delete during the computation!\nAfter the computation it will be deleted in order to avoid future collisions.")
     # for each result in the .xml file...
     outfile=open(os.path.join(working_dir, 'autoimmunity_raw_output.txt'), 'w')
     for record in NCBIXML.parse(open(os.path.join(working_dir,"sapiens.xml"))):
-        query_name = record.query.split(' ')[0] # take only the query id 
+        query_name = record.query.split(' ')[0] # take only the query name 
         # take the right candidate to update
-        tmp_protein = list_of_proteins[0]
         for p in list_of_proteins:
-            if p.id == query_name:
+            if query_name in p.id: # do not use query_name == p.id
                 tmp_protein = p
         # for each effective alignment between the tmp candidate and the human proteome
         for alignment in record.alignments:
             for hsp in alignment.hsps: # collect all the interesting peptides
-                #print(hsp.query, hsp.query_start, hsp.match)
-                tmp_protein.list_of_shared_human_peps += Protein.Protein.hsp_match_parser(hsp.match, hsp.query, parsing_window_size=minlength, max_sub=substitution, max_mismatch=mismatch)
+                tmp_protein.list_of_shared_human_peps += Protein.Protein.hsp_match_parser(hsp.match,\
+                                                                                          hsp.query,\
+                                                                                          parsing_window_size=minlength,\
+                                                                                          max_sub=substitution,\
+                                                                                          max_mismatch=mismatch)
         # print out the peptides (if there are any)
         if len(tmp_protein.list_of_shared_human_peps) == 0:
             outfile.write("\nNo immunogenic peptides for " + query_name)   
         else:
-            outfile.write("\nList of immunogenic peptides for " + query_name + ": " + str([el['match'] for el in tmp_protein.list_of_shared_human_peps]))
+            outfile.write("\nList of immunogenic peptides for " + query_name + ": " +\
+                          str([el['match'] for el in tmp_protein.list_of_shared_human_peps]))
     outfile.close()
     os.remove(os.path.join(working_dir, "sapiens.xml")) # delete after the computation
     
@@ -780,8 +861,9 @@ def mouse(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, minlengt
     for record in NCBIXML.parse(open(os.path.join(working_dir, "mouse.xml"))):
         query_name = record.query.split(' ')[0]
         tmp_protein = list_of_proteins[0]
+        # take the right protein
         for p in list_of_proteins:
-            if p.id == query_name:
+            if query_name in p.id: # do not use query_name == p.id
                 tmp_protein = p
         for alignment in record.alignments:
             for hsp in alignment.hsps:
@@ -834,18 +916,27 @@ def conservation(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, p
     blastx_cline = NcbiblastpCommandline(query=proteome1, db=os.path.join(working_dir, 'compare_proteome/compare_proteome'), evalue=e_value, outfmt=5, out=os.path.join(working_dir,"comparison.xml")) # 5 is for xml 
     stdout, stderr = blastx_cline()
     
+    outfile=open(os.path.join(working_dir, 'conservation_raw_output.txt'), 'w')
     for record in NCBIXML.parse(open(os.path.join(working_dir,"comparison.xml"))):
         query_name = record.query.split(' ')[0] 
     
-        tmp_protein = list_of_proteins[0]
         for p in list_of_proteins:
-            if p.id == query_name:
+            if query_name in p.id: # do not use p.id == query_name
                 tmp_protein = p
                 #max_score = 0
         for alignment in record.alignments:
             for hsp in alignment.hsps:
                 #if hsp.score > max_score: max_score = hsp.score
-                tmp_protein.list_of_shared_conserv_proteome_peps += Protein.Protein.hsp_match_parser(hsp.match, hsp.query, parsing_window_size=minlength, max_sub=substitution, max_mismatch=mismatch)
+                tmp_protein.list_of_shared_conserv_proteome_peps += Protein.Protein.hsp_match_parser(hsp.match,
+                                                                                                     hsp.query,
+                                                                                                     parsing_window_size=minlength, 
+                                                                                                     max_sub=substitution, 
+                                                                                                     max_mismatch=mismatch)
+        if len(tmp_protein.list_of_shared_human_peps) == 0:
+            outfile.write("\nNo shared peptides for " + query_name)   
+        else:
+            outfile.write("\nList of shared peptides for " + query_name + ": " + str([el['match'] for el in tmp_protein.list_of_shared_human_peps]))
+    outfile.close()                                                                                              
     # sum peptides
     logging.debug('Run sum of peptides')
     for p in list_of_proteins:
@@ -922,7 +1013,7 @@ def select(list_of_proteins, p_ad_no_citoplasm_filter, p_ad_extracellular_filter
     final_list = []
     for protein in list_of_proteins:
         if protein.localization[0].localization == "Cytoplasmic": continue 
-        if protein.localization[0].reliability <= 2: continue
+        if protein.localization[0].reliability <= 3: continue
         if protein.p_ad < p_ad_no_citoplasm_filter and not protein.localization[0].localization == "Extracellular": continue 
         if protein.p_ad < p_ad_extracellular_filter and protein.localization[0].localization == "Extracellular": continue 
         if (protein.transmembrane_doms >= transmemb_doms_limit) and (protein.original_sequence_if_razor is None): continue
