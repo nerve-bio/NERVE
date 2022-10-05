@@ -1,9 +1,0 @@
-Ipython[all]
-Bio
-pycurl
-pandas
-urllib3
-pytest-shutil
-protobuf==3.19
-grpcio>=1.8.6
-openpyxl

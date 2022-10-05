@@ -2,24 +2,24 @@ version: "3.3"
 services:
   jupyter:
     build:
-      context: web
+      context: nerve
       args:
         - USER_ID=1001
         - GROUP_ID=1001
-    container_name: jupyter
+    container_name: nerve
     ports:
-      - 8880:8880
+      - 8888:8888
     depends_on:
       - psortb_http_api
     volumes:
-      - ./workdir:/my_data
+      - ../workdir:/workdir
     networks:
       - my_network
   psortb_http_api:
     build: psortb
     container_name: psortb
     ports:
-      - 8080:8080
+      - 8088:8088
     networks:
       - my_network
 networks:

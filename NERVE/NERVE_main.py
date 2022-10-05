@@ -1,8 +1,6 @@
-#!/usr/bin/python3
+#!/usr/local/bin/python
 """Run NERVE, reverse vaccinology software"""
 
-#import sys
-#sys.path.insert(0,'/NERVE')
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # disable most of the warnings 
 import time

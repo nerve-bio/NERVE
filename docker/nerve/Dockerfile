@@ -22,8 +22,9 @@ FROM intermediate AS dependencies
 RUN git clone https://github.com/flatironinstitute/DeepFRI.git
 # download model weights for DeepFri
 RUN wget https://users.flatironinstitute.org/vgligorijevic/public_www/DeepFRI_data/newest_trained_models.tar.gz
+RUN mv newest_trained_models.tar.gz trained_models.tar.gz
 RUN tar xvzf trained_models.tar.gz -C ./DeepFRI
-RUN mv trained_models ./DeepFri/trained_models
+RUN ls ./DeepFRI
 RUN git clone https://github.com/Superzchen/iFeature.git
 #COPY trained_models ./trained_models
 #COPY DeepFRI ./DeepFri
@@ -41,6 +42,7 @@ FROM dependencies AS final
 USER user
 RUN mkdir /workdir
 RUN chown user:user /workdir
+RUN ["chmod", "+x", "/NERVE/NERVE/NERVE_main.py"
 
 ENTRYPOINT ["/NERVE/NERVE/NERVE_main.py"]
 
