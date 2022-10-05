@@ -1,4 +1,4 @@
-#! python3
+#!/usr/bin/python3
 """Run NERVE, reverse vaccinology software"""
 
 #import sys
