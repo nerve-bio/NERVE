@@ -20,30 +20,33 @@ RUN pip install -r ./requirements.txt && \
 FROM intermediate AS dependencies
 # clone repositories
 RUN git clone https://github.com/flatironinstitute/DeepFRI.git
+RUN mv ./DeepFRI ./DeepFri 
+RUN python3 ./DeepFri/setup.py install
 # download model weights for DeepFri
 RUN wget https://users.flatironinstitute.org/vgligorijevic/public_www/DeepFRI_data/newest_trained_models.tar.gz
 RUN mv newest_trained_models.tar.gz trained_models.tar.gz
-RUN tar xvzf trained_models.tar.gz -C ./DeepFRI
-RUN ls ./DeepFRI
-RUN git clone https://github.com/Superzchen/iFeature.git
-#COPY trained_models ./trained_models
-#COPY DeepFRI ./DeepFri
-#COPY iFeature ./iFeature
-
-RUN git clone https://github.com/nicolagulmini/spaan && \
+RUN tar xvzf trained_models.tar.gz -C ./DeepFri
+RUN git clone https://github.com/Superzchen/iFeature.git && \
     git clone https://github.com/FranceCosta/NERVE && \
-    python3 ./DeepFri/setup.py install
+    git clone https://github.com/nicolagulmini/spaan
 
 RUN apt-get update && \
     apt-get install -y apt-utils ncbi-blast+ &&\
     apt-get install nano
 
 FROM dependencies AS final
-USER user
+ARG USER_ID
+ARG GROUP_ID
+RUN echo $USER_ID
+RUN echo $GROUP_ID
+RUN addgroup --gid $GROUP_ID user # name user as user
+RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user # name group user as user
 RUN mkdir /workdir
 RUN chown user:user /workdir
-RUN ["chmod", "+x", "/NERVE/NERVE/NERVE_main.py"
-
+# root needed to change permissions
+USER root
+RUN chmod +x /NERVE/NERVE/NERVE_main.py
+USER user
 ENTRYPOINT ["/NERVE/NERVE/NERVE_main.py"]
 
 #ARG USER_ID

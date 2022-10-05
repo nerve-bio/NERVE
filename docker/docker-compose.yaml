@@ -1,6 +1,6 @@
 version: "3.3"
 services:
-  jupyter:
+  nerve:
     build:
       context: nerve
       args:
