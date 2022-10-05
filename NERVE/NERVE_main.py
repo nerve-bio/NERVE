@@ -1,7 +1,8 @@
-#!/usr/bin/python3
-
+#! python3
 """Run NERVE, reverse vaccinology software"""
 
+#import sys
+#sys.path.insert(0,'/NERVE')
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # disable most of the warnings 
 import time
@@ -745,7 +746,7 @@ def adhesin(list_of_proteins, working_dir, NERVE_dir)->list:
                         level=logging.DEBUG,
                         force=True)
     # take the model from nerve but the methods from spaan, cause the model in spaan could be modified and tested
-    model = keras.models.load_model(os.path.join(NERVE_dir, '/models/espaan_model.h5')) 
+    model = keras.models.load_model(os.path.join(os.path.join(NERVE_dir, "models"), 'espaan_model.h5')) 
     for p in list_of_proteins:
         p.p_ad = float(model.predict([
                      np.array([aminoacids_frequencies(p.sequence)]),
@@ -999,7 +1000,8 @@ def virulence(list_of_proteins, working_dir, iFeature_dir, proteome1, NERVE_dir)
                 check_prot += 1
         datasets[i] = np.array(datasets[i])
     labels = np.array([0. for _ in range(len(datasets[0]))])
-    virulent_model = tensorflow.keras.models.load_model(os.path.join(NERVE_dir, '/models/virulent_classification_model.h5'))
+    virulent_model = tensorflow.keras.models.load_model(os.path.join(os.path.join(NERVE_dir,"models"),\
+                                                                     'virulent_classification_model.h5'))
     for i in range(len(datasets)):
         for j in range(len(datasets[i])):
             datasets[i][j] = np.array(datasets[i][j])

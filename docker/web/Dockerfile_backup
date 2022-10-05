@@ -1,0 +1,48 @@
+###
+### NERVE dependencies installation
+###
+### base image found here https://hub.docker.com/_/python
+### first stage (base, with Python 3.8)
+FROM python:3.8 AS base
+ENV PYTHONPATH "${PYTHONPATH}:/NERVE"
+ENV PYTHONPATH "${PYTHONPATH}:/spaan"
+ENV LANG C
+
+FROM base AS intermediate
+COPY requirements.txt .
+RUN pip install --upgrade setuptools
+RUN pip install -r ./requirements.txt && \
+    python -m pip install git+https://github.com/nicolagulmini/tmhmm.py
+
+FROM intermediate AS dependencies
+COPY trained_models ./trained_models
+COPY DeepFRI ./DeepFri
+COPY iFeature ./iFeature
+RUN mv trained_models ./DeepFri/trained_models
+
+RUN git clone https://github.com/nicolagulmini/spaan && \
+    git clone https://github.com/FranceCosta/NERVE && \
+    python3 ./DeepFri/setup.py install
+
+RUN apt-get update && \
+    apt-get install -y apt-utils ncbi-blast+ &&\
+    apt-get install nano
+    
+    
+FROM dependencies AS final
+ARG USER_ID
+ARG GROUP_ID
+
+EXPOSE 8880
+
+# user and group id are defined in build.sh command
+
+RUN addgroup --gid $GROUP_ID user # name user as user
+RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user # name group user as user
+RUN mkdir /my_data
+RUN chown user:user /my_data
+RUN chown user:user /NERVE
+
+USER user
+
+CMD jupyter notebook --notebook-dir=/my_data --ip='0.0.0.0' --port='8880' --allow-root --NotebookApp.token='' --NotebookApp.password=''
