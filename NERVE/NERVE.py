@@ -1,3 +1,7 @@
+#!/usr/bin/python3
+
+"""Run NERVE, reverse vaccinology software"""
+
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # disable most of the warnings 
 import time
@@ -25,6 +29,7 @@ from shutil import rmtree
 import logging
 import subprocess
 import json
+from operator import attrgetter
 
 def dir_path(path:str)->str:
     '''Path validator'''
@@ -214,8 +219,7 @@ def get_args() -> Args:
      
     parser.add_argument('-wd','--working_dir',
                         metavar='\b', 
-                        help='path to working directory. If not existing, a working directory with the given path\
-                        is created',
+                        help='path to working directory. If not existing, a working directory with the given path is created',
                         type=str,
                         required=False,
                         default='./'
@@ -255,9 +259,9 @@ def main():
     """Runs NERVE"""
     # record time:
     nerve_start = time.time()
-    print("Start NERVE 1.5")
-
     args=get_args()
+    print("Start NERVE 1.5")
+    
     # init workdir:
     if args.working_dir[-1] != '/':
         args=args._replace(working_dir=args.working_dir+'/')
@@ -432,16 +436,16 @@ def main():
         end=time.time()
         logging.debug("Done run in: {:.4f} seconds".format(end-start))
 
-    # ranking based on proteome2 similarity
-    #if args.proteome2:
-    #    final_proteins.sort(key=lambda p: p.conservation_score, reverse=True) # ranking
-    # ranking based on virulence probability
     if args.virulent=="True":
         final_proteins.sort(key=lambda p: p.p_vir, reverse=True)
+    
     # return .csv outputs
     output(final_proteins, os.path.join(args.working_dir, 'vaccine_candidates.csv'))
-    output(list_of_proteins, os.path.join(args.working_dir, 'discarded_proteins.csv'))
-    #Protein.Protein.information_to_csv(list_of_proteins)
+    # collect discarded proteins
+    final_proteins_names = [p.id for p in final_proteins]
+    discarded_proteins = [p for p in list_of_proteins if p.id not in final_proteins_names]
+    output(discarded_proteins, os.path.join(args.working_dir, 'discarded_proteins.csv'))
+    
     nerve_end = time.time()
     logging.debug("Done: NERVE has finished its analysis in: {:.4f} seconds".format(nerve_end-nerve_start))
     print("100% done")
@@ -557,18 +561,16 @@ def proteome_uploader(infile:str)->list:
     proteome_data={}
     infile=open(infile, 'r').readlines()
     for i in range(len(infile)):
-        # init protein name
-        name=''
-        if infile[i].startswith('>'):
+        # use .strip() to remove initial spaces
+        if infile[i].strip().startswith('>'):
             # upload protein name
             name=infile[i].strip()[1:]
             proteome_data[name]=''
         # upload sequence
-        if infile[i].startswith('>')==False:
+        if infile[i].strip().startswith('>')==False and infile[i].strip()!='':
             # in case of wrong name input:
-            if name=="":
-                raise ValueError('Encountered a sequence with wrong name formatting. Possible presence of spaces\
-                before ">" symbol.')
+            #if name=="":
+            #    raise ValueError('Encountered a sequence with wrong name formatting. Possible presence of spaces before ">" symbol.')
             proteome_data[name]+=infile[i].strip()
     for element in proteome_data:
         proteome_elements.append(protein_element(element, proteome_data[element]))
@@ -614,6 +616,7 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False)->dir_path:
               'G': 'G', 'H': 'H', 'L': 'L', 'R': 'R', 'W': 'W', 'A': 'A', 'V': 'V', 'E': 'E', 'Y': 'Y', 'M': 'M', 
               'U':'C'}
     filtered_sequences, discarded_sequences = [],[]
+    # control formatting
     fasta_list = is_fasta(path_to_fasta)    
     # filename needed to create the output file
     file_name = os.path.basename(path_to_fasta)
@@ -722,7 +725,11 @@ def psortb(list_of_proteins, working_dir, gram, proteome1)->list:
             # get list containing each prediction and its score
             predictions=(predictions.strip().split('\n'))
             localizations=[Localization(element.split()[0], element.split()[1]) for element in predictions]
-            #output=[l.localization for l in localizations]+[l.reliability for l in localizations]
+            # sort localizations
+            localizations = sorted(localizations, key=attrgetter('reliability'), reverse=True)
+            # set unknown prediction
+            if localizations[0].reliability <= 3.:
+                localizations = [Localization('Unknown', 0)]
             for p in list_of_proteins:
                 if p.id == id_:
                     p.localization=localizations
@@ -738,7 +745,7 @@ def adhesin(list_of_proteins, working_dir, NERVE_dir)->list:
                         level=logging.DEBUG,
                         force=True)
     # take the model from nerve but the methods from spaan, cause the model in spaan could be modified and tested
-    model = keras.models.load_model(os.path.join(NERVE_dir, 'espaan_model.h5')) 
+    model = keras.models.load_model(os.path.join(NERVE_dir, '/models/espaan_model.h5')) 
     for p in list_of_proteins:
         p.p_ad = float(model.predict([
                      np.array([aminoacids_frequencies(p.sequence)]),
@@ -794,7 +801,7 @@ def autoimmunity(list_of_proteins, proteome1, working_dir, NERVE_dir, e_value, m
                         level=logging.DEBUG,
                         force=True)
     
-    blastx_cline = NcbiblastpCommandline(query=proteome1, db=os.path.join(NERVE_dir, "sapiens_database/sapiens"), \
+    blastx_cline = NcbiblastpCommandline(query=proteome1, db=os.path.join(NERVE_dir, "database/sapiens_database/sapiens"), \
                                          evalue=e_value, outfmt=5, out=os.path.join(working_dir,"sapiens.xml")) # 5 is for xml 
     stdout, stderr = blastx_cline()
     #logging.debug("Warning: you can find a sapiens.xml file on your working directory which is the outputs of the autoimmunity module.\nDo not delete during the computation!\nAfter the computation it will be deleted in order to avoid future collisions.")
@@ -839,12 +846,17 @@ def autoimmunity(list_of_proteins, proteome1, working_dir, NERVE_dir, e_value, m
                     score += len(tmp_match)
                 prev_match = tmp_match
         p.sapiens_peptides_sum = score/p.length
-    mhcpep = pandas.read_csv(os.path.join(NERVE_dir, "mhcpep/mhcpep_sapiens.csv"), skipinitialspace=True)
-    number_of_proteins = len(list_of_proteins)
+        
+    # store peptides from comparison with human recognized bacterial mhcpep
+    mhcpep = pandas.read_csv(os.path.join(NERVE_dir, "database/mhcpep/mhcpep_sapiens.csv"), skipinitialspace=True)
+    #number_of_proteins = len(list_of_proteins)
     for p in list_of_proteins:
         for seq in p.list_of_shared_human_peps:
+            #print(p.id)
             for pep in mhcpep['Epitope.2']:
                 tmp_matches = Protein.Protein.peptide_comparison(seq, pep)
+                #if len(str(tmp_matches))>3:
+                #    print(tmp_matches)
                 p.list_of_peptides_from_comparison_with_mhcpep_sapiens += tmp_matches
     return list_of_proteins
             
@@ -855,7 +867,7 @@ def mouse(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, minlengt
                         filemode='a',
                         level=logging.DEBUG,
                         force=True)
-    blastx_cline = NcbiblastpCommandline(query=proteome1, db=os.path.join(NERVE_dir,"mouse_database/mouse"), evalue=e_value, outfmt=5, out=os.path.join(working_dir, "mouse.xml"))
+    blastx_cline = NcbiblastpCommandline(query=proteome1, db=os.path.join(NERVE_dir,"database/mouse_database/mouse"), evalue=e_value, outfmt=5, out=os.path.join(working_dir, "mouse.xml"))
     stdout, stderr = blastx_cline()
     outfile=open(os.path.join(working_dir, 'mouse_immunity_raw_output.txt'), 'w')
     for record in NCBIXML.parse(open(os.path.join(working_dir, "mouse.xml"))):
@@ -876,8 +888,9 @@ def mouse(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, minlengt
     outfile.close()
     os.remove(os.path.join(working_dir, "mouse.xml")) # delete after the computation
     
-    mhcpep = pandas.read_csv(os.path.join(NERVE_dir, "mhcpep/mhcpep_mouse.csv"), skipinitialspace=True)
-    number_of_proteins = len(list_of_proteins)
+    # store peptides from comparison with mouse recognized bacterial mhcpep
+    mhcpep = pandas.read_csv(os.path.join(NERVE_dir, "database/mhcpep/mhcpep_mouse.csv"), skipinitialspace=True)
+    #number_of_proteins = len(list_of_proteins)
     for p in list_of_proteins:
         for seq in p.list_of_shared_mouse_peps:
             for pep in mhcpep['Epitope.2']:
@@ -986,7 +999,7 @@ def virulence(list_of_proteins, working_dir, iFeature_dir, proteome1, NERVE_dir)
                 check_prot += 1
         datasets[i] = np.array(datasets[i])
     labels = np.array([0. for _ in range(len(datasets[0]))])
-    virulent_model = tensorflow.keras.models.load_model(os.path.join(NERVE_dir, 'virulent_classification_model.h5'))
+    virulent_model = tensorflow.keras.models.load_model(os.path.join(NERVE_dir, '/models/virulent_classification_model.h5'))
     for i in range(len(datasets)):
         for j in range(len(datasets[i])):
             datasets[i][j] = np.array(datasets[i][j])
@@ -1013,7 +1026,7 @@ def select(list_of_proteins, p_ad_no_citoplasm_filter, p_ad_extracellular_filter
     final_list = []
     for protein in list_of_proteins:
         if protein.localization[0].localization == "Cytoplasmic": continue 
-        if protein.localization[0].reliability <= 3: continue
+        #if protein.localization[0].reliability <= 3: continue
         if protein.p_ad < p_ad_no_citoplasm_filter and not protein.localization[0].localization == "Extracellular": continue 
         if protein.p_ad < p_ad_extracellular_filter and protein.localization[0].localization == "Extracellular": continue 
         if (protein.transmembrane_doms >= transmemb_doms_limit) and (protein.original_sequence_if_razor is None): continue
@@ -1040,9 +1053,9 @@ def output(list_of_proteins, outfile):
                  str("".join([str(round(protein.p_vir,4)) if protein.p_vir!=None else ""])),
                  str("".join([str(round(protein.p_ad, 4)) if protein.p_ad!=None else ""])),
                  str("".join([str(round(protein.conservation_score, 4)) if protein.conservation_score!=None else ""])),
-                 str(", ".join([str(dic['match']) for dic in protein.list_of_shared_human_peps if len(protein.list_of_shared_human_peps)>0])),
-                 str(", ".join([str(dic['match']) for dic in protein.list_of_shared_mouse_peps if len(protein.list_of_shared_mouse_peps)>0])),
-                 str(", ".join([str(dic['match']) for dic in protein.list_of_shared_conserv_proteome_peps if len(protein.list_of_shared_conserv_proteome_peps)>0])),
+                 str("".join(str(len([str(dic['match']) for dic in protein.list_of_shared_human_peps if len(protein.list_of_shared_human_peps)>0])))),
+                 str("".join(str(len([str(dic['match']) for dic in protein.list_of_shared_mouse_peps if len(protein.list_of_shared_mouse_peps)>0])))),
+                 str("".join(str(len([str(dic['match']) for dic in protein.list_of_shared_conserv_proteome_peps if len(protein.list_of_shared_conserv_proteome_peps)>0])))),
                  str("".join([str(round(protein.sapiens_peptides_sum,4)) if protein.sapiens_peptides_sum!=None else "0"])),
                  str("".join([str(round(protein.mouse_peptides_sum,4)) if protein.mouse_peptides_sum!=None else "0"])),
                  str("".join([str(protein.annotations) if protein.annotations!=None else ""])),
@@ -1050,7 +1063,7 @@ def output(list_of_proteins, outfile):
                  str(", ".join(list(set(protein.list_of_peptides_from_comparison_with_mhcpep_mouse)))),  
                  str(protein.sequence),
                  str("".join([str(protein.original_sequence_if_razor) if protein.original_sequence_if_razor!=None else ""])),
-                 str(protein.tmhmm_seq)
+                 str("".join([str(protein.tmhmm_seq) if "M" in str(protein.tmhmm_seq) else ""]))
                  ] for protein in list_of_proteins
                 ], 
                 columns= ['id ',

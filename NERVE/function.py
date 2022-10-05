@@ -1,4 +1,6 @@
-# #!/usr/bin/python3
+#!/usr/bin/python3
+
+"""Runs protein function prediction with DeepFri"""
 
 import argparse, os, urllib, subprocess
 import pandas as pd

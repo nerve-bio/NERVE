@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+"""Runs protein subcellular localization with cello on the web and parses output webpage to collect the results. Deprecated module"""
+
 import os
 from urllib.parse import urlencode
 import pycurl
