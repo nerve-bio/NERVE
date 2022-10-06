@@ -37,31 +37,14 @@ RUN apt-get update && \
 FROM dependencies AS final
 ARG USER_ID
 ARG GROUP_ID
-RUN echo $USER_ID
-RUN echo $GROUP_ID
+EXPOSE 8880
 RUN addgroup --gid $GROUP_ID user # name user as user
 RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user # name group user as user
 RUN mkdir /workdir
-RUN chown user:user /workdir
-# root needed to change permissions
-USER root
+RUN chown -R user:user /workdir
 RUN chmod +x /NERVE/NERVE/NERVE_main.py
 USER user
-ENTRYPOINT ["/NERVE/NERVE/NERVE_main.py"]
 
-#ARG USER_ID
-#ARG GROUP_ID
-
-#EXPOSE 8888
-
-# user and group id are defined in build.sh command
-
-#RUN addgroup --gid $GROUP_ID user # name user as user
-#RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user # name group user as user
-
-#RUN chown user:user /NERVE
-
-
-
-#CMD jupyter notebook --notebook-dir=/my_data --ip='0.0.0.0' --port='8888' --allow-root --NotebookApp.token='' --NotebookApp.password=''
+CMD jupyter notebook --notebook-dir=/workdir --ip='0.0.0.0' --port='8880' --allow-root --NotebookApp.token='' --NotebookApp.password=''
+#ENTRYPOINT ["/NERVE/NERVE/NERVE_main.py"]
 

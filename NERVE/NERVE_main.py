@@ -228,21 +228,21 @@ def get_args() -> Args:
                         help='path to NERVE folder',
                         type=dir_path,
                         required=False,
-                        default='../NERVE'
+                        default='/NERVE'
                         )
     parser.add_argument('-id','--iFeature_dir',
                         metavar='\b', 
                         help='NERVE folder',
                         type=dir_path,
                         required=False,
-                        default='../iFeature'
+                        default='/iFeature'
                         )
     parser.add_argument('-dfd','--DeepFri_dir',
                         metavar='\b', 
                         help='NERVE folder',
                         type=dir_path,
                         required=False,
-                        default='../DeepFri'
+                        default='/DeepFri'
                         )
     
     
@@ -659,6 +659,8 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False)->dir_path:
         filename.write(f'{str(sequence.seq)}\n')
     #SeqIO.write(discarded_sequences, filename, "fasta")
     filename.close()
+    # repath output_file to be absolute
+    output_file=os.path.join('/', os.path.relpath(output_file, start = '/'))
     if upload==True:
         # return filtered sequnces and the new path
         return filtered_sequences, output_file
