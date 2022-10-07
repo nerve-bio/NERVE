@@ -21,7 +21,7 @@ cd ./NERVE/docker
 ```
 6) open a brouser and navigate to local host: http://localhost:8880
 
-7) follow instructions in [example.ipynb](/NERVE/docker/workdir/example.ipynb) notebook
+7) follow instructions in [example.ipynb](/docker/workdir/example.ipynb) notebook
 
 
 
