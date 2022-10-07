@@ -1,3 +1,5 @@
-__pycache__
+./__pycache__
 *.pyc
-/docker/
+./docker/
+./.gitignore
+./workdir/UP000000425/

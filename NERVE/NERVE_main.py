@@ -128,13 +128,13 @@ def get_args() -> Args:
                         )
     parser.add_argument('-p1','--proteome1',
                         metavar='\b', 
-                        help='Path to proteome, alternative Uniprot proteome ID (https://www.uniprot.org/proteomes/?query=&sort=score).',
+                        help='Path to proteome or Uniprot proteome ID (see: https://www.uniprot.org/proteomes/?query=&sort=score).',
                         type=str,
                         required=True,
                         )
     parser.add_argument('-p2','--proteome2',
                         metavar='\b', 
-                        help='Path to proteome, alternative Uniprot proteome ID (https://www.uniprot.org/proteomes/?query=&sort=score).',
+                        help='Path to proteome or Uniprot proteome ID (see: https://www.uniprot.org/proteomes/?query=&sort=score).',
                         type=str,
                         required=False,
                         )
@@ -318,6 +318,8 @@ def main():
     # update input path of proteome1
     args=args._replace(proteome1=proteome1_new_path)
     logging.debug(f'Finish quality control of proteome1. Updated path: ({args.proteome1})')
+    if len(list_of_fasta_proteins) == 0:
+        raise ValueError(f'All input protein sequences have been discarded. See {os.path.join(args.working_dir, "logfile.log")} for more information.')
     if args.proteome2:
         logging.debug(f'Start quality control of proteome2 ({args.proteome2})')
         proteome2_new_path=quality_control(args.proteome2, args.working_dir)
@@ -508,7 +510,7 @@ def proteome_downloader(working_dir, proteome_id, filename='input_proteome.fasta
                 text_file.close()
             except AssertionError as e:
                 logging.debug(f'28upid is not a valid building block')
-                print(f'Unable to download proteome {proteome_id} due to invalid proteome ID Uniprot API failure or wrong path. In case of uniprot API failure provide the proteome as file.')
+                print(f'Unable to download proteome {proteome_id} due to invalid proteome ID, Uniprot API failure or wrong path. In case of uniprot API failure provide the proteome as file.')
                 raise SystemExit(e)
     return None
 
@@ -533,19 +535,6 @@ def proteome_uploader(infile:str)->list:
     for element in proteome_data:
         proteome_elements.append(protein_element(element, proteome_data[element]))
     return proteome_elements
-
-def is_fasta(filename:str):
-    """Function that rise an error if the format is not .fasta.
-    param: filename: path to fasta file"""
-    with open(filename, "r") as handle:
-        fasta = list(SeqIO.parse(handle, "fasta"))
-        # biopython silently fails if the format is not fasta returning an empty generator
-        # any() returns False if the list is empty
-        if any(fasta) == True:
-            fasta=proteome_uploader(filename)
-            return fasta
-        else:
-            raise ValueError(f'{filename} is not in fasta format')
 
 def proteome_uploader(infile:str)->list:
     """Function to read and parse fasta files. Bio SeqIO is not suitable because it chops sequence names. It 
@@ -628,9 +617,9 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False)->dir_path:
         for aa in str(record.seq):
             if aa not in aa_dic:
                 flag = False
-                logging.debug(f'Found non-canonical aminoacid "{aa}" in sequence {record.name}')
+                logging.debug(f'Found non-canonical aminoacid "{aa}" in sequence: {record.name}')
             elif aa == "U":
-                logging.debug(f'Found non-canonical aminoacid "{aa}" (Selenocysteine) in sequence {record.name}, substituting to Cysteine')
+                logging.debug(f'Found non-canonical aminoacid "{aa}" (Selenocysteine) in sequence: {record.name}, substituting to Cysteine')
                 new_seq+=aa_dic[aa]
             else:
                 new_seq+=aa_dic[aa]

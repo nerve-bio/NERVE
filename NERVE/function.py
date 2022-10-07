@@ -76,6 +76,11 @@ def main() -> None:
     #print(f'Results are saved as annotation.csv. This is a preview:\n{final_df}')
 
 def deep_fri(path_to_fasta, DeepFri_dir, working_dir):
+    """Runs DeepFri prediction of protein function
+       param: path_to_fasta: path to input fasta sequence file
+       param: DeepFri_dir: path to /DeepFri/ directory
+       param: working_dir: path to working directory
+       output: pandas DataFrame containing fasta ID associated to protein function"""
     current_dir = os.getcwd()
     #working_dir+="/" if working_dir[-1] != "/" else ""
     if working_dir[0] == ".":

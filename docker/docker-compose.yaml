@@ -4,8 +4,8 @@ services:
     build:
       context: nerve
       args:
-        - USER_ID=1001
-        - GROUP_ID=1001
+        - USER_ID="${USER_ID}"
+        - GROUP_ID="${GROUP_ID}"
     container_name: nerve
     ports:
       - 8880:8880
