@@ -1,5 +1,0 @@
-./__pycache__
-*.pyc
-./.gitignore
-./docker/workdir/UP000000425/
-./docker/psortb/src/temp_wd/
