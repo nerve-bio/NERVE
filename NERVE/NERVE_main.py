@@ -721,7 +721,7 @@ def psortb(list_of_proteins, working_dir, gram, proteome1)->list:
             if localizations[0].reliability <= 3.:
                 localizations = [Localization('Unknown', 0)]
             for p in list_of_proteins:
-                if p.id == id_:
+                if id_ in p.id:
                     p.localization=localizations
     # save psortb raw predictions
     #df.to_csv(os.path.join(working_dir, 'psortb_predictions.csv'))

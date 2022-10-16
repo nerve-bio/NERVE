@@ -16,7 +16,6 @@ COPY requirements.txt .
 RUN pip install --upgrade setuptools
 RUN pip install -r ./requirements.txt && \
     python -m pip install git+https://github.com/nicolagulmini/tmhmm.py
-#RUN pip install nbconvert==7.2.0 --force-reinstall
 
 FROM intermediate AS dependencies
 # clone repositories
