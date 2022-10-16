@@ -7,10 +7,10 @@ from subprocess import getstatusoutput
 
 # global test variables
 
-PRG = "/NERVE/NERVE/NERVE_main.py"
+PRG = "../NERVE/NERVE_main.py"
 RUN = f'python {PRG}'
-WORKDIR = "/my_data/tests/output_data/"
-INPUTDIR = "/my_data/tests/input_data/"
+WORKDIR = "./output_data/"
+INPUTDIR = "./input_data/"
 TEST1 = ('proteome1', f'--gram n --proteome1 {INPUTDIR}proteome1.fasta --working_dir\
           {WORKDIR}proteome1 --annotation False --razor False --select False --mouse False', """,id ,uniprot_accession_code,length,transmembrane_doms,localization,localization score,virulence_probability,adhesin_probability,conservation_score,list_of_shared_human_peps,list_of_shared_mouse_peps,list_of_shared_conserv_proteome_peps,human_peptides_sum,mouse_peptides_sum,annotations,list_of_peptides_from_comparison_with_mhcpep_sapiens,list_of_peptides_from_comparison_with_mhcpep_mouse,sequence,original_sequence_if_razor,tmhmm_seq
 0,sp|P0C277|FOLD_NEIMB Bifunctional protein FolD OS=Neisseria meningitidis serogroup B (strain MC58) OX=122586 GN=folD PE=3 SV=1,P0C277,284,0,Periplasmic,5.96,0.1789,0.0243,,117,0,0,1.0599,0,,,,MSAQLINGKEVSQKRLQAVAEAVAQRQQNNLHHPCLAVVLVGGDPASAVYVRNKKTACQKCGIKSLSYELPESTSQEELLALVDRLNADSEVDGILVQLPLPKHLDSQAVLERISPDKDVDGFHPYNVGRLAVKMPLMRPCTPKGVMTLLEAYGIDPKGKKAVVVGASNIVGRPQALELLLARATVTVCHSATENLTDEVAGADILVVGVGIPNFVKGEWIKPGAVVIDVGINRLDDGSLCGDVEFETAKERAAMITPVPGGVGPMTIATLMENTLHAASLHDA,,

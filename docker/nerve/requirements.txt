@@ -7,3 +7,4 @@ pytest-shutil==1.7.0
 protobuf==3.19
 grpcio>=1.8.6
 openpyxl==3.0.10
+nbconvert==7.2.0

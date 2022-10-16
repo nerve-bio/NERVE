@@ -16,6 +16,7 @@ COPY requirements.txt .
 RUN pip install --upgrade setuptools
 RUN pip install -r ./requirements.txt && \
     python -m pip install git+https://github.com/nicolagulmini/tmhmm.py
+#RUN pip install nbconvert==7.2.0 --force-reinstall
 
 FROM intermediate AS dependencies
 # clone repositories
@@ -42,6 +43,7 @@ RUN addgroup --gid $GROUP_ID user # name user as user
 RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user # name group user as user
 RUN mkdir /workdir
 RUN chown -R user:user /workdir
+#VOLUME ["/workdir"]
 RUN chmod +x /NERVE/NERVE/NERVE_main.py
 USER user
 
