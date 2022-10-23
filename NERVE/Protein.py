@@ -1,8 +1,10 @@
+"""Class and methods to store entry information"""
+
 class Protein:
 		
 	def __init__(self, identifier, sequence_string):
 		self.id = identifier
-		self.accession = identifier.split('|')[1] if '|' in identifier else None
+		self.accession = identifier.split('|')[1] if identifier.count("|")==2 else None
 		self.sequence = sequence_string # the sequence used for the analyses
 		self.original_sequence_if_razor = None # put the original sequence if razor is performed
 		self.length = len(sequence_string)
@@ -16,7 +18,7 @@ class Protein:
 		self.list_of_peptides_from_comparison_with_mhcpep_sapiens = [] # here a list of mhcpep match
 		self.list_of_peptides_from_comparison_with_mhcpep_mouse = [] # here a list of mhcpep match
 		self.razor_loops = []
-		self.p_vir = 0
+		self.p_vir = None
 		self.sapiens_peptides_sum = None
 		self.mouse_peptides_sum = None
 		self.conservation_score = None
@@ -105,47 +107,48 @@ class Protein:
 	def information_to_csv(list_of_proteins):
 		print("information_to_csv method call: this method returns a .csv file with the available information about the given proteins, in the same order as in the list.")
 		from pandas import DataFrame
-		DataFrame([
-				[str(protein.id),
-				 str(protein.accession),
-				 str(protein.sequence),
-				 str(protein.original_sequence_if_razor),
-				 str(protein.length),
-				 str(protein.localization),
-				 str(protein.p_ad),
-				 str(protein.transmembrane_doms),
-				 str(protein.tmhmm_seq),
-				 str(protein.list_of_shared_human_peps),
-				 str(protein.list_of_shared_mouse_peps),
-				 str(protein.list_of_shared_conserv_proteome_peps),
-				 str(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens),
-				 str(protein.list_of_peptides_from_comparison_with_mhcpep_mouse),
-				 str(protein.razor_loops),
-				 str(protein.p_vir),
-				 str(protein.sapiens_peptides_sum),
-				 str(protein.mouse_peptides_sum),
-				 str(protein.conservation_score)
-				 ] for protein in list_of_proteins
-				], 
-				columns= ['id ',
-				 	'accession',
-				 	'sequence',
-				 	'original_sequence_if_razor',
-				 	'length',
-				 	'localization',
-				 	'p_ad',
-				 	'transmembrane_doms',
-				 	'tmhmm_seq',
-				 	'list_of_shared_human_peps',
-				 	'list_of_shared_mouse_peps',
-				 	'list_of_shared_conserv_proteome_peps',
-				 	'list_of_peptides_from_comparison_with_mhcpep_sapiens',
-				 	'list_of_peptides_from_comparison_with_mhcpep_mouse',
-				 	'razor_loops',
-				 	'p_vir',
-				 	'sapiens_peptides_sum',
-				 	'mouse_peptides_sum',
-				 	'conservation_score'
-					 ]
-		
-				).to_csv('output.csv') 
+		DataFrame([[str(protein.id),
+                 str("".join([str(protein.accession) if protein.accession!=None else ""])),
+                 str(protein.length),
+                 str(protein.transmembrane_doms),
+                 str(protein.localization[0].localization),
+                 str(protein.localization[0].reliability),
+                 #str(", ".join([str(element) for element in protein.localization])),
+                 str("".join([str(round(protein.p_vir,4)) if protein.p_vir!=None else ""])),
+                 str("".join([str(round(protein.p_ad, 4)) if protein.p_ad!=None else ""])),
+                 str("".join([str(round(protein.conservation_score, 4)) if protein.conservation_score!=None else ""])),
+                 str("".join(str(len([str(dic['match']) for dic in protein.list_of_shared_human_peps if len(protein.list_of_shared_human_peps)>0])))),
+                 str("".join(str(len([str(dic['match']) for dic in protein.list_of_shared_mouse_peps if len(protein.list_of_shared_mouse_peps)>0])))),
+                 str("".join(str(len([str(dic['match']) for dic in protein.list_of_shared_conserv_proteome_peps if len(protein.list_of_shared_conserv_proteome_peps)>0])))),
+                 str("".join([str(round(protein.sapiens_peptides_sum,4)) if protein.sapiens_peptides_sum!=None else "0"])),
+                 str("".join([str(round(protein.mouse_peptides_sum,4)) if protein.mouse_peptides_sum!=None else "0"])),
+                 str("".join([str(protein.annotations) if protein.annotations!=None else ""])),
+                 str(", ".join(list(set(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens)))), 
+                 str(", ".join(list(set(protein.list_of_peptides_from_comparison_with_mhcpep_mouse)))),  
+                 str(protein.sequence),
+                 str("".join([str(protein.original_sequence_if_razor) if protein.original_sequence_if_razor!=None else ""])),
+                 str("".join([str(protein.tmhmm_seq) if "M" in str(protein.tmhmm_seq) else ""]))
+                 ] for protein in list_of_proteins
+                ], 
+                columns= ['id ',
+                    'uniprot_accession_code',
+                    'length',
+                    'transmembrane_doms',
+                    'localization',
+                    'localization score',
+                    'virulence_probability',
+                    'adhesin_probability',
+                    'conservation_score',
+                    'list_of_shared_human_peps',
+                    'list_of_shared_mouse_peps',
+                    'list_of_shared_conserv_proteome_peps',
+                    'human_peptides_sum',
+                    'mouse_peptides_sum',
+                    'annotations',
+                    'list_of_peptides_from_comparison_with_mhcpep_sapiens',
+                    'list_of_peptides_from_comparison_with_mhcpep_mouse',
+                    'sequence',
+                    'original_sequence_if_razor',
+                    'tmhmm_seq'
+                     ]
+                ).to_csv(outfile) 

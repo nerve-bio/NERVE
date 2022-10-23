@@ -1,0 +1,27 @@
+version: "3.3"
+services:
+  nerve:
+    build:
+      context: nerve
+      args:
+        - USER_ID="${USER_ID}"
+        - GROUP_ID="${GROUP_ID}"
+    container_name: nerve
+    ports:
+      - 8880:8880
+    depends_on:
+      - psortb_http_api
+    volumes:
+      - ./:/workdir
+    networks:
+      - my_network
+  psortb_http_api:
+    build: psortb
+    container_name: psortb
+    ports:
+      - 8080:8080
+    networks:
+      - my_network
+networks:
+  my_network:
+    driver: bridge

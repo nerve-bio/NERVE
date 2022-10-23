@@ -2,6 +2,27 @@
 
 Please visit https://nicolagulmini.github.io/NERVE/.
 
+### Stand-alone usage:
+NERVE can be used as a stand alone verison taking advantage of [Docker](https://www.docker.com/) and [Docker-compose](https://docs.docker.com/engine/reference/commandline/compose/) in unix systems.
+
+1) install Docker following [these instructions](https://docs.docker.com/engine/install/) and [the post-installation procedure](https://docs.docker.com/engine/install/linux-postinstall/)
+2) install docker-compose as explained [here](https://docs.docker.com/compose/install/linux/)
+3) clone repository:
+```
+git clone git@github.com:/nicolagulmini/NERVE.git
+```
+4) cd to docker folder
+```
+cd ./NERVE/docker
+```
+5) build docker containers. This takes a few minutes
+```
+./build_run.sh
+```
+6) open a browser and navigate to local host: http://localhost:8880
+
+7) follow instructions in [example.ipynb](/docker/workdir/example.ipynb) notebook
+
 
 
 <!--

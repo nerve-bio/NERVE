@@ -1,4 +1,6 @@
-# #!/usr/bin/python3
+#!/usr/bin/python3
+
+"""Runs protein function prediction with DeepFri"""
 
 import argparse, os, urllib, subprocess
 import pandas as pd
@@ -74,6 +76,11 @@ def main() -> None:
     #print(f'Results are saved as annotation.csv. This is a preview:\n{final_df}')
 
 def deep_fri(path_to_fasta, DeepFri_dir, working_dir):
+    """Runs DeepFri prediction of protein function
+       param: path_to_fasta: path to input fasta sequence file
+       param: DeepFri_dir: path to /DeepFri/ directory
+       param: working_dir: path to working directory
+       output: pandas DataFrame containing fasta ID associated to protein function"""
     current_dir = os.getcwd()
     #working_dir+="/" if working_dir[-1] != "/" else ""
     if working_dir[0] == ".":
@@ -137,7 +144,7 @@ def DeepFriParser(path_to_infile: open) -> pd.DataFrame:
         Protein = row_tuples[0].id_
         sorted_row_tuples = sorted(row_tuples, key=attrgetter('score'), reverse=True)
         # get only gene ontology values
-        GOs = f'DeepFri predictions: {" | ".join([element.GO for element in sorted_row_tuples])}'
+        GOs = f'DeepFri predictions: {" | ".join([element.GO for element in sorted_row_tuples if element.score >=0.3])}'
         listout.append([Protein, GOs])
     output_df = pd.DataFrame(listout, columns = ['Protein', 'Function'])
     return output_df
