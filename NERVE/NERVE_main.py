@@ -1024,6 +1024,7 @@ def select(list_of_proteins, p_ad_no_citoplasm_filter, p_ad_extracellular_filter
         if protein.sapiens_peptides_sum > .15: continue
         if len(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens) >= 1: continue
         if (float(protein.localization[0].reliability) < 7.49) and (protein.p_ad < padlimit): continue
+        # proteins with Unknown localization have score==0
         #if (protein.localization[0].localization == "Unknown") and (protein.p_ad < padlimit): continue
         if mouse==True:
             if protein.mouse_peptides_sum > mouse_peptides_sum_limit: continue 
