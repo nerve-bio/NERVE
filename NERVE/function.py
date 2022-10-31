@@ -131,7 +131,7 @@ def retrieve_entry_function(fastas: str, outfile: str) -> pd.DataFrame:
 def DeepFriParser(path_to_infile: open) -> pd.DataFrame:
     '''Parses DeepFri input file
     param: path_to_infile: path to .csv output file produced by DeepFri program
-    output: output_df: dataframe with Protein and Function fields where protein is the input protein fasta id and function is the | separated list of GO terms in descending order based on their score'''
+    output: output_df: dataframe with Protein and Function fields where protein is the input protein fasta id and function is the | separated list of GO terms in descending order based on their score. Only elements with a score >0.5 are considered valid'''
     # import the .csv file in a table-like format using pandas module 
     df = pd.read_csv(path_to_infile, comment='#')
     # rearrange information output
@@ -144,7 +144,7 @@ def DeepFriParser(path_to_infile: open) -> pd.DataFrame:
         Protein = row_tuples[0].id_
         sorted_row_tuples = sorted(row_tuples, key=attrgetter('score'), reverse=True)
         # get only gene ontology values
-        GOs = f'DeepFri predictions: {" | ".join([element.GO for element in sorted_row_tuples if element.score >=0.3])}'
+        GOs = f'DeepFri predictions: {" | ".join([element.GO for element in sorted_row_tuples if element.score >0.5])}'
         listout.append([Protein, GOs])
     output_df = pd.DataFrame(listout, columns = ['Protein', 'Function'])
     return output_df
