@@ -52,28 +52,15 @@ def main() -> None:
     # get command-line arguments
     args = get_args()
     
-    # set directories
-    #current_dir = os.getcwd()
-    #DeepFri_dir = os.path.join(current_dir, "DeepFri")
-    
-    # interrogate uniprot for function
-    fastas = open(args.path_to_fastas, 'r')
-    fasta_list = list(SeqIO.parse(fastas, "fasta"))
-    outfile = os.path.join(working_dir, "deep_fri_input.fa")
-    UniProt_df = retrieve_entry_function(fastas, outfile)
-    
-    DeepFri_df = deep_fri("deep_fri_input.fa", DeepFri_dir)
-    
-    # merge the two dfs
-    final_df = pd.concat([UniProt_df, DeepFri_df])
+    DeepFri_df = deep_fri(args.path_to_fasta, args.DeepFri_dir, args.working_dir)
     
     # add excluded proteins
-    catched_proteins = final_df['Protein'].unique()
+    catched_proteins = DeepFri_df['Protein'].unique()
     listout = [[protein.id, 'Uknown function'] for protein in fasta_list if protein.id not in catched_proteins]
     missing_df = pd.DataFrame(listout, columns=['Protein', 'Function'])
-    final_df = pd.concat([final_df, missing_df])
+    final_df = pd.concat([DeepFri_df, missing_df])
     final_df.to_csv(os.path.join(current_dir, 'annotation.csv'), index = False)
-    #print(f'Results are saved as annotation.csv. This is a preview:\n{final_df}')
+    print(f'Results are saved as annotation.csv. This is a preview:\n{final_df}')
 
 def deep_fri(path_to_fasta, DeepFri_dir, working_dir):
     """Runs DeepFri prediction of protein function
@@ -95,38 +82,6 @@ def deep_fri(path_to_fasta, DeepFri_dir, working_dir):
     # parse DeepFri results
     DeepFri_df = DeepFriParser(os.path.join(working_dir, '_MF_predictions.csv'))
     return DeepFri_df
-
-def retrieve_entry_function(fastas: str, outfile: str) -> pd.DataFrame: 
-    '''Retrieves Uniprot annotated entry function of provided ACs and returns the data in a dictionary format
-    param: fasta_list: list of Biopython Seq.IO objects containing protein ids and sequences to be evaluated;
-    param: outfile: fasta file output containing sequences whose function was not found in the Uniprot
-    output: output_df: data frame with Protein and Function fields where protein is the input fasta id and function is the annotated protein function from the uniprot database'''
-    fasta_list = list(SeqIO.parse(fastas, "fasta"))
-    dic, tdp, AC, = [{}, [], str()]
-    # extract functions from uniprot
-    for p in fasta_list:
-        try:
-            Id = p.id
-            AC = p.id.split("|")[1]
-            handle = urllib.request.urlopen(f"http://www.uniprot.org/uniprot/{AC}.xml")
-            record = SeqIO.read(handle, "uniprot-xml")
-            dic[Id] = [f'Uniprot annotations: {" | ".join([i for i in record.annotations["comment_function"]])}']
-        except KeyError as e:
-            if e.args[0] == 'comment_function':
-                tdp.append(p)  
-    # write outfile with proteins whose function was not found
-    filename = open(outfile, 'w')
-    SeqIO.write(tdp, filename, "fasta")
-    filename.close()
-    # create and rearrange dataframe
-    output_df = pd.DataFrame.from_dict(dic, orient='index')
-    if len(output_df.columns) == 2:
-       output_df = output_df.reset_index()
-       output_df.columns = ['Protein', 'Function']
-       return output_df
-    else:
-       print("No Uniprot matches found")
-       return pd.DataFrame([['', '']], columns=['Protein', 'Function'])
 
 def DeepFriParser(path_to_infile: open) -> pd.DataFrame:
     '''Parses DeepFri input file
