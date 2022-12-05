@@ -576,12 +576,6 @@ def is_fasta(filename:str):
             return fasta
         else:
             raise ValueError(f'{filename} is not in fasta format')
-            
-def dir_path(path:str)->str:
-    '''Path validator'''
-    if os.path.isdir(path) == False:
-        raise argparse.ArgumentTypeError(f'{path} is not a valid path')
-    return path
 
 def quality_control(path_to_fasta:str, working_dir:str, upload=False)->dir_path:
     """
@@ -1024,6 +1018,7 @@ def select(list_of_proteins, p_ad_no_citoplasm_filter, p_ad_extracellular_filter
         if protein.sapiens_peptides_sum > .15: continue
         if len(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens) >= 1: continue
         if (float(protein.localization[0].reliability) < 7.49) and (protein.p_ad < padlimit): continue
+        # proteins with Unknown localization have score==0
         #if (protein.localization[0].localization == "Unknown") and (protein.p_ad < padlimit): continue
         if mouse==True:
             if protein.mouse_peptides_sum > mouse_peptides_sum_limit: continue 
@@ -1066,9 +1061,9 @@ def output(list_of_proteins, outfile):
                     'virulence_probability',
                     'adhesin_probability',
                     'conservation_score',
-                    'list_of_shared_human_peps',
-                    'list_of_shared_mouse_peps',
-                    'list_of_shared_conserv_proteome_peps',
+                    'shared_human_peps',
+                    'shared_mouse_peps',
+                    'shared_conserv_proteome_peps',
                     'human_peptides_sum',
                     'mouse_peptides_sum',
                     'annotations',

@@ -11,21 +11,26 @@ ENV PYTHONPATH "${PYTHONPATH}:/"
 ENV LANG C
 
 FROM base AS intermediate
+
+RUN pip install setuptools==65.4.1
+RUN git clone https://github.com/flatironinstitute/DeepFRI.git
+RUN mv ./DeepFRI ./DeepFri 
+# install DeepFri dependencies
+WORKDIR ./DeepFri
+RUN pip install .
+WORKDIR /
+# download model weights for DeepFri
+RUN wget https://users.flatironinstitute.org/vgligorijevic/public_www/DeepFRI_data/newest_trained_models.tar.gz
+RUN mv newest_trained_models.tar.gz trained_models.tar.gz
+RUN tar xvzf trained_models.tar.gz -C ./DeepFri
+
 # install python dependencies
 COPY requirements.txt .
-RUN pip install --upgrade setuptools
 RUN pip install -r ./requirements.txt && \
     python -m pip install git+https://github.com/nicolagulmini/tmhmm.py
 
 FROM intermediate AS dependencies
 # clone repositories
-RUN git clone https://github.com/flatironinstitute/DeepFRI.git
-RUN mv ./DeepFRI ./DeepFri 
-RUN python3 ./DeepFri/setup.py install
-# download model weights for DeepFri
-RUN wget https://users.flatironinstitute.org/vgligorijevic/public_www/DeepFRI_data/newest_trained_models.tar.gz
-RUN mv newest_trained_models.tar.gz trained_models.tar.gz
-RUN tar xvzf trained_models.tar.gz -C ./DeepFri
 RUN git clone https://github.com/Superzchen/iFeature.git && \
     git clone https://github.com/FranceCosta/NERVE && \
     git clone https://github.com/nicolagulmini/spaan
@@ -42,6 +47,8 @@ RUN addgroup --gid $GROUP_ID user # name user as user
 RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user # name group user as user
 RUN mkdir /workdir
 RUN chown -R user:user /workdir
+# give permissions to allow testing
+RUN chown -R user:user /NERVE
 #VOLUME ["/workdir"]
 RUN chmod +x /NERVE/NERVE/NERVE_main.py
 USER user

@@ -1,4 +1,4 @@
-Ipython[all]==8.0.0
+Ipython[all]==8.5.0
 Bio==1.4.0
 pycurl==7.45.1
 pandas==1.5.0
@@ -7,3 +7,4 @@ pytest-shutil==1.7.0
 protobuf==3.19
 grpcio>=1.8.6
 openpyxl==3.0.10
+numpy==1.20.3
