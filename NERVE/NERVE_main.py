@@ -576,12 +576,6 @@ def is_fasta(filename:str):
             return fasta
         else:
             raise ValueError(f'{filename} is not in fasta format')
-            
-def dir_path(path:str)->str:
-    '''Path validator'''
-    if os.path.isdir(path) == False:
-        raise argparse.ArgumentTypeError(f'{path} is not a valid path')
-    return path
 
 def quality_control(path_to_fasta:str, working_dir:str, upload=False)->dir_path:
     """
@@ -1073,8 +1067,8 @@ def output(list_of_proteins, outfile):
                     'human_peptides_sum',
                     'mouse_peptides_sum',
                     'annotations',
-                    'peptides_from_comparison_with_mhcpep_sapiens',
-                    'peptides_from_comparison_with_mhcpep_mouse',
+                    'list_of_peptides_from_comparison_with_mhcpep_sapiens',
+                    'list_of_peptides_from_comparison_with_mhcpep_mouse',
                     'sequence',
                     'original_sequence_if_razor',
                     'tmhmm_seq'
