@@ -1,4 +1,7 @@
+#!/usr/local/bin/python
 """Class and methods to store entry information"""
+
+import numpy as np
 
 class Protein:
 		
@@ -9,7 +12,7 @@ class Protein:
 		self.original_sequence_if_razor = None # put the original sequence if razor is performed
 		self.length = len(sequence_string)
 		self.localization = None
-		self.p_ad = 0
+		self.p_ad = None
 		self.transmembrane_doms = None
 		self.tmhmm_seq = None
 		self.list_of_shared_human_peps = [] # in a dictionary with match, query and starting position (start_pos)
@@ -23,6 +26,7 @@ class Protein:
 		self.mouse_peptides_sum = None
 		self.conservation_score = None
 		self.annotations = None
+		self.model_raw_data = []
 
 	def print_information(self):
 		print("Information about protein " + str(self.id) + ":")
@@ -43,6 +47,18 @@ class Protein:
 		print('	conservation score:', self.conservation_score)
 		print('	annotations:', self.annotations)
 		      
+	def standardize(self, means, std_devs, projection_matrix) -> np.array:
+                """Standadize dataset:
+                param: means: np.array
+                param: std_devs: np.array
+                param: projection_matrix: np.array
+                output: reduced_dataset"""
+                dataset = self.model_raw_data
+                std_dataset = np.zeros(dataset.shape)
+                std_dataset = (dataset - means) / std_devs
+                reduced_dataset = std_dataset.dot(projection_matrix)
+                return reduced_dataset
+	
 	def provide_raw_loops(self):
 		#print("Warning: this method uses X as a exclusive symbol to split the final protein. Check if X is used inside the protein sequence!")
 		conds = ['o', 'O']
@@ -55,7 +71,8 @@ class Protein:
 			elif len(new_seq) > 0 and not new_seq[len(new_seq)-1] == "X":
 				new_seq += "X"
 		return new_seq.split('X')
-			
+		
+    
 	@staticmethod 
 	def hsp_match_parser(hsp_match, query, parsing_window_size=9, max_sub=3, max_mismatch=1):
 		to_return = []
