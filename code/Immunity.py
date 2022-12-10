@@ -20,7 +20,7 @@ def autoimmunity(list_of_proteins, proteome1, working_dir, NERVE_dir, e_value, m
     stdout, stderr = blastx_cline()
     #logging.debug("Warning: you can find a sapiens.xml file on your working directory which is the outputs of the autoimmunity module.\nDo not delete during the computation!\nAfter the computation it will be deleted in order to avoid future collisions.")
     # for each result in the .xml file...
-    outfile = open(os.path.join(working_dir, 'autoimmunity_raw_output.txt'), 'w')
+    #outfile = open(os.path.join(working_dir, 'autoimmunity_raw_output.txt'), 'w')
     for record in NCBIXML.parse(open(os.path.join(working_dir,"sapiens.xml"))):
         query_name = record.query.split(' ')[0] # take only the query name 
         # take the right candidate to update
@@ -36,12 +36,12 @@ def autoimmunity(list_of_proteins, proteome1, working_dir, NERVE_dir, e_value, m
                                                                                           max_sub=substitution,\
                                                                                           max_mismatch=mismatch)
         # print out the peptides (if there are any)
-        if len(tmp_protein.list_of_shared_human_peps) == 0:
-            outfile.write("\nNo immunogenic peptides for " + query_name)   
-        else:
-            outfile.write("\nList of immunogenic peptides for " + query_name + ": " +\
-                          str([el['match'] for el in tmp_protein.list_of_shared_human_peps]))
-    outfile.close()
+        #if len(tmp_protein.list_of_shared_human_peps) == 0:
+        #    outfile.write("\nNo immunogenic peptides for " + query_name)   
+        #else:
+        #    outfile.write("\nList of immunogenic peptides for " + query_name + ": " +\
+        #                  str([el['match'] for el in tmp_protein.list_of_shared_human_peps]))
+    #outfile.close()
     os.remove(os.path.join(working_dir, "sapiens.xml")) # delete after the computation
     
     # sum peptides
@@ -83,7 +83,7 @@ def mouse(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, minlengt
                         force=True)
     blastx_cline = NcbiblastpCommandline(query=proteome1, db=os.path.join(NERVE_dir,"database/mouse_database/mouse"), evalue=e_value, outfmt=5, out=os.path.join(working_dir, "mouse.xml"))
     stdout, stderr = blastx_cline()
-    outfile=open(os.path.join(working_dir, 'mouse_immunity_raw_output.txt'), 'w')
+    #outfile = open(os.path.join(working_dir, 'mouse_immunity_raw_output.txt'), 'w')
     for record in NCBIXML.parse(open(os.path.join(working_dir, "mouse.xml"))):
         query_name = record.query.split(' ')[0]
         tmp_protein = list_of_proteins[0]
@@ -94,12 +94,12 @@ def mouse(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, minlengt
         for alignment in record.alignments:
             for hsp in alignment.hsps:
                 tmp_protein.list_of_shared_mouse_peps += Protein.Protein.hsp_match_parser(hsp.match, hsp.query, parsing_window_size=minlength, max_sub=substitution, max_mismatch=mismatch )
-         # print out the peptides (if there are any)
-        if len(tmp_protein.list_of_shared_human_peps) == 0:
-            outfile.write("\nNo immunogenic peptides for " + query_name)   
-        else:
-            outfile.write("\nList of immunogenic peptides for " + query_name + ": " + str([el['match'] for el in tmp_protein.list_of_shared_human_peps]))
-    outfile.close()
+        # print out the peptides (if there are any)
+        #if len(tmp_protein.list_of_shared_human_peps) == 0:
+        #    outfile.write("\nNo immunogenic peptides for " + query_name)   
+        #else:
+        #    outfile.write("\nList of immunogenic peptides for " + query_name + ": " + str([el['match'] for el in tmp_protein.list_of_shared_human_peps]))
+    #outfile.close()
     os.remove(os.path.join(working_dir, "mouse.xml")) # delete after the computation
     
     # store peptides from comparison with mouse recognized bacterial mhcpep

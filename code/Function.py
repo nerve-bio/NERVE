@@ -68,4 +68,6 @@ def annotation(list_of_proteins, proteome1, working_dir, DeepFri_dir)->list:
         for index, row in deepfri_df.iterrows():
             if row['Protein'] in p.id:
                 p.annotations = row['Function']
+    for file in ['_MF_predictions.csv', '_MF_pred_scores.json']:
+        os.remove(os.path.join(working_dir, file))
     return list_of_proteins

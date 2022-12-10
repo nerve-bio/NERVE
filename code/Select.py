@@ -6,24 +6,31 @@ import pandas as pd
 def select(list_of_proteins, p_ad_no_citoplasm_filter, p_ad_extracellular_filter, transmemb_doms_limit,
            padlimit, mouse, mouse_peptides_sum_limit, virlimit, virulent)->list:
     """Selects suitable candidate proteins for vaccine production"""
-    
+
     final_list = []
     for protein in list_of_proteins:
-        if protein.localization[0].localization == "Cytoplasmic": continue 
-        #if protein.localization[0].reliability <= 3: continue
-        if protein.p_ad < p_ad_no_citoplasm_filter and not protein.localization[0].localization == "Extracellular": continue 
-        if protein.p_ad < p_ad_extracellular_filter and protein.localization[0].localization == "Extracellular": continue 
+        # exclude cytoplasmatic proteins if low PAD or VIR
+        if virulent == "True":
+            if (protein.localization[0].localization == "Cytoplasmic" and (protein.p_ad < padlimit and protein.p_vir < virlimit)): continue 
+        if virulent != "True":
+            if protein.localization[0].localization == "Cytoplasmic" and protein.p_ad < padlimit: continue 
+        
+        # exlude low fidelty localization prediction proteins if low PAD or VIR
+        if virulent == "True":
+            if protein.localization[0].reliability < 7.49 and (protein.p_vir < virlimit and protein.p_ad < padlimit): continue
+        if virulent != "True":
+            if protein.localization[0].reliability < 7.49 and protein.p_ad < padlimit: continue
+        
         if (protein.transmembrane_doms >= transmemb_doms_limit) and (protein.original_sequence_if_razor is None): continue
         if protein.sapiens_peptides_sum > .15: continue
         if len(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens) >= 1: continue
-        if (float(protein.localization[0].reliability) < 7.49) and (protein.p_ad < padlimit): continue
-        # proteins with Unknown localization have score==0
-        #if (protein.localization[0].localization == "Unknown") and (protein.p_ad < padlimit): continue
-        if mouse==True:
+        if mouse == "True":
             if protein.mouse_peptides_sum > mouse_peptides_sum_limit: continue 
             if len(protein.list_of_peptides_from_comparison_with_mhcpep_mouse) >= 1: continue 
-        if virulent==True:
-            if protein.p_vir < virlimit: continue
+            
+        #if protein.p_ad < p_ad_no_citoplasm_filter and not protein.localization[0].localization == "Extracellular": continue 
+        #if protein.p_ad < p_ad_extracellular_filter and protein.localization[0].localization == "Extracellular": continue
+        
         final_list.append(protein)
     return final_list
 
@@ -73,4 +80,4 @@ def output(list_of_proteins, outfile):
                     'original_sequence_if_razor',
                     'tmhmm_seq'
                      ]
-                ).to_csv(outfile)
+                ).to_csv(outfile, index = False)

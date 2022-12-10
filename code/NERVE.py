@@ -204,7 +204,7 @@ def get_args() -> Args:
                         help='Path to NERVE repository folder (download from: https://github.com/nicolagulmini/NERVE)',
                         type=dir_path,
                         required=False,
-                        default='/NERVE'
+                        default='../NERVE'
                         )
     parser.add_argument('-id','--iFeature_dir',
                         metavar='\b', 
@@ -242,7 +242,7 @@ def main():
     if args.working_dir[-1] != '/':
         args=args._replace(working_dir=args.working_dir+'/')
     # create working directory if does not exist
-    if os.path.isdir(args.working_dir)==False:
+    if os.path.isdir(args.working_dir) == False:
         os.makedirs(args.working_dir)
     # define log file
     logging.basicConfig(filename=os.path.join(args.working_dir, 'logfile.log'),
@@ -251,7 +251,7 @@ def main():
                         force=True)
     logging.debug(f'Running NERVE with the following parameters:\n{args.print_args()}')    
     # check input and download proteome:
-    if os.path.isfile(args.proteome1)==True:
+    if os.path.isfile(args.proteome1) == True:
         logging.debug(f'{args.proteome1} found as {args.proteome1}')
         # repath proteome as absolute path
         args = args._replace(proteome1=os.path.join('/', os.path.relpath(args.proteome1, start = '/')))
@@ -269,7 +269,7 @@ def main():
         args = args._replace(proteome1=os.path.join(args.working_dir,'proteome1.fasta'))
     
     if args.proteome2:
-        if os.path.isfile(args.proteome2)==True:
+        if os.path.isfile(args.proteome2) == True:
             logging.debug(f'{args.proteome2} found as {args.proteome2}')
             # repath proteome as absolute path
             args = args._replace(proteome2=os.path.join('/', os.path.relpath(args.proteome2, start = '/')))
@@ -339,7 +339,7 @@ def main():
     print("40% done")
     
     # Razor
-    if args.razor=="True":
+    if args.razor == "True":
         logging.debug("Loop-razor start...")
         start=time.time()
         list_of_proteins=razor(list_of_proteins, args.working_dir, args.transmemb_doms_limit, args.razlen)

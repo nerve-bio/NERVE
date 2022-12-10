@@ -23,8 +23,8 @@ def psortb(list_of_proteins, working_dir, gram, proteome1) -> list:
     infile = open(proteome1, 'r')
     proteome1 = "".join(infile)
     body = {'gram':gram,'seq':proteome1}
-    with open(os.path.join(working_dir, 'payload.json'), 'w') as f:
-        json.dump(body, f)
+    #with open(os.path.join(working_dir, 'payload.json'), 'w') as f:
+    #    json.dump(body, f)
     req = urllib.request.Request(url)
     req.add_header('Content-Type', 'application/json; charset=utf-8')
     jsondata = json.dumps(body)
@@ -49,7 +49,7 @@ def psortb(list_of_proteins, working_dir, gram, proteome1) -> list:
             localizations = sorted(localizations, key = attrgetter('reliability'), reverse = True)
             # set unknown prediction
             if localizations[0].reliability <= 3.:
-                localizations = [Localization('Unknown', 0)]
+                localizations = [Localization('Unknown', 0.)]
             for p in list_of_proteins:
                 if id_ in p.id:
                     p.localization = localizations
