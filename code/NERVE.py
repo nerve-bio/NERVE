@@ -402,21 +402,20 @@ def main():
     if args.select == "True":
         logging.debug("Select start...")
         start=time.time()
-        final_proteins = select(list_of_proteins, args.p_ad_no_citoplasm_filter, args.p_ad_extracellular_filter, 
-               args.transmemb_doms_limit, args.padlimit, args.mouse, 
-               args.mouse_peptides_sum_limit, args.virlimit, args.virulent)
+        final_proteins = select(list_of_proteins, args.transmemb_doms_limit,
+                                args.padlimit, args.mouse, args.mouse_peptides_sum_limit, args.virlimit, args.virulent, args.annotation)
         end = time.time()
         logging.debug("Done run in: {:.4f} seconds".format(end - start))
 
-    if args.virulent == "True":
-        final_proteins.sort(key = lambda p: p.p_vir, reverse = True)
+    #if args.virulent == "True":
+    #    final_proteins.sort(key = lambda p: p.p_vir, reverse = True)
     
     # return .csv outputs
-    output(final_proteins, os.path.join(args.working_dir, 'vaccine_candidates.csv'))
+    output(final_proteins, os.path.join(args.working_dir, 'vaccine_candidates.csv'), args.mouse_peptides_sum_limit, args.mouse)
     # collect discarded proteins
     final_proteins_names = [p.id for p in final_proteins]
     discarded_proteins = [p for p in list_of_proteins if p.id not in final_proteins_names]
-    output(discarded_proteins, os.path.join(args.working_dir, 'discarded_proteins.csv'))
+    output(discarded_proteins, os.path.join(args.working_dir, 'discarded_proteins.csv'), args.mouse_peptides_sum_limit, args.mouse)
     
     nerve_end = time.time()
     logging.debug("Done: NERVE has finished its analysis in: {:.4f} seconds".format(nerve_end-nerve_start))

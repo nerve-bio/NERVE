@@ -2,18 +2,31 @@
 """Select module"""
 
 import pandas as pd
-
-def select(list_of_proteins, p_ad_no_citoplasm_filter, p_ad_extracellular_filter, transmemb_doms_limit,
-           padlimit, mouse, mouse_peptides_sum_limit, virlimit, virulent)->list:
+from Protein import Protein
+    
+def select(list_of_proteins, transmemb_doms_limit,
+           padlimit, mouse, mouse_peptides_sum_limit, virlimit, virulent, annotation)->list:
     """Selects suitable candidate proteins for vaccine production"""
-
+    
+    # annotations to exclude proteins
+    exclusion_annotations = ['structural constituent of ribosome', 'DNA binding', 'DNA-binding transcription factor activity',
+                             'transcription regulator activity', 'rRNA binding', 'RNA binding',
+                             'aminoacyl-tRNA ligase activity', 'sequence-specific DNA binding', 
+                             'catalytic activity, acting on a tRNA', 'catalytic activity, acting on RNA',
+                             'tyrosine-tRNA ligase activity', 'aminoacyl-tRNA editing activity',
+                             'translation factor activity, RNA binding', 'translation regulator activity',
+                             'translation regulator activity, nucleic acid binding', 
+                             'translation elongation factor activity', 'catalytic activity, acting on DNA'
+                            ]
+    
     final_list = []
     for protein in list_of_proteins:
         # exclude cytoplasmatic proteins if low PAD or VIR
-        if virulent == "True":
-            if (protein.localization[0].localization == "Cytoplasmic" and (protein.p_ad < padlimit and protein.p_vir < virlimit)): continue 
-        if virulent != "True":
-            if protein.localization[0].localization == "Cytoplasmic" and protein.p_ad < padlimit: continue 
+        #if virulent == "True":
+        #    if (protein.localization[0].localization == "Cytoplasmic" and (protein.p_ad < padlimit and protein.p_vir < virlimit)): continue 
+        #if virulent != "True":
+        #    if protein.localization[0].localization == "Cytoplasmic" and protein.p_ad < padlimit: continue 
+        if protein.localization[0].localization == "Cytoplasmic" and protein.localization[0].reliability >= 7.49: continue
         
         # exlude low fidelty localization prediction proteins if low PAD or VIR
         if virulent == "True":
@@ -27,17 +40,38 @@ def select(list_of_proteins, p_ad_no_citoplasm_filter, p_ad_extracellular_filter
         if mouse == "True":
             if protein.mouse_peptides_sum > mouse_peptides_sum_limit: continue 
             if len(protein.list_of_peptides_from_comparison_with_mhcpep_mouse) >= 1: continue 
-            
-        #if protein.p_ad < p_ad_no_citoplasm_filter and not protein.localization[0].localization == "Extracellular": continue 
-        #if protein.p_ad < p_ad_extracellular_filter and protein.localization[0].localization == "Extracellular": continue
         
+        annotation_flag = "False"
+        if annotation == "True":
+            for annot in exclusion_annotations:
+                if annot in str(protein.annotations): 
+                    annotation_flag = "True"
+        if annotation_flag == "True": continue
+
         final_list.append(protein)
     return final_list
 
-def output(list_of_proteins, outfile):
+def scorer(protein:Protein, mouse_peptides_sum_limit:float, mouse:str) -> float:
+    """Provides a score for protein candidates"""
+    
+    if mouse == "True":
+        score = (protein.p_ad + (protein.p_vir if protein.p_vir != None else 0 ) +\
+             ((protein.localization[0].reliability / 10) if protein.localization[0].reliability > 7.49 else 0) +\
+             (1 - len(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens)) +\
+             (1 - (protein.sapiens_peptides_sum / .15)) + (1 - len(protein.list_of_peptides_from_comparison_with_mhcpep_mouse)) +\
+             (1 - (protein.mouse_peptides_sum / mouse_peptides_sum_limit))) / 7
+    if mouse != "True":
+        score = (protein.p_ad + (protein.p_vir if protein.p_vir != None else 0 ) +\
+             ((protein.localization[0].reliability / 10) if protein.localization[0].reliability > 7.49 else 0) +\
+             (1 - len(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens)) +\
+             (1 - (protein.sapiens_peptides_sum / .15))) / 7
+    return score
+
+def output(list_of_proteins:list, outfile, mouse_peptides_sum_limit:float, mouse:str):
     """Produces output .csv table"""
-    pd.DataFrame([[str(protein.id),
+    df = pd.DataFrame([[str(protein.id),
                  str("".join([str(protein.accession) if protein.accession!=None else ""])),
+                 (round(scorer(protein, mouse_peptides_sum_limit, mouse), 4)),
                  str(protein.length),
                  str(protein.transmembrane_doms),
                  str(protein.localization[0].localization),
@@ -61,6 +95,7 @@ def output(list_of_proteins, outfile):
                 ], 
                 columns= ['id ',
                     'uniprot_accession_code',
+                    'score',
                     'length',
                     'transmembrane_doms',
                     'localization',
@@ -78,6 +113,8 @@ def output(list_of_proteins, outfile):
                     'list_of_peptides_from_comparison_with_mhcpep_mouse',
                     'sequence',
                     'original_sequence_if_razor',
-                    'tmhmm_seq'
+                    'tmhmm_seq',
                      ]
-                ).to_csv(outfile, index = False)
+                )
+    df = df.sort_values(by = 'score', ascending = False)
+    df.to_csv(outfile, index = False)
