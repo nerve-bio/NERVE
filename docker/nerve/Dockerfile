@@ -3,6 +3,7 @@
 ###
 ### base image found here https://hub.docker.com/_/python
 ### first stage (base, with Python 3.8)
+ARG VERSION
 FROM python:3.8 AS base
  # set where NERVE is contained
 ENV PYTHONPATH "${PYTHONPATH}:/NERVE"
@@ -39,7 +40,7 @@ RUN apt-get update && \
     apt-get install -y apt-utils ncbi-blast+ &&\
     apt-get install nano
 
-FROM dependencies AS final
+FROM dependencies AS setting
 ARG USER_ID
 ARG GROUP_ID
 EXPOSE 8880
@@ -49,10 +50,20 @@ RUN mkdir /workdir
 RUN chown -R user:user /workdir
 # give permissions to allow testing
 RUN chown -R user:user /NERVE
-#VOLUME ["/workdir"]
-RUN chmod +x /NERVE/NERVE/NERVE_main.py
+RUN chmod +x /NERVE/code/NERVE.py
 USER user
 
+FROM setting as version-interactive
+ENV cmd="jupyter notebook --notebook-dir=/workdir --ip='0.0.0.0' --port='8880' --allow-root --NotebookApp.token='' --NotebookApp.password=''"
+
+FROM setting as version-commandline
+ENV cmd="['/NERVE/NERVE/NERVE_main.py']"
+
+FROM version-${VERSION} AS final
+#RUN echo "command is ${cmd}"
+#CMD cmd
 CMD jupyter notebook --notebook-dir=/workdir --ip='0.0.0.0' --port='8880' --allow-root --NotebookApp.token='' --NotebookApp.password=''
+
+#CMD jupyter notebook --notebook-dir=/workdir --ip='0.0.0.0' --port='8880' --allow-root --NotebookApp.token='' --NotebookApp.password=''
 #ENTRYPOINT ["/NERVE/NERVE/NERVE_main.py"]
 

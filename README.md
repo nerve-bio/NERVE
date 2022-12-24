@@ -3,7 +3,7 @@
 Please visit https://nicolagulmini.github.io/NERVE/.
 
 ### Stand-alone usage:
-NERVE can be used as a stand alone verison taking advantage of [Docker](https://www.docker.com/) and [Docker-compose](https://docs.docker.com/engine/reference/commandline/compose/) in unix systems.
+NERVE can be used as a stand alone verison taking advantage of [Docker](https://www.docker.com/) and [Docker-compose](https://docs.docker.com/engine/reference/commandline/compose/) in linux systems.
 
 1) install Docker following [these instructions](https://docs.docker.com/engine/install/) and [the post-installation procedure](https://docs.docker.com/engine/install/linux-postinstall/)
 2) install docker-compose as explained [here](https://docs.docker.com/compose/install/linux/)
