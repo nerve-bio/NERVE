@@ -14,15 +14,18 @@ ENV LANG C
 FROM base AS intermediate
 
 RUN pip install setuptools==65.4.1
-RUN git clone https://github.com/flatironinstitute/DeepFRI.git
-RUN mv ./DeepFRI ./DeepFri 
+COPY ./dependencies/DeepFri.tar.gz ./DeepFri.tar.gz
+RUN tar xvzf ./DeepFri.tar.gz
+#RUN git clone https://github.com/flatironinstitute/DeepFRI.git
+#RUN mv ./DeepFRI ./DeepFri 
 # install DeepFri dependencies
 WORKDIR ./DeepFri
 RUN pip install .
 WORKDIR /
 # download model weights for DeepFri
-RUN wget https://users.flatironinstitute.org/vgligorijevic/public_www/DeepFRI_data/newest_trained_models.tar.gz
-RUN mv newest_trained_models.tar.gz trained_models.tar.gz
+#RUN wget https://users.flatironinstitute.org/vgligorijevic/public_www/DeepFRI_data/newest_trained_models.tar.gz
+COPY ./dependencies/newest_trained_models.tar.gz trained_models.tar.gz
+#RUN mv newest_trained_models.tar.gz trained_models.tar.gz
 RUN tar xvzf trained_models.tar.gz -C ./DeepFri
 
 # install python dependencies
@@ -32,9 +35,11 @@ RUN pip install -r ./requirements.txt && \
 
 FROM intermediate AS dependencies
 # clone repositories
-RUN git clone https://github.com/Superzchen/iFeature.git && \
-    git clone https://github.com/FranceCosta/NERVE && \
-    git clone https://github.com/nicolagulmini/spaan
+#RUN git clone https://github.com/Superzchen/iFeature.git && \
+RUN  git clone https://github.com/FranceCosta/NERVE && \
+     git clone https://github.com/nicolagulmini/spaan
+COPY ./dependencies/iFeature.tar.gz iFeature.tar.gz
+RUN tar xvzf iFeature.tar.gz
 
 RUN apt-get update && \
     apt-get install -y apt-utils ncbi-blast+ &&\

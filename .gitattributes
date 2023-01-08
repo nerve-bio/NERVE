@@ -1,0 +1,4 @@
+*.gz filter=lfs diff=lfs merge=lfs -text
+*.tar.gz filter=lfs diff=lfs merge=lfs -text
+docker/nerve/dependencies/newest_trained_models.tar.gz filter=lfs diff=lfs merge=lfs -text
+docker/nerve/dependencies/** filter=lfs diff=lfs merge=lfs -text
