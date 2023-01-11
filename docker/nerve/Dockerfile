@@ -14,7 +14,9 @@ ENV LANG C
 FROM base AS intermediate
 
 RUN pip install setuptools==65.4.1
-COPY ./dependencies/DeepFri.tar.gz ./DeepFri.tar.gz
+#COPY ./dependencies/DeepFri.tar.gz ./DeepFri.tar.gz
+RUN git clone https://github.com/FranceCosta/nerve_data.git
+RUN mv /nerve_data/DeepFri.tar.gz DeepFri.tar.gz
 RUN tar xvzf ./DeepFri.tar.gz
 #RUN git clone https://github.com/flatironinstitute/DeepFRI.git
 #RUN mv ./DeepFRI ./DeepFri 
@@ -24,7 +26,7 @@ RUN pip install .
 WORKDIR /
 # download model weights for DeepFri
 #RUN wget https://users.flatironinstitute.org/vgligorijevic/public_www/DeepFRI_data/newest_trained_models.tar.gz
-COPY ./dependencies/newest_trained_models.tar.gz trained_models.tar.gz
+RUN /nerve_data/newest_trained_models.tar.gz trained_models.tar.gz
 #RUN mv newest_trained_models.tar.gz trained_models.tar.gz
 RUN tar xvzf trained_models.tar.gz -C ./DeepFri
 
@@ -38,7 +40,7 @@ FROM intermediate AS dependencies
 #RUN git clone https://github.com/Superzchen/iFeature.git && \
 RUN  git clone https://github.com/FranceCosta/NERVE && \
      git clone https://github.com/nicolagulmini/spaan
-COPY ./dependencies/iFeature.tar.gz iFeature.tar.gz
+COPY /nerve_data/iFeature.tar.gz iFeature.tar.gz
 RUN tar xvzf iFeature.tar.gz
 
 RUN apt-get update && \
