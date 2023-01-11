@@ -15,7 +15,10 @@ FROM base AS intermediate
 
 RUN pip install setuptools==65.4.1
 #COPY ./dependencies/DeepFri.tar.gz ./DeepFri.tar.gz
-RUN git clone https://github.com/FranceCosta/nerve_data.git
+RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
+RUN apt-get install git-lfs
+RUN git lfs install
+RUN git lfs clone https://github.com/FranceCosta/nerve_data.git
 RUN mv /nerve_data/DeepFri.tar.gz DeepFri.tar.gz
 RUN tar xvzf ./DeepFri.tar.gz
 #RUN git clone https://github.com/flatironinstitute/DeepFRI.git
@@ -26,7 +29,7 @@ RUN pip install .
 WORKDIR /
 # download model weights for DeepFri
 #RUN wget https://users.flatironinstitute.org/vgligorijevic/public_www/DeepFRI_data/newest_trained_models.tar.gz
-RUN /nerve_data/newest_trained_models.tar.gz trained_models.tar.gz
+RUN mv /nerve_data/newest_trained_models.tar.gz trained_models.tar.gz
 #RUN mv newest_trained_models.tar.gz trained_models.tar.gz
 RUN tar xvzf trained_models.tar.gz -C ./DeepFri
 
