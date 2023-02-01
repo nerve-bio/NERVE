@@ -14,24 +14,23 @@ ENV LANG C
 FROM base AS intermediate
 
 RUN pip install setuptools==65.4.1
-#COPY ./dependencies/DeepFri.tar.gz ./DeepFri.tar.gz
-RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
-RUN apt-get install git-lfs
-RUN git lfs install
-RUN git lfs clone https://github.com/FranceCosta/nerve_data.git
-RUN mv /nerve_data/DeepFri.tar.gz DeepFri.tar.gz
-RUN tar xvzf ./DeepFri.tar.gz
-#RUN git clone https://github.com/flatironinstitute/DeepFRI.git
-#RUN mv ./DeepFRI ./DeepFri 
-# install DeepFri dependencies
+RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
+    apt-get install git-lfs && \
+    git lfs install && \
+    git lfs clone https://github.com/FranceCosta/nerve_data.git
+
+RUN mv /nerve_data/DeepFri.tar.gz DeepFri.tar.gz && \
+    tar xvzf ./DeepFri.tar.gz
+
+RUN mv /nerve_data/newest_trained_models.tar.gz trained_models.tar.gz && \
+    tar xvzf trained_models.tar.gz -C ./DeepFri
+
+RUN mv /nerve_data/iFeature.tar.gz iFeature.tar.gz && \
+    tar xvzf iFeature.tar.gz
+
 WORKDIR ./DeepFri
 RUN pip install .
 WORKDIR /
-# download model weights for DeepFri
-#RUN wget https://users.flatironinstitute.org/vgligorijevic/public_www/DeepFRI_data/newest_trained_models.tar.gz
-RUN mv /nerve_data/newest_trained_models.tar.gz trained_models.tar.gz
-#RUN mv newest_trained_models.tar.gz trained_models.tar.gz
-RUN tar xvzf trained_models.tar.gz -C ./DeepFri
 
 # install python dependencies
 COPY requirements.txt .
@@ -43,8 +42,6 @@ FROM intermediate AS dependencies
 #RUN git clone https://github.com/Superzchen/iFeature.git && \
 RUN  git clone https://github.com/FranceCosta/NERVE && \
      git clone https://github.com/nicolagulmini/spaan
-COPY /nerve_data/iFeature.tar.gz iFeature.tar.gz
-RUN tar xvzf iFeature.tar.gz
 
 RUN apt-get update && \
     apt-get install -y apt-utils ncbi-blast+ &&\
