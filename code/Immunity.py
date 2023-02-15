@@ -6,6 +6,7 @@ from Bio.Blast.Applications import NcbiblastpCommandline
 from Bio.Blast import NCBIXML 
 import pandas as pd
 from code import Protein
+import shutil
 
 def autoimmunity(list_of_proteins, proteome1, working_dir, NERVE_dir, e_value, minlength, mismatch, substitution)->list:
     """Performs research of human immunogenig peptides"""
@@ -183,5 +184,5 @@ def conservation(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, p
 
     os.remove(os.path.join(working_dir, "comparison.xml")) # delete after the computation
     if os.path.isdir(os.path.join(working_dir, "compare_proteome")):
-        rmtree(os.path.join(working_dir, "compare_proteome"))
+        shutil.rmtree(os.path.join(working_dir, "compare_proteome"))
     return list_of_proteins
