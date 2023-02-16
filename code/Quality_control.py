@@ -44,7 +44,7 @@ def proteome_downloader(working_dir, proteome_id, filename='input_proteome.fasta
     return None
 
 def download_from_url_to_file(url:str, output_dir:str, filename:str, assert_error_message:str):
-    downloaded = false
+    downloaded = False
     for _ in range(3):
         try:
             response = requests.get(url, stream = True, timeout = 120)
@@ -54,12 +54,12 @@ def download_from_url_to_file(url:str, output_dir:str, filename:str, assert_erro
             # raise an AssertionError if the given proteome ID is not valid
             assert text_file.tell() > 0, assert_error_message
             text_file.close()
-            downloaded = true
+            downloaded = True
             break
         except requests.exceptions.ReadTimeout:
             logging.debug(f'Failed to fetch from {url}')
             continue
-    assert downloaded == true, 'Download failed after retries'
+    assert downloaded is True, 'Download failed after retries'
 
 def proteome_uploader(infile:str) -> list:
     """Function to read and parse fasta files. Bio SeqIO is not suitable because it chops sequence names. It 
