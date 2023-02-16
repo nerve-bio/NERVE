@@ -26,40 +26,40 @@ def proteome_downloader(working_dir, proteome_id, filename='input_proteome.fasta
                         force = True)
     try: 
         url = f'https://rest.uniprot.org/uniprotkb/stream?compressed=false&format={format_}&query=%28proteome%3A{proteome_id}%29'
-        response = requests.get(url, stream = True, timeout = 120)
-        text_file = open(os.path.join(output_dir, filename), 'wb')
-        for chunk in response.iter_content(chunk_size=1024):
-              text_file.write(chunk)
-        # raise an AssertionError if the given proteome ID is not valid
-        assert text_file.tell() > 0, 'First download attempt failed'
-        text_file.close()
+        download_from_url_to_file(url, output_dir, filename, 'First download attempt failed');
     except AssertionError: 
         logging.debug(f'28proteome is not a valid building block')
         try:
             url=f'https://rest.uniprot.org/uniprotkb/stream?format={format_}&query=%28proteome%3A{proteome_id}%29'
-            response = requests.get(url, stream = True, timeout = 120)
-            text_file = open(os.path.join(output_dir, filename), 'wb')
-            for chunk in response.iter_content(chunk_size=1024):
-                  text_file.write(chunk)
-            # raise an AssertionError if the given proteome ID is not valid
-            assert text_file.tell() > 0, 'Second download attempt failed'
-            text_file.close()
+            download_from_url_to_file(url, output_dir, filename, 'Second download attempt failed');
         except AssertionError:
             logging.debug(f'avoiding compression is not a valid building block')
             try:
                 url=f'https://rest.uniprot.org/uniparc/stream?format={format_}&query=%28upid%3A{proteome_id}%29'
-                response = requests.get(url, stream = True, timeout = 120)
-                text_file = open(os.path.join(output_dir, filename), 'wb')
-                for chunk in response.iter_content(chunk_size=1024):
-                      text_file.write(chunk)
-                # raise an AssertionError if the given proteome ID is not valid
-                assert text_file.tell() > 0, 'Third download attempt failed'
-                text_file.close()
+                download_from_url_to_file(url, output_dir, filename, 'Third download attempt failed');
             except AssertionError as e:
                 logging.debug(f'28upid is not a valid building block')
                 print(f'Unable to download proteome {proteome_id} due to invalid proteome ID, Uniprot API failure or wrong path. In case of uniprot API failure provide the proteome as file.')
                 raise SystemExit(e)
     return None
+
+def download_from_url_to_file(url:str, output_dir:str, filename: str, assert_error_message: str):
+    downloaded = false
+    for _ in range(3):
+        try:
+            response = requests.get(url, stream = True, timeout = 120)
+            text_file = open(os.path.join(output_dir, filename), 'wb')
+            for chunk in response.iter_content(chunk_size=1024):
+                text_file.write(chunk)
+            # raise an AssertionError if the given proteome ID is not valid
+            assert text_file.tell() > 0, 'Third download attempt failed'
+            text_file.close()
+            downloaded = true
+            break
+        except requests.exceptions.ReadTimeout:
+            logging.debug(f'Failed to fetch from {url}')
+            continue
+    assert downloaded == true, 'Download failed after retries'
 
 def proteome_uploader(infile:str) -> list:
     """Function to read and parse fasta files. Bio SeqIO is not suitable because it chops sequence names. It 
