@@ -26,7 +26,7 @@ def proteome_downloader(working_dir, proteome_id, filename='input_proteome.fasta
                         force = True)
     try: 
         url = f'https://rest.uniprot.org/uniprotkb/stream?compressed=false&format={format_}&query=%28proteome%3A{proteome_id}%29'
-        response = requests.get(url, stream = True)
+        response = requests.get(url, stream = True, timeout = 120)
         text_file = open(os.path.join(output_dir, filename), 'wb')
         for chunk in response.iter_content(chunk_size=1024):
               text_file.write(chunk)
@@ -37,7 +37,7 @@ def proteome_downloader(working_dir, proteome_id, filename='input_proteome.fasta
         logging.debug(f'28proteome is not a valid building block')
         try:
             url=f'https://rest.uniprot.org/uniprotkb/stream?format={format_}&query=%28proteome%3A{proteome_id}%29'
-            response = requests.get(url, stream = True)
+            response = requests.get(url, stream = True, timeout = 120)
             text_file = open(os.path.join(output_dir, filename), 'wb')
             for chunk in response.iter_content(chunk_size=1024):
                   text_file.write(chunk)
@@ -48,7 +48,7 @@ def proteome_downloader(working_dir, proteome_id, filename='input_proteome.fasta
             logging.debug(f'avoiding compression is not a valid building block')
             try:
                 url=f'https://rest.uniprot.org/uniparc/stream?format={format_}&query=%28upid%3A{proteome_id}%29'
-                response = requests.get(url, stream = True)
+                response = requests.get(url, stream = True, timeout = 120)
                 text_file = open(os.path.join(output_dir, filename), 'wb')
                 for chunk in response.iter_content(chunk_size=1024):
                       text_file.write(chunk)
