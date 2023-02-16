@@ -43,7 +43,7 @@ def proteome_downloader(working_dir, proteome_id, filename='input_proteome.fasta
                 raise SystemExit(e)
     return None
 
-def download_from_url_to_file(url:str, output_dir:str, filename: str, assert_error_message: str):
+def download_from_url_to_file(url:str, output_dir:str, filename:str, assert_error_message:str):
     downloaded = false
     for _ in range(3):
         try:
@@ -52,7 +52,7 @@ def download_from_url_to_file(url:str, output_dir:str, filename: str, assert_err
             for chunk in response.iter_content(chunk_size=1024):
                 text_file.write(chunk)
             # raise an AssertionError if the given proteome ID is not valid
-            assert text_file.tell() > 0, 'Third download attempt failed'
+            assert text_file.tell() > 0, assert_error_message
             text_file.close()
             downloaded = true
             break
