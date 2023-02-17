@@ -56,7 +56,7 @@ def download_from_url_to_file(url:str, output_dir:str, filename:str, assert_erro
             text_file.close()
             downloaded = True
             break
-        except requests.exceptions.ReadTimeout:
+        except:
             logging.debug(f'Failed to fetch from {url}')
             continue
     assert downloaded is True, 'Download failed after retries'
