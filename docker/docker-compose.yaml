@@ -13,7 +13,7 @@ services:
     depends_on:
       - psortb_http_api
     volumes:
-      - ./workdir/:/workdir
+      - ../../:/workdir
     networks:
       - my_network
   psortb_http_api:
