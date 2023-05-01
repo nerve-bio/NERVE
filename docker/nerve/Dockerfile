@@ -13,25 +13,26 @@ RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.d
     git lfs install && \
     git lfs clone https://github.com/FranceCosta/nerve_data.git && \
     git clone https://github.com/nicolagulmini/spaan && \
-    git clone https://github.com/FranceCosta/NERVE
+    git clone https://github.com/FranceCosta/NERVE && \
+    mv /usr/nerve_python/nerve_data /usr/nerve_python/assets
 
 WORKDIR /usr/nerve_python/assets
 
-RUN mv /nerve_data/DeepFri.tar.gz DeepFri.tar.gz && \
-    tar xvzf ./DeepFri.tar.gz && \
-    mv /nerve_data/newest_trained_models.tar.gz trained_models.tar.gz && \
+RUN tar xvzf ./DeepFri.tar.gz && \
+    mv newest_trained_models.tar.gz trained_models.tar.gz && \
     tar xvzf trained_models.tar.gz -C ./DeepFri && \
-    mv /nerve_data/iFeature.tar.gz iFeature.tar.gz && \
     tar xvzf iFeature.tar.gz
 
 WORKDIR /usr/nerve_python/assets/DeepFri
 RUN pip install .
 
-WORKDIR /usr/nerve_python
+WORKDIR /usr/nerve_python/NERVE/docker/nerve
 
 RUN pip install -r ./requirements.txt && \
     python -m pip install git+https://github.com/nicolagulmini/tmhmm.py && \
     apt-get update && \
     apt-get install -y apt-utils ncbi-blast+ nano
+
+WORKDIR /
 
 FROM dependencies AS final
