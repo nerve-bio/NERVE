@@ -204,21 +204,21 @@ def get_args() -> Args:
                         help='Path to NERVE repository folder (download from: https://github.com/nicolagulmini/NERVE)',
                         type=dir_path,
                         required=False,
-                        default='../NERVE'
+                        default='/usr/nerve_python/NERVE'
                         )
     parser.add_argument('-id','--iFeature_dir',
                         metavar='\b', 
                         help='Path to iFeature repository folder (download from: https://github.com/Superzchen/iFeature)',
                         type=dir_path,
                         required=False,
-                        default='/iFeature'
+                        default='/usr/nerve_python/assets/iFeature'
                         )
     parser.add_argument('-dfd','--DeepFri_dir',
                         metavar='\b', 
                         help='Path to DeepFri folder (download from: https://github.com/flatironinstitute/DeepFRI)',
                         type=dir_path,
                         required=False,
-                        default='/DeepFri'
+                        default='/usr/nerve_python/assets/DeepFri'
                         )
     
     
