@@ -1,58 +1,37 @@
-###
-### NERVE dependencies installation
-###
-### base image found here https://hub.docker.com/_/python
-### first stage (base, with Python 3.8)
 FROM python:3.8 AS base
- # set where NERVE is contained
-ENV PYTHONPATH "${PYTHONPATH}:/NERVE"
-# set where spaan is contained
-ENV PYTHONPATH "${PYTHONPATH}:/"
+
+LABEL maintainer="Francesco Costa <fcosta@ebi.ac.uk>"
+ENV PYTHONPATH "${PYTHONPATH}:/usr/nerve_python"
+ENV PYTHONPATH "${PYTHONPATH}:/usr/nerve_python/NERVE"
 ENV LANG C
 
-FROM base AS intermediate
-
+FROM base AS dependencies
+WORKDIR /usr/nerve_python
 RUN pip install setuptools==65.4.1
-RUN git clone https://github.com/flatironinstitute/DeepFRI.git
-RUN mv ./DeepFRI ./DeepFri 
-# install DeepFri dependencies
-WORKDIR ./DeepFri
+RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
+    apt-get install git-lfs && \
+    git lfs install && \
+    git lfs clone https://github.com/FranceCosta/nerve_data.git && \
+    git clone https://github.com/nicolagulmini/spaan && \
+    git clone https://github.com/FranceCosta/NERVE
+
+WORKDIR /usr/nerve_python/assets
+
+RUN mv /nerve_data/DeepFri.tar.gz DeepFri.tar.gz && \
+    tar xvzf ./DeepFri.tar.gz && \
+    mv /nerve_data/newest_trained_models.tar.gz trained_models.tar.gz && \
+    tar xvzf trained_models.tar.gz -C ./DeepFri && \
+    mv /nerve_data/iFeature.tar.gz iFeature.tar.gz && \
+    tar xvzf iFeature.tar.gz
+
+WORKDIR /usr/nerve_python/assets/DeepFri
 RUN pip install .
-WORKDIR /
-# download model weights for DeepFri
-RUN wget https://users.flatironinstitute.org/vgligorijevic/public_www/DeepFRI_data/newest_trained_models.tar.gz
-RUN mv newest_trained_models.tar.gz trained_models.tar.gz
-RUN tar xvzf trained_models.tar.gz -C ./DeepFri
 
-# install python dependencies
-COPY requirements.txt .
+WORKDIR /usr/nerve_python
+
 RUN pip install -r ./requirements.txt && \
-    python -m pip install git+https://github.com/nicolagulmini/tmhmm.py
-
-FROM intermediate AS dependencies
-# clone repositories
-RUN git clone https://github.com/Superzchen/iFeature.git && \
-    git clone https://github.com/FranceCosta/NERVE && \
-    git clone https://github.com/nicolagulmini/spaan
-
-RUN apt-get update && \
-    apt-get install -y apt-utils ncbi-blast+ &&\
-    apt-get install nano
+    python -m pip install git+https://github.com/nicolagulmini/tmhmm.py && \
+    apt-get update && \
+    apt-get install -y apt-utils ncbi-blast+ nano
 
 FROM dependencies AS final
-ARG USER_ID
-ARG GROUP_ID
-EXPOSE 8880
-RUN addgroup --gid $GROUP_ID user # name user as user
-RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user # name group user as user
-RUN mkdir /workdir
-RUN chown -R user:user /workdir
-# give permissions to allow testing
-RUN chown -R user:user /NERVE
-#VOLUME ["/workdir"]
-RUN chmod +x /NERVE/NERVE/NERVE_main.py
-USER user
-
-CMD jupyter notebook --notebook-dir=/workdir --ip='0.0.0.0' --port='8880' --allow-root --NotebookApp.token='' --NotebookApp.password=''
-#ENTRYPOINT ["/NERVE/NERVE/NERVE_main.py"]
-

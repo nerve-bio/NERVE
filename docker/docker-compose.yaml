@@ -4,15 +4,16 @@ services:
     build:
       context: nerve
       args:
-        - USER_ID="${USER_ID}"
-        - GROUP_ID="${GROUP_ID}"
+        - USER_ID=${USER_ID}
+        - GROUP_ID=${GROUP_ID}
+        - VERSION=${VERSION}
     container_name: nerve
     ports:
       - 8880:8880
     depends_on:
       - psortb_http_api
     volumes:
-      - ./workdir/:/workdir
+      - ../../:/workdir
     networks:
       - my_network
   psortb_http_api:

@@ -1,5 +1,4 @@
-#!python3
-
+#!/usr/bin/python3
 """Tests NERVE"""
 
 import os, shutil
@@ -7,7 +6,7 @@ from subprocess import getstatusoutput
 
 # global test variables
 
-PRG = "../NERVE/NERVE_main.py"
+PRG = "../code/NERVE.py"
 RUN = f'python {PRG}'
 WORKDIR = "./output_data/"
 INPUTDIR = "./input_data/"
