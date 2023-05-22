@@ -40,6 +40,12 @@ class Args(NamedTuple):
     transmemb_doms_limit:int
     virlimit:float
     virulent:bool
+    epitopes: {self.epitopes},
+    mhci_length: {self.mhci_length},
+    mhcii_length: {self.mhcii_length},
+    mhci_overlap: {self.mhci_overlap},
+    mhcii_overlap: {self.mhcii_overlap},
+    epitope_percentile: {self.epitope_percentile},
     working_dir:str
     NERVE_dir:str
     iFeature_dir:str
@@ -191,6 +197,52 @@ def get_args() -> Args:
                         default="True",
                         required=False,
                         )
+    parser.add_argument('-ep', '--epitopes',
+                        metavar='\b',
+                        type=str,
+                        help='Activate or deactivate epitopes module',
+                        required=False,
+                        default="True"
+                        )
+    parser.add_argument('-m1l', '--mhci_length',
+                        metavar='\b',
+                        type=int,
+                        help='mhci binders length (9, 10, 11 are available)',
+                        required=False,
+                        choices=[9, 10, 11],
+                        default=9
+                        )
+    parser.add_argument('-m2l', '--mhcii_length',
+                        metavar='\b',
+                        type=int,
+                        help='mhcii binders length (9, 11, 13, 15 are available)',
+                        required=False,
+                        choices=[9, 11, 13, 15],
+                        default=11
+                        )
+    parser.add_argument('-m1ovr', '--mhci_overlap',
+                        metavar='\b',
+                        type=int,
+                        help='mhci-epitope overlap',
+                        required=False,
+                        choices=[1, 2],
+                        default=1
+                        )
+    parser.add_argument('-m2ovr', '--mhcii_overlap',
+                        metavar='\b',
+                        type=int,
+                        help='mhcii-epitope overlap',
+                        required=False,
+                        choices=[1, 2],
+                        default=1
+                        )
+    parser.add_argument('-prt', '--epitope_percentile',
+                        metavar='\b',
+                        type=float,
+                        help='percentile decision threshold on whick to predict epitopes from full length proteins',
+                        required=False,
+                        default=0.9
+                        )
      
     parser.add_argument('-wd','--working_dir',
                         metavar='\b', 
@@ -228,7 +280,9 @@ def get_args() -> Args:
                 args.mouse, args.mouse_peptides_sum_limit, args.proteome1, args.proteome2, 
                 args.p_ad_extracellular_filter, args.p_ad_no_citoplasm_filter, args.padlimit, args.razor, 
                 args.razlen, args.select, args.substitution, args.transmemb_doms_limit, args.virlimit, 
-                args.virulent, args.working_dir, args.NERVE_dir, args.iFeature_dir, args.DeepFri_dir)
+                args.virulent, args.epitopes,
+                args.mhci_length, args.mhcii_length, args.mhci_overlap, args.mhcii_overlap,
+                args.epitope_percentileargs.working_dir, args.NERVE_dir, args.iFeature_dir, args.DeepFri_dir)
 
 
 def main():
@@ -409,6 +463,19 @@ def main():
 
     #if args.virulent == "True":
     #    final_proteins.sort(key = lambda p: p.p_vir, reverse = True)
+    
+    # 12.Epitope prediction
+    if args.epitopes == "True":
+        print("=" * 50)
+        print("{:^50}".format('Epitope prediction of best candidates with epitopepredict starts'))
+        print("=" * 50)
+        start = time.time()
+        logging.debug('Epitope prediction starts ...')
+        final_proteins = epitope(final_proteins, args.autoimmunity, args.mouse, args.mouse_peptides_sum_limit,
+                                 args.working_dir, args.mhci_length, args.mhcii_length,
+                                 args.mhci_overlap, args.mhcii_overlap, args.epitope_percentile)
+        end = time.time()
+        logging.debug(f'Epitope prediction done in {end - start} seconds')
     
     # return .csv outputs
     output(final_proteins, os.path.join(args.working_dir, 'vaccine_candidates.csv'), args.mouse_peptides_sum_limit, args.mouse)
