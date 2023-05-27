@@ -58,7 +58,9 @@ class Args(NamedTuple):
                 proteome2: {self.proteome2}, p_ad_extracellular_filter: {self.p_ad_extracellular_filter},
                 padlimit: {self.padlimit}, razor: {self.razor}, razlen: {self.razlen}, select: {self.select},
                 substitution: {self.substitution}, transmemb_doms_limit: {self.transmemb_doms_limit},
-                virlimit: {self.virlimit}, virulent: {self.virulent}, working_dir: {self.working_dir},
+                virlimit: {self.virlimit}, virulent: {self.virulent},epitopes: {self.epitopes}, mhci_length: {self.mhci_length},
+                mhcii_length: {self.mhcii_length}, mhci_overlap: {self.mhci_overlap}, mhcii_overlap: {self.mhcii_overlap},
+                epitope_percentile: {self.epitope_percentile}, working_dir: {self.working_dir},
                 NERVE_dir: {self.NERVE_dir}, iFeature_dir: {self.iFeature_dir},  DeepFri_dir: {self.DeepFri_dir}''')
     
 def get_args() -> Args:
