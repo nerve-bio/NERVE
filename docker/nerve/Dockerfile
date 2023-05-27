@@ -1,38 +1,8 @@
-FROM python:3.8 AS base
+FROM francecosta/nerve:v0.0.1 AS final
 
-LABEL maintainer="Francesco Costa <fcosta@ebi.ac.uk>"
-ENV PYTHONPATH "${PYTHONPATH}:/usr/nerve_python"
-ENV PYTHONPATH "${PYTHONPATH}:/usr/nerve_python/NERVE"
-ENV LANG C
+WORKDIR /workdir
+EXPOSE 8880
+RUN chmod +x /usr/nerve_python/NERVE/code/NERVE.py
 
-FROM base AS dependencies
-WORKDIR /usr/nerve_python
-RUN pip install setuptools==65.4.1
-RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
-    apt-get install git-lfs && \
-    git lfs install && \
-    git lfs clone https://github.com/FranceCosta/nerve_data.git && \
-    git clone https://github.com/nicolagulmini/spaan && \
-    git clone https://github.com/FranceCosta/NERVE && \
-    mv /usr/nerve_python/nerve_data /usr/nerve_python/assets
-
-WORKDIR /usr/nerve_python/assets
-
-RUN tar xvzf ./DeepFri.tar.gz && \
-    mv newest_trained_models.tar.gz trained_models.tar.gz && \
-    tar xvzf trained_models.tar.gz -C ./DeepFri && \
-    tar xvzf iFeature.tar.gz
-
-WORKDIR /usr/nerve_python/assets/DeepFri
-RUN pip install .
-
-WORKDIR /usr/nerve_python/NERVE/docker/nerve
-
-RUN pip install -r ./requirements.txt && \
-    python -m pip install git+https://github.com/nicolagulmini/tmhmm.py && \
-    apt-get update && \
-    apt-get install -y apt-utils ncbi-blast+ nano
-
-WORKDIR /
-
-FROM dependencies AS final
+#CMD jupyter notebook --notebook-dir=/workdir --ip='0.0.0.0' --port='8880' --allow-root --NotebookApp.token='' --NotebookApp.password=''
+ENTRYPOINT ["/usr/nerve_python/NERVE/code/NERVE.py"]

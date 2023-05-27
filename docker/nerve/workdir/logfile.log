@@ -1,0 +1,121 @@
+DEBUG:root:Running NERVE with the following parameters:
+annotation: True, e_value: 1e-10, gram: n,
+                minlength: 9, mismatch: 1, mouse: True,
+                mouse_peptides_sum_limit: 0.15, proteome1: UP000036027,
+                proteome2: None, p_ad_extracellular_filter: 0.38,
+                padlimit: 0.85, razor: True, razlen: 50, select: True,
+                substitution: 3, transmemb_doms_limit: 3,
+                virlimit: 0.5, virulent: True, working_dir: ./,
+                NERVE_dir: /usr/nerve_python/NERVE, iFeature_dir: /usr/nerve_python/assets/iFeature,  DeepFri_dir: /usr/nerve_python/assets/DeepFri
+DEBUG:root:UP000036027 is not a file, download from Uniprot.
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): rest.uniprot.org:443
+DEBUG:urllib3.connectionpool:https://rest.uniprot.org:443 "GET /uniprotkb/stream?compressed=false&format=fasta&query=%28proteome%3AUP000036027%29 HTTP/1.1" 200 None
+DEBUG:root:UP000036027 successfully downloaded
+DEBUG:root:Start quality control of proteome1 (./proteome1.fasta)
+DEBUG:root:Finish quality control of proteome1. Updated path: (/workdir/cleaned_proteome1.fasta)
+DEBUG:root:Extract protein sequences and IDs from proteome1
+DEBUG:root:2157 proteins loaded in 0.14020538330078125 seconds
+DEBUG:root:Subcelloc start with psortb...
+DEBUG:root:Sending request to psortb
+DEBUG:root:Psortb stdout:
+Saving results to /result.txt
+
+- Running PSORTb: /usr/local/psortb/bin/psortb3.pl -n -v /usr/local/nodeapi/src/temp_wd/1/input.fasta > /usr/local/nodeapi/src/temp_wd/1/result.txt
+
+Psortb stderr:
+* Using /usr/local/psortb as PSort root directory
+* Reading sequences from file "/usr/local/nodeapi/src/temp_wd/1/input.fasta"
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+
+DEBUG:root:Parsing psortb output
+DEBUG:root:Done run in: 805.7080 seconds
+DEBUG:root:Adhesin start...
+DEBUG:root:Done run in: 116.4657 seconds
+DEBUG:root:Tmhelices start...
+DEBUG:root:Done run in: 59.3862 seconds
+DEBUG:root:Loop-razor start...
+DEBUG:root:Substituting tr|A0A0J0YTB5|A0A0J0YTB5_9NEIS Thiol:disulfide interchange protein DsbD OS=Neisseria arctica OX=1470200 GN=dsbD PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J1C3U8|A0A0J1C3U8_9NEIS Probable peptidoglycan glycosyltransferase FtsW OS=Neisseria arctica OX=1470200 GN=ftsW PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YPB8|A0A0J0YPB8_9NEIS histidine kinase OS=Neisseria arctica OX=1470200 GN=PL75_10630 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YPF8|A0A0J0YPF8_9NEIS Cell division protein FtsK OS=Neisseria arctica OX=1470200 GN=PL75_10345 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YQR5|A0A0J0YQR5_9NEIS CDP-diacylglycerol--serine O-phosphatidyltransferase OS=Neisseria arctica OX=1470200 GN=PL75_07990 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YQV0|A0A0J0YQV0_9NEIS Membrane protein insertase YidC OS=Neisseria arctica OX=1470200 GN=yidC PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YR35|A0A0J0YR35_9NEIS Apolipoprotein N-acyltransferase OS=Neisseria arctica OX=1470200 GN=lnt PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YRC6|A0A0J0YRC6_9NEIS Protein-export membrane protein SecF OS=Neisseria arctica OX=1470200 GN=secF PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YRC9|A0A0J0YRC9_9NEIS Protein translocase subunit SecD OS=Neisseria arctica OX=1470200 GN=secD PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YRY8|A0A0J0YRY8_9NEIS Zinc metalloprotease OS=Neisseria arctica OX=1470200 GN=PL75_06185 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YTM5|A0A0J0YTM5_9NEIS Thiol reductant ABC exporter subunit CydD OS=Neisseria arctica OX=1470200 GN=PL75_02570 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J1C1Y1|A0A0J1C1Y1_9NEIS Signal peptidase I OS=Neisseria arctica OX=1470200 GN=PL75_09185 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YPF4|A0A0J0YPF4_9NEIS Transglutaminase OS=Neisseria arctica OX=1470200 GN=PL75_10485 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YPI8|A0A0J0YPI8_9NEIS Permease OS=Neisseria arctica OX=1470200 GN=PL75_10220 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YPZ4|A0A0J0YPZ4_9NEIS Membrane protein OS=Neisseria arctica OX=1470200 GN=PL75_09360 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YQB6|A0A0J0YQB6_9NEIS Membrane protein OS=Neisseria arctica OX=1470200 GN=PL75_08710 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YQD1|A0A0J0YQD1_9NEIS Amino acid ABC transporter permease OS=Neisseria arctica OX=1470200 GN=PL75_08775 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YQD7|A0A0J0YQD7_9NEIS Sodium:solute symporter OS=Neisseria arctica OX=1470200 GN=PL75_08805 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YQG0|A0A0J0YQG0_9NEIS Phosphoglycerol transferase OS=Neisseria arctica OX=1470200 GN=PL75_08860 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YQM0|A0A0J0YQM0_9NEIS Permease OS=Neisseria arctica OX=1470200 GN=PL75_08405 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YQN1|A0A0J0YQN1_9NEIS Histidine kinase OS=Neisseria arctica OX=1470200 GN=PL75_08525 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YQN4|A0A0J0YQN4_9NEIS Membrane protein OS=Neisseria arctica OX=1470200 GN=PL75_08550 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YQT8|A0A0J0YQT8_9NEIS Membrane protein OS=Neisseria arctica OX=1470200 GN=PL75_08020 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YR37|A0A0J0YR37_9NEIS Nitric oxide reductase large subunit OS=Neisseria arctica OX=1470200 GN=PL75_07690 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YR51|A0A0J0YR51_9NEIS Conjugal transfer protein TraD OS=Neisseria arctica OX=1470200 GN=PL75_07780 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YR54|A0A0J0YR54_9NEIS Polymerase OS=Neisseria arctica OX=1470200 GN=PL75_07040 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YR73|A0A0J0YR73_9NEIS Membrane protein OS=Neisseria arctica OX=1470200 GN=PL75_06930 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YRB7|A0A0J0YRB7_9NEIS Peptide ABC transporter permease OS=Neisseria arctica OX=1470200 GN=PL75_07290 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YRI8|A0A0J0YRI8_9NEIS Membrane protein OS=Neisseria arctica OX=1470200 GN=PL75_06540 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YRK5|A0A0J0YRK5_9NEIS Cysteine ABC transporter permease OS=Neisseria arctica OX=1470200 GN=PL75_06635 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YRS7|A0A0J0YRS7_9NEIS Oligopeptide transporter permease OS=Neisseria arctica OX=1470200 GN=oppB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YRV6|A0A0J0YRV6_9NEIS Multidrug ABC transporter ATP-binding protein OS=Neisseria arctica OX=1470200 GN=PL75_06110 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YSC1|A0A0J0YSC1_9NEIS Sugar transporter OS=Neisseria arctica OX=1470200 GN=PL75_04890 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YSG8|A0A0J0YSG8_9NEIS C4-dicarboxylate ABC transporter OS=Neisseria arctica OX=1470200 GN=PL75_05130 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YSI5|A0A0J0YSI5_9NEIS Membrane protein OS=Neisseria arctica OX=1470200 GN=PL75_05270 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YSS5|A0A0J0YSS5_9NEIS Putrescine/spermidine ABC transporter permease OS=Neisseria arctica OX=1470200 GN=PL75_04470 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YST5|A0A0J0YST5_9NEIS Ferredoxin OS=Neisseria arctica OX=1470200 GN=PL75_04430 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YSU8|A0A0J0YSU8_9NEIS Membrane protein OS=Neisseria arctica OX=1470200 GN=PL75_04575 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YT88|A0A0J0YT88_9NEIS Sulfatase OS=Neisseria arctica OX=1470200 GN=PL75_03820 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YT89|A0A0J0YT89_9NEIS ABC transporter domain-containing protein OS=Neisseria arctica OX=1470200 GN=PL75_03605 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YT97|A0A0J0YT97_9NEIS Membrane protein OS=Neisseria arctica OX=1470200 GN=PL75_03600 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YTF4|A0A0J0YTF4_9NEIS Competence protein ComA OS=Neisseria arctica OX=1470200 GN=PL75_03700 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YTN0|A0A0J0YTN0_9NEIS Cytochrome d ubiquinol oxidase subunit 2 OS=Neisseria arctica OX=1470200 GN=PL75_02555 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YTN2|A0A0J0YTN2_9NEIS Cytochrome d terminal oxidase subunit 1 OS=Neisseria arctica OX=1470200 GN=PL75_02560 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YTR2|A0A0J0YTR2_9NEIS Carbon starvation protein A OS=Neisseria arctica OX=1470200 GN=PL75_02815 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YTX7|A0A0J0YTX7_9NEIS Metallophosphoesterase OS=Neisseria arctica OX=1470200 GN=PL75_02230 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YTY9|A0A0J0YTY9_9NEIS Lipid transporter ATP-binding/permease OS=Neisseria arctica OX=1470200 GN=PL75_02660 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YTZ3|A0A0J0YTZ3_9NEIS TraG N-terminal Proteobacteria domain-containing protein OS=Neisseria arctica OX=1470200 GN=PL75_01170 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YU28|A0A0J0YU28_9NEIS Macrolide transporter OS=Neisseria arctica OX=1470200 GN=PL75_01290 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YU65|A0A0J0YU65_9NEIS Probable membrane transporter protein OS=Neisseria arctica OX=1470200 GN=PL75_01480 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YU99|A0A0J0YU99_9NEIS Microcin ABC transporter permease OS=Neisseria arctica OX=1470200 GN=PL75_01675 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YUA1|A0A0J0YUA1_9NEIS Peptide ABC transporter permease OS=Neisseria arctica OX=1470200 GN=PL75_01670 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YUE1|A0A0J0YUE1_9NEIS Inner membrane protein OS=Neisseria arctica OX=1470200 GN=PL75_01900 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YUH2|A0A0J0YUH2_9NEIS Membrane protein OS=Neisseria arctica OX=1470200 GN=PL75_00095 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YUY0|A0A0J0YUY0_9NEIS Cytochrome C biogenesis protein OS=Neisseria arctica OX=1470200 GN=PL75_00790 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YUY5|A0A0J0YUY5_9NEIS Membrane protein OS=Neisseria arctica OX=1470200 GN=PL75_00780 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YUZ4|A0A0J0YUZ4_9NEIS histidine kinase OS=Neisseria arctica OX=1470200 GN=PL75_00845 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J0YV31|A0A0J0YV31_9NEIS DUF3616 domain-containing protein OS=Neisseria arctica OX=1470200 GN=PL75_00345 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J1C2F2|A0A0J1C2F2_9NEIS Lipopolysaccharide export system permease protein LptF OS=Neisseria arctica OX=1470200 GN=PL75_08410 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J1C2Y5|A0A0J1C2Y5_9NEIS Peptide transporter OS=Neisseria arctica OX=1470200 GN=PL75_07295 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J1C3R8|A0A0J1C3R8_9NEIS Acyltransferase OS=Neisseria arctica OX=1470200 GN=PL75_05440 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J1C435|A0A0J1C435_9NEIS Sodium:proton antiporter OS=Neisseria arctica OX=1470200 GN=PL75_05080 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J1C5R1|A0A0J1C5R1_9NEIS Uncharacterized protein OS=Neisseria arctica OX=1470200 GN=PL75_01770 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0J1C5Z7|A0A0J1C5Z7_9NEIS Sulfate transporter OS=Neisseria arctica OX=1470200 GN=PL75_01905 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Done run in: 0.0240 seconds
+DEBUG:root:Autoimmunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 610.3565 seconds
+DEBUG:root:Mouse immunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 305.7740 seconds
+DEBUG:root:Virulence start...
+DEBUG:root:Done run in: 101.2531 seconds
+DEBUG:root:Annotation start...
+DEBUG:root:Done run in: 196.1078 seconds
+DEBUG:root:Select start...
+DEBUG:root:Done run in: 0.0033 seconds
+DEBUG:root:Done: NERVE has finished its analysis in: 2195.9111 seconds
