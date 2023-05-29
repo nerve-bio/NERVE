@@ -16,7 +16,7 @@ from code.Subcellular import psortb
 from code.Topology import tmhelices
 from code.Razor import razor
 from code.Immunity import  autoimmunity, conservation, mouse
-from code.Select import output, select
+from code.Select import output, select, scorer
 
 
 class Args(NamedTuple):
@@ -397,13 +397,17 @@ def main():
         logging.debug("Done run in: {:.4f} seconds".format(end - start))
     print("90% done")
     
+    # score
+    for protein in list_of_proteins:
+        protein.score = scorer(protein, args.mouse_peptides_sum_limit, args.mouse)
+    
     # select
     final_proteins=list_of_proteins
     if args.select == "True":
         logging.debug("Select start...")
         start=time.time()
         final_proteins = select(list_of_proteins, args.transmemb_doms_limit,
-                                args.padlimit, args.mouse, args.mouse_peptides_sum_limit, args.virlimit, args.virulent, args.annotation)
+                                args.padlimit, args.mouse, args.mouse_peptides_sum_limit, args.virlimit, args.virulent, args.razor)
         end = time.time()
         logging.debug("Done run in: {:.4f} seconds".format(end - start))
 

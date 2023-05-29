@@ -1,5 +1,6 @@
 FROM ubuntu:16.04 AS psortb
-MAINTAINER Gemma Hoad <ghoad@sfu.ca>
+LABEL old_maintainer="Gemma Hoad <ghoad@sfu.ca>"
+LABEL new_maintainer="Francesco Costa <fcosta@ebi.ac.uk>"
 
 # Install packages then remove cache package list information
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get -yq install openssh-client \

@@ -18,7 +18,7 @@ def extract_features(list_of_proteins, NERVE_dir, iFeature_dir, working_dir, pro
     
     # run iFeauture
     for feature in features:
-        bashCmdMethod(f"python3 {iFeature_dir}/iFeature.py --file {proteome1} --type {feature}\
+        bashCmdMethod(f"python3 {os.path.join(iFeature_dir, 'iFeature.py')} --file {proteome1} --type {feature}\
         --out {os.path.join(working_dir, feature+'.out')}")
     # parse files and update Protein entires
     datasets = [[] for feature in features]
