@@ -68,15 +68,17 @@ def epitope(final_proteins, autoimmunity, mouse, mouse_peptides_sum_limit, worki
                 mhci_epitopes.to_csv(new_dir_path+'mhci_epitopes_{}.csv'.format(p.accession), index=False)
                 mhcii_epitopes.to_csv(new_dir_path+'mhcii_epitopes_{}.csv'.format(p.accession), index=False)
                 
-                p.mhci_epitopes = 'Epitopes acquired. See mhci_epitopes.csv'
-                p.mhcii_epitopes = 'Epitopes acquired. See mhcii_epitopes.csv'
+             
                 
                 # promiscuous binders mhc1
                 results_mhc1_raw = base.results_from_csv(path=new_dir_path+'mhci_epitopes_{}.csv'.format(p.accession))
                 ###
                 
                 score_threshold = results_mhc1_raw['score'].quantile(0.95)
-                filtered_binders1 = results_mhc1_raw.loc[results_mhc1_raw['score'] >= score_threshold]
+                filtered_binders1 = results_mhc1_raw.loc[results_mhc1_raw['score'] >= score_threshold]       ########################## salvare il migliore e fare colonna
+		best_binder1 = filtered_binders1.loc[filtered_binders1.groupby('allele')['score'].idxmax()]
+
+
                 ###
                 
                 #filtered_binders1 = mhci_predictor.get_binders(names=results_mhc1_raw, cutoff=0.95)  #non funziona, vedi sopra
@@ -84,18 +86,22 @@ def epitope(final_proteins, autoimmunity, mouse, mouse_peptides_sum_limit, worki
                 #save filtered binders
                 filtered_binders1.to_csv(new_dir_path+'MHC1_epitopes_FILTERED{}.csv'.format(p.accession), index=False) #####
                 # find promiscuous binders
-                pb1 = mhci_predictor.promiscuous_binders(cutoff=.95, cutoff_method='score')  #cutoff=.95, cutoff_method='score'
+                pb1 = mhci_predictor.promiscuous_binders(cutoff=.95, cutoff_method='score')  #cutoff=.95, cutoff_method='score'     #####################salvare il migliore e colonna 
+		best_pb1 = pb1.loc[pb1['score'].idxmax()]
                 # save pbs
                 pb1.to_csv(new_dir_path+'Promiscuous_binders_MHC1_{}.csv'.format(p.accession), index=False)
                 
                 # promiscuous binders mhc2
                 results_mhc2_raw = base.results_from_csv(path=new_dir_path+'mhcii_epitopes_{}.csv'.format(p.accession))
-                filtered_binders2 = mhcii_predictor.get_binders(names=results_mhc2_raw, cutoff=0.95)
+                filtered_binders2 = mhcii_predictor.get_binders(names=results_mhc2_raw, cutoff=0.95)          ################################ salvare il migliore e colonna
+		best_binder2 = filtered_binders2.loc[filtered_binders2.groupby('allele')['score'].idxmax()]
                 # save filtered binders
                 filtered_binders2.to_csv(new_dir_path+'MHC2_epitopes_FILTERED{}.csv'.format(p.accession), index=False)
                 # find promiscuous binders
-                pb2 = mhcii_predictor.promiscuous_binders(cutoff=0.95)
-                # save pbs
+                pb2 = mhcii_predictor.promiscuous_binders(cutoff=0.95)                                               ###########################salvare il migliore e colonna
+		best_pb2 = pb2.loc[pb2['score'].idxmax()]
+
+                # save pbs 
                 pb2.to_csv(new_dir_path+'Promiscuous_binders_MHC2_{}.csv'.format(p.accession), index=False)
                 
                 # plot binders in a sequence
@@ -117,6 +123,11 @@ def epitope(final_proteins, autoimmunity, mouse, mouse_peptides_sum_limit, worki
                 for name in names_ii:
                    ax = plotting.plot_binder_map(mhcii_predictor, name=name)
                    ax.figure.savefig(fname=new_dir_path+'heatmap_pbs_MHC2_{}.png'.format(p.accession))
+		
+		p.mhci_epitopes = best_binder1       #################################modificare qui
+                p.mhcii_epitopes = best_binder2    ###################################### qui
+		p.PB_MHC1 = best_pb1
+		p.PB_MHC2 = best_pb2
                                    
                 
     return final_proteins
