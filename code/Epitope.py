@@ -76,7 +76,9 @@ def epitope(final_proteins, autoimmunity, mouse, mouse_peptides_sum_limit, worki
                 best_binder1 = filtered_binders1.groupby('allele').apply(lambda x: x.loc[x['score'].idmax()])
 		
                 for allele, row in best_binder1.iterrows():
-                    allele_name = allele.replace('*', '_').replace(':','_').replace('-','_')
+                    #allele_name = allele.replace('*', '_').replace(':','_').replace('-','_')
+	            allele_name = str(allele).replace('*', '_').replace(':', '_').replace('-', '_')
+
                     peptide = row['peptide']
                     exec(f"{allele_name} = '{peptide}'")    #create a variable for every allele (6 in total, A0101, A0201, A0301, A2402, B0702, B4403)
 
@@ -98,7 +100,9 @@ def epitope(final_proteins, autoimmunity, mouse, mouse_peptides_sum_limit, worki
                 best_binder2 = filtered_binders2.groupby('allele').apply(lambda x: x.loc[x['score'].idmax()])
 		
                 for allele, row in best_binder1.iterrows():
-                    allele_name = allele.replace('*', '_').replace(':','_').replace('-','_')
+                    #allele_name = allele.replace('*', '_').replace(':','_').replace('-','_')
+		    allele_name = str(allele).replace('*', '_').replace(':', '_').replace('-', '_')
+
                     peptide = row['peptide']
                     exec(f"{allele_name} = '{peptide}'")    #create a variable for every allele (8 in total, 0101, 0301, 0401, 0701, 0801, 1101, 1301, 1501)
 			
