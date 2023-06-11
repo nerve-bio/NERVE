@@ -6,19 +6,18 @@ from typing import NamedTuple
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # disable warnings
 
-from code import Protein
-from code.Utils import bashCmdMethod, dir_path
-from code.Function import annotation
-from code.Adhesin import extract_features, adhesin_predict
-from code.Virulent_factor import virulent_factor_predict
-from code.Quality_control import proteome_downloader, proteome_uploader, quality_control
-from code.Subcellular import psortb
-from code.Topology import tmhelices
-from code.Razor import razor
-from code.Immunity import  autoimmunity, conservation, mouse
-from code.Select import output, select
-from code.Epitope import epitope
-
+from Protein import *
+from Utils import bashCmdMethod, dir_path
+from Function import annotation
+from Adhesin import extract_features, adhesin_predict
+from Virulent_factor import virulent_factor_predict
+from Quality_control import proteome_downloader, proteome_uploader, quality_control
+from Subcellular import psortb
+from Topology import tmhelices
+from Razor import razor
+from Immunity import  autoimmunity, conservation, mouse
+from Select import output, select
+from Epitope import *
 
 class Args(NamedTuple):
     '''Command-line arguments'''
@@ -285,7 +284,7 @@ def get_args() -> Args:
                 args.razlen, args.select, args.substitution, args.transmemb_doms_limit, args.virlimit, 
                 args.virulent, args.epitopes,
                 args.mhci_length, args.mhcii_length, args.mhci_overlap, args.mhcii_overlap,
-                args.epitope_percentile, args.working_dir, args.NERVE_dir, args.iFeature_dir, args.DeepFri_dir)
+                args.epitope_percentile,args.working_dir, args.NERVE_dir, args.iFeature_dir, args.DeepFri_dir)
 
 
 def main():
@@ -365,7 +364,7 @@ def main():
     for p in list_of_fasta_proteins:
         p_id = str(p.name)
         p_seq = str(p.seq)
-        list_of_proteins.append(Protein.Protein(p_id, p_seq))
+        list_of_proteins.append(Protein(p_id, p_seq))
     end=time.time()
     logging.debug(f'{len(list_of_fasta_proteins)} proteins loaded in {end-start} seconds')
             
@@ -474,7 +473,7 @@ def main():
         print("=" * 50)
         start = time.time()
         logging.debug('Epitope prediction starts ...')
-        final_proteins = epitope(final_proteins, args.autoimmunity, args.mouse, args.mouse_peptides_sum_limit,
+        final_proteins = epitope(final_proteins, args.mouse, args.mouse_peptides_sum_limit,
                                  args.working_dir, args.mhci_length, args.mhcii_length,
                                  args.mhci_overlap, args.mhcii_overlap, args.epitope_percentile)
         end = time.time()

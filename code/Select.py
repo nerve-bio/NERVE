@@ -22,13 +22,13 @@ def select(list_of_proteins, transmemb_doms_limit,
     final_list = []
     for protein in list_of_proteins:
         # exclude cytoplasmatic proteins if low PAD or VIR
-        #if virulent == "True":
-        #    if (protein.localization[0].localization == "Cytoplasmic" and (protein.p_ad < padlimit and protein.p_vir < virlimit)): continue 
-        #if virulent != "True":
-        #    if protein.localization[0].localization == "Cytoplasmic" and protein.p_ad < padlimit: continue 
+        if virulent == "True":
+            if (protein.localization[0].localization == "Cytoplasmic" and (protein.p_ad < padlimit and protein.p_vir < virlimit)): continue 
+        if virulent != "True":
+            if protein.localization[0].localization == "Cytoplasmic" and protein.p_ad < padlimit: continue 
         if protein.localization[0].localization == "Cytoplasmic" and protein.localization[0].reliability >= 7.49: continue
         
-        # exlude low fidelty localization prediction proteins if low PAD or VIR
+        # exlude low fidelity localization prediction proteins if low PAD or VIR
         if virulent == "True":
             if protein.localization[0].reliability < 7.49 and (protein.p_vir < virlimit and protein.p_ad < padlimit): continue
         if virulent != "True":
@@ -76,7 +76,7 @@ def output(list_of_proteins:list, outfile, mouse_peptides_sum_limit:float, mouse
                  str(protein.transmembrane_doms),
                  str(protein.localization[0].localization),
                  str(protein.localization[0].reliability),
-                 #str(", ".join([str(element) for element in protein.localization])),
+                 str(", ".join([str(element) for element in protein.localization])),
                  str("".join([str(round(protein.p_vir,4)) if protein.p_vir!=None else ""])),
                  str("".join([str(round(protein.p_ad, 4)) if protein.p_ad!=None else ""])),
                  str("".join([str(round(protein.conservation_score, 4)) if protein.conservation_score!=None else ""])),
