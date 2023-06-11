@@ -40,12 +40,12 @@ class Args(NamedTuple):
     transmemb_doms_limit:int
     virlimit:float
     virulent:bool
-    epitopes: {self.epitopes},
-    mhci_length: {self.mhci_length},
-    mhcii_length: {self.mhcii_length},
-    mhci_overlap: {self.mhci_overlap},
-    mhcii_overlap: {self.mhcii_overlap},
-    epitope_percentile: {self.epitope_percentile},
+    epitopes:str
+    mhci_length:int
+    mhcii_length:int
+    mhci_overlap:int
+    mhcii_overlap:int
+    epitope_percentile:float
     working_dir:str
     NERVE_dir:str
     iFeature_dir:str
