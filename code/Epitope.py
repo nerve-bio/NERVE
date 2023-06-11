@@ -131,24 +131,24 @@ def epitope(final_proteins, autoimmunity, mouse, mouse_peptides_sum_limit, worki
                    ax = plotting.plot_binder_map(mhcii_predictor, name=name)
                    ax.figure.savefig(fname=new_dir_path+'heatmap_pbs_MHC2_{}.png'.format(p.accession))
 		
-		p.HLA_A_01_01 = HLA_A_01_01
-                p.HLA_A_02_01 = HLA_A_02_01
-		p.HLA_A_03_01 = HLA_A_03_01
-		p.HLA_A_24_02 = HLA_A_24_02
-		p.HLA_B_07_02 = HLA_B_07_02
-		p.HLA_B_44_03 = HLA_B_44_03
+		protein.HLA_A_01_01 = HLA_A_01_01
+                protein.HLA_A_02_01 = HLA_A_02_01
+		protein.HLA_A_03_01 = HLA_A_03_01
+		protein.HLA_A_24_02 = HLA_A_24_02
+		protein.HLA_B_07_02 = HLA_B_07_02
+		protein.HLA_B_44_03 = HLA_B_44_03
 		
-		p.HLA_DRB1_01_01 = HLA_DRB1_01_01
-		p.HLA_DRB1_03_01 = HLA_DRB1_03_01
-		p.HLA_DRB1_04_01 = HLA_DRB1_04_01
-		p.HLA_DRB1_07_01 = HLA_DRB1_07_01
-		p.HLA_DRB1_08_01 = HLA_DRB1_08_01
-		p.HLA_DRB1_11_01 = HLA_DRB1_11_01
-		p.HLA_DRB1_13_01 = HLA_DRB1_13_01
-		p.HLA_DRB1_15_01 = HLA_DRB1_15_01
+		protein.HLA_DRB1_01_01 = HLA_DRB1_01_01
+		protein.HLA_DRB1_03_01 = HLA_DRB1_03_01
+		protein.HLA_DRB1_04_01 = HLA_DRB1_04_01
+		protein.HLA_DRB1_07_01 = HLA_DRB1_07_01
+		protein.HLA_DRB1_08_01 = HLA_DRB1_08_01
+		protein.HLA_DRB1_11_01 = HLA_DRB1_11_01
+		protein.HLA_DRB1_13_01 = HLA_DRB1_13_01
+		protein.HLA_DRB1_15_01 = HLA_DRB1_15_01
 		
-		p.pb1 = best_pb1
-		p.pb2 = best_pb2
+		protein.pb1 = best_pb1
+		protein.pb2 = best_pb2
                                    
                 
     return final_proteins
