@@ -284,7 +284,7 @@ def get_args() -> Args:
                 args.razlen, args.select, args.substitution, args.transmemb_doms_limit, args.virlimit, 
                 args.virulent, args.epitopes,
                 args.mhci_length, args.mhcii_length, args.mhci_overlap, args.mhcii_overlap,
-                args.epitope_percentileargs.working_dir, args.NERVE_dir, args.iFeature_dir, args.DeepFri_dir)
+                args.epitope_percentile, args.working_dir, args.NERVE_dir, args.iFeature_dir, args.DeepFri_dir)
 
 
 def main():
