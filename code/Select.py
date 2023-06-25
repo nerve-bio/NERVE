@@ -85,22 +85,14 @@ def output(list_of_proteins:list, outfile, mouse_peptides_sum_limit:float, mouse
                  str(protein.sequence),
                  str("".join([str(protein.original_sequence_if_razor) if protein.original_sequence_if_razor!=None else ""])),
                  str("".join([str(protein.tmhmm_seq) if "M" in str(protein.tmhmm_seq) else ""])), # should be shown anyways
-                 str("".join([str(protein.HLA_A_01_01) if protein.HLA_A_01_01!=None else ""])),
-                 str("".join([str(protein.HLA_A_02_01) if protein.HLA_A_02_01!=None else ""])),
-                 str("".join([str(protein.HLA_A_03_01) if protein.HLA_A_03_01!=None else ""])),
-                 str("".join([str(protein.HLA_A_24_02) if protein.HLA_A_24_02!=None else ""])),
-                 str("".join([str(protein.HLA_B_07_02) if protein.HLA_B_07_02!=None else ""])),
-                 str("".join([str(protein.HLA_B_44_03) if protein.HLA_B_44_03!=None else ""])),
-                 str("".join([str(protein.HLA_A_01_01) if protein.HLA_A_01_01!=None else ""])),
-                 str("".join([str(protein.HLA_DRB1_01_01) if protein.HLA_DRB1_01_01!=None else ""])),
-                 str("".join([str(protein.HLA_DRB1_03_01) if protein.HLA_DRB1_03_01!=None else ""])),
-                 str("".join([str(protein.HLA_DRB1_04_01) if protein.HLA_DRB1_04_01!=None else ""])),
-                 str("".join([str(protein.HLA_DRB1_07_01) if protein.HLA_DRB1_08_01!=None else ""])),
-                 str("".join([str(protein.HLA_DRB1_11_01) if protein.HLA_DRB1_11_01!=None else ""])),
-                 str("".join([str(protein.HLA_DRB1_13_01) if protein.HLA_DRB1_13_01!=None else ""])),
-                 str("".join([str(protein.HLA_DRB1_15_01) if protein.HLA_DRB1_15_01!=None else ""])),
-                 str("".join([str(protein.pb1) if protein.pb1!=None else ""])),
-                 str("".join([str(protein.pb2) if protein.pb2!=None else ""]))
+                 str("".join([str(protein.tmhmm_seq) if "M" in str(protein.tmhmm_seq) else ""])),
+                 str("".join([str(protein.MHC1_binders) if str(protein.MHC1_binders) != None else ''])),
+                 str("".join([str(protein.MHC2_binders) if str(protein.MHC2_binders) != None else ''])),
+                 str("".join([str(protein.MHC1_pb_binders) if str(protein.MHC1_pb_binders) != None else ''])),
+                 str("".join([str(protein.MHC2_pb_binders) if str(protein.MHC2_pb_binders) != None else ''])),
+                 str("".join([str(protein.instability_index) if str(protein.instability_index) != None else ''])),
+                 str("".join([str(protein.charge_at_pH_7) if str(protein.charge_at_pH_7) != None else '']))
+                 
                  
                  ] for protein in list_of_proteins
                 ], 
@@ -125,22 +117,12 @@ def output(list_of_proteins:list, outfile, mouse_peptides_sum_limit:float, mouse
                     'sequence',
                     'original_sequence_if_razor',
                     'tmhmm_seq',
-                    'MHC1_HLA_A_01_01',
-                    'MHC1_HLA_A_02_01',
-                    'MHC1_HLA_A_03_01',
-                    'MHC1_HLA_A_24_02',
-                    'MHC1_HLA_B_07_02',
-                    'MHC1_HLA_B_44_03',
-                    'MHC2_HLA_DRB1_01_01',
-                    'MHC2_HLA_DRB1_03_01',
-                    'MHC2_HLA_DRB1_04_01',
-                    'MHC2_HLA_DRB1_07_01',
-                    'MHC2_HLA_DRB1_08_01',
-                    'MHC2_HLA_DRB1_11_01',
-                    'MHC2_HLA_DRB1_13_01',
-                    'MHC2_HLA_DRB1_15_01',
-                    'promiscuous_binders_MHC1',
-                    'promiscuous_binders_MHC2'
+                    'MHC1_binders',
+                    'MHC2_binders',
+                    'MHC1_pb_binders',
+                    'MHC2_pb_binders',
+                    'Instability_index',
+                    'Charge_at_pH7'
                      ]
                 )
     df = df.sort_values(by = 'score', ascending = False)
