@@ -2,7 +2,7 @@
 """Select module"""
 
 import pandas as pd
-from Protein import Protein
+from code.Protein import Protein
     
 def select(list_of_proteins, transmemb_doms_limit,
            padlimit, mouse, mouse_peptides_sum_limit, virlimit, virulent, razor)->list:
