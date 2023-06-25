@@ -152,7 +152,14 @@ class Protein:
                  str(", ".join(list(set(protein.list_of_peptides_from_comparison_with_mhcpep_mouse)))),  
                  str(protein.sequence),
                  str("".join([str(protein.original_sequence_if_razor) if protein.original_sequence_if_razor!=None else ""])),
-                 str("".join([str(protein.tmhmm_seq) if "M" in str(protein.tmhmm_seq) else ""]))
+                 str("".join([str(protein.tmhmm_seq) if "M" in str(protein.tmhmm_seq) else ""])),
+		 str("".join([str(protein.MHC1_binders) if protein.MHC1_binders != None else ""])),
+                 str("".join([str(protein.MHC2_binders) if protein.MHC2_binders != None else ""])),
+                    
+                 str("".join([str(protein.MHC1_pb_binders) if protein.MHC1_pb_binders != None else ""])),
+                 str("".join([str(protein.MHC2_pb_binders) if protein.MHC2_pb_binders != None else ""])),
+                 str("".join([str(protein.instability_index) if str(protein.instability_index) != None else ''])),
+                 str("".join([str(protein.charge_at_pH_7) if str(protein.charge_at_pH_7) != None else '']))
                  ] for protein in list_of_proteins
                 ], 
                 columns= ['id ',
@@ -175,5 +182,11 @@ class Protein:
                     'sequence',
                     'original_sequence_if_razor',
                     'tmhmm_seq'
+		     'MHC1_binders',
+                           'MHC2_binders',
+                           'MHC1_pb_binders',
+                           'MHC2_pb_binders',
+                           'Instability_index',
+                           'charge_at_pH7'
                      ]
                 ).to_csv(outfile) 
