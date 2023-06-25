@@ -5,7 +5,7 @@
 from epitopepredict import base, sequtils, analysis, plotting
 import math
 from Utils import *
-from Select import *
+from code.Select import *
 
 
 def epitope(final_proteins, autoimmunity, mouse, mouse_peptides_sum_limit, antigen, working_dir,
