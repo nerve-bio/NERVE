@@ -8,7 +8,7 @@ from Utils import *
 from code.Select import *
 
 
-def epitope(final_proteins, autoimmunity, mouse, mouse_peptides_sum_limit, antigen, working_dir,
+def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
             mhci_length, mhcii_length, mhci_overlap, mhcii_overlap, epitope_percentile) -> list:
     """Module to run epitopes prediction"""
     
