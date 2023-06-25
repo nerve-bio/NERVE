@@ -10,6 +10,7 @@ def select(list_of_proteins, transmemb_doms_limit,
         
     final_list = []
     for protein in list_of_proteins:
+
         if protein.localization[0].localization == "Cytoplasmic" or protein.localization[0].reliability < 7.49: continue
         if virulent == 'False':
             if protein.p_ad < padlimit: continue
@@ -19,6 +20,22 @@ def select(list_of_proteins, transmemb_doms_limit,
             if (protein.transmembrane_doms >= transmemb_doms_limit) and (protein.original_sequence_if_razor is None): continue
         if razor == 'False':
             if protein.transmembrane_doms >= transmemb_doms_limit: continue
+
+        # exclude cytoplasmatic proteins if low PAD or VIR
+        if virulent == "True":
+            if (protein.localization[0].localization == "Cytoplasmic" and (protein.p_ad < padlimit and protein.p_vir < virlimit)): continue 
+        if virulent != "True":
+            if protein.localization[0].localization == "Cytoplasmic" and protein.p_ad < padlimit: continue 
+        if protein.localization[0].localization == "Cytoplasmic" and protein.localization[0].reliability >= 7.49: continue
+        
+        # exlude low fidelity localization prediction proteins if low PAD or VIR
+        if virulent == "True":
+            if protein.localization[0].reliability < 7.49 and (protein.p_vir < virlimit and protein.p_ad < padlimit): continue
+        if virulent != "True":
+            if protein.localization[0].reliability < 7.49 and protein.p_ad < padlimit: continue
+        
+        if (protein.transmembrane_doms >= transmemb_doms_limit) and (protein.original_sequence_if_razor is None): continue
+
         if protein.sapiens_peptides_sum > .15: continue
         if len(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens) >= 1: continue
         if mouse == "True":
@@ -53,7 +70,7 @@ def output(list_of_proteins:list, outfile, mouse_peptides_sum_limit:float, mouse
                  str(protein.transmembrane_doms),
                  str(protein.localization[0].localization),
                  str(protein.localization[0].reliability),
-                 #str(", ".join([str(element) for element in protein.localization])),
+                 str(", ".join([str(element) for element in protein.localization])),
                  str("".join([str(round(protein.p_vir,4)) if protein.p_vir!=None else ""])),
                  str("".join([str(round(protein.p_ad, 4)) if protein.p_ad!=None else ""])),
                  str("".join([str(round(protein.conservation_score, 4)) if protein.conservation_score!=None else ""])),
@@ -67,7 +84,24 @@ def output(list_of_proteins:list, outfile, mouse_peptides_sum_limit:float, mouse
                  str(", ".join(list(set(protein.list_of_peptides_from_comparison_with_mhcpep_mouse)))),  
                  str(protein.sequence),
                  str("".join([str(protein.original_sequence_if_razor) if protein.original_sequence_if_razor!=None else ""])),
-                 str("".join([str(protein.tmhmm_seq) if "M" in str(protein.tmhmm_seq) else ""])) # should be shown anyways
+                 str("".join([str(protein.tmhmm_seq) if "M" in str(protein.tmhmm_seq) else ""])), # should be shown anyways
+                 str("".join([str(protein.HLA_A_01_01) if protein.HLA_A_01_01!=None else ""])),
+                 str("".join([str(protein.HLA_A_02_01) if protein.HLA_A_02_01!=None else ""])),
+                 str("".join([str(protein.HLA_A_03_01) if protein.HLA_A_03_01!=None else ""])),
+                 str("".join([str(protein.HLA_A_24_02) if protein.HLA_A_24_02!=None else ""])),
+                 str("".join([str(protein.HLA_B_07_02) if protein.HLA_B_07_02!=None else ""])),
+                 str("".join([str(protein.HLA_B_44_03) if protein.HLA_B_44_03!=None else ""])),
+                 str("".join([str(protein.HLA_A_01_01) if protein.HLA_A_01_01!=None else ""])),
+                 str("".join([str(protein.HLA_DRB1_01_01) if protein.HLA_DRB1_01_01!=None else ""])),
+                 str("".join([str(protein.HLA_DRB1_03_01) if protein.HLA_DRB1_03_01!=None else ""])),
+                 str("".join([str(protein.HLA_DRB1_04_01) if protein.HLA_DRB1_04_01!=None else ""])),
+                 str("".join([str(protein.HLA_DRB1_07_01) if protein.HLA_DRB1_08_01!=None else ""])),
+                 str("".join([str(protein.HLA_DRB1_11_01) if protein.HLA_DRB1_11_01!=None else ""])),
+                 str("".join([str(protein.HLA_DRB1_13_01) if protein.HLA_DRB1_13_01!=None else ""])),
+                 str("".join([str(protein.HLA_DRB1_15_01) if protein.HLA_DRB1_15_01!=None else ""])),
+                 str("".join([str(protein.pb1) if protein.pb1!=None else ""])),
+                 str("".join([str(protein.pb2) if protein.pb2!=None else ""]))
+                 
                  ] for protein in list_of_proteins
                 ], 
                 columns= ['id',
@@ -91,6 +125,22 @@ def output(list_of_proteins:list, outfile, mouse_peptides_sum_limit:float, mouse
                     'sequence',
                     'original_sequence_if_razor',
                     'tmhmm_seq',
+                    'MHC1_HLA_A_01_01',
+                    'MHC1_HLA_A_02_01',
+                    'MHC1_HLA_A_03_01',
+                    'MHC1_HLA_A_24_02',
+                    'MHC1_HLA_B_07_02',
+                    'MHC1_HLA_B_44_03',
+                    'MHC2_HLA_DRB1_01_01',
+                    'MHC2_HLA_DRB1_03_01',
+                    'MHC2_HLA_DRB1_04_01',
+                    'MHC2_HLA_DRB1_07_01',
+                    'MHC2_HLA_DRB1_08_01',
+                    'MHC2_HLA_DRB1_11_01',
+                    'MHC2_HLA_DRB1_13_01',
+                    'MHC2_HLA_DRB1_15_01',
+                    'promiscuous_binders_MHC1',
+                    'promiscuous_binders_MHC2'
                      ]
                 )
     df = df.sort_values(by = 'score', ascending = False)
