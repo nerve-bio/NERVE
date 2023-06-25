@@ -27,10 +27,11 @@ def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
     m1alleles = base.get_preset_alleles('mhc1_supertypes')
 
     # calculate score for every protein in the list
+                        ####################################################################################
     protein_scores = []
     
     for protein in final_proteins:
-        score = scorer(protein, mouse_peptides_sum_limit, mouse, autoimmunity, antigen)
+        score = protein.score
         protein_scores.append(score)
 
     if len(protein_scores) != 0:
