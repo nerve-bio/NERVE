@@ -1,3 +1,4 @@
+
 """Run epitope prediction of proteins"""
 
 
@@ -7,7 +8,7 @@ from Utils import *
 from Select import *
 
 
-def epitope(final_proteins, autoimmunity, mouse, mouse_peptides_sum_limit, working_dir,
+def epitope(final_proteins, autoimmunity, mouse, mouse_peptides_sum_limit, antigen, working_dir,
             mhci_length, mhcii_length, mhci_overlap, mhcii_overlap, epitope_percentile) -> list:
     """Module to run epitopes prediction"""
     
@@ -27,10 +28,9 @@ def epitope(final_proteins, autoimmunity, mouse, mouse_peptides_sum_limit, worki
 
     # calculate score for every protein in the list
     protein_scores = []
-    #data_i = []
-    #data_ii = []
+    
     for protein in final_proteins:
-        score = scorer(protein, mouse_peptides_sum_limit, mouse, autoimmunity)
+        score = scorer(protein, mouse_peptides_sum_limit, mouse, autoimmunity, antigen)
         protein_scores.append(score)
 
     if len(protein_scores) != 0:
@@ -40,8 +40,7 @@ def epitope(final_proteins, autoimmunity, mouse, mouse_peptides_sum_limit, worki
         n = len(sorted_scores)
         percentile_index = math.ceil(n * epitope_percentile) - 1
         percentile = sorted_scores[percentile_index]
-	
-	
+
         for p, score in zip(final_proteins, protein_scores):
             if score >= epitope_percentile:
                 # create a dir for every protein
@@ -67,54 +66,67 @@ def epitope(final_proteins, autoimmunity, mouse, mouse_peptides_sum_limit, worki
                 mhci_epitopes.to_csv(new_dir_path+'mhci_epitopes_{}.csv'.format(p.accession), index=False)
                 mhcii_epitopes.to_csv(new_dir_path+'mhcii_epitopes_{}.csv'.format(p.accession), index=False)
 
+                
                 results_mhc1_raw = base.results_from_csv(path=new_dir_path+'mhci_epitopes_{}.csv'.format(p.accession))
                 ###
                 
                 score_threshold = results_mhc1_raw['score'].quantile(0.95)
-                filtered_binders1 = results_mhc1_raw.loc[results_mhc1_raw['score'] >= score_threshold]       
-                
-                best_binder1 = filtered_binders1.groupby('allele').apply(lambda x: x.loc[x['score'].idmax()])
-		
-                for allele, row in best_binder1.iterrows():
-                    #allele_name = allele.replace('*', '_').replace(':','_').replace('-','_')
-	            allele_name = str(allele).replace('*', '_').replace(':', '_').replace('-', '_')
-
-                    peptide = row['peptide']
-                    exec(f"{allele_name} = '{peptide}'")    #create a variable for every allele (6 in total, A0101, A0201, A0301, A2402, B0702, B4403)
-
+                filtered_binders1 = results_mhc1_raw.loc[results_mhc1_raw['score'] >= score_threshold]
                 ###
-                
+
                 #filtered_binders1 = mhci_predictor.get_binders(names=results_mhc1_raw, cutoff=0.95)  #non funziona, vedi sopra
                 
                 #save filtered binders
                 filtered_binders1.to_csv(new_dir_path+'MHC1_epitopes_FILTERED{}.csv'.format(p.accession), index=False) #####
+                binders1 = pd.read_csv(new_dir_path + 'mhci_epitopes_{}.csv'.format(p.accession))
+
+                # Seleziona le righe con il valore di score più alto per ogni allele
+                pd.set_option('display.max_colwidth', None)
+                #binders1 = binders1.reset_index()
+                if not binders1.empty:
+                    best_binders = binders1.groupby('allele').apply(lambda x: x.loc[x['score'].idxmax()])
+                    best_binders = best_binders.loc[:, ['allele', 'score', 'peptide']]
+                    p.MHC1_binders = best_binders
                 # find promiscuous binders
-                pb1 = mhci_predictor.promiscuous_binders(cutoff=.95, cutoff_method='score')  #cutoff=.95, cutoff_method='score'     #####################salvare il migliore e colonna 
-                best_pb1 = pb1.loc[pb1['score'].idxmax()]
+                pb1 = mhci_predictor.promiscuous_binders(cutoff=.95, cutoff_method='score') #cutoff=.95, cutoff_method='score'
+
                 # save pbs
                 pb1.to_csv(new_dir_path+'Promiscuous_binders_MHC1_{}.csv'.format(p.accession), index=False)
-                
+
+                binders_pb1 = pd.read_csv(new_dir_path + 'Promiscuous_binders_MHC1_{}.csv'.format(p.accession))
+                if not binders_pb1.empty:
+                    best_binders_pb1 = binders_pb1.groupby('name').apply(lambda x: x.loc[x['score'].idxmax()])
+                    best_binders_pb1 = best_binders_pb1.loc[:, ['alleles', 'score', 'peptide']]
+                    p.MHC1_pb_binders = best_binders_pb1
+                else:
+                    p.MHC1_pb_binders = 'None'
                 # promiscuous binders mhc2
                 results_mhc2_raw = base.results_from_csv(path=new_dir_path+'mhcii_epitopes_{}.csv'.format(p.accession))
-                filtered_binders2 = mhcii_predictor.get_binders(names=results_mhc2_raw, cutoff=0.95)          ################################ salvare il migliore e colonna
-                best_binder2 = filtered_binders2.groupby('allele').apply(lambda x: x.loc[x['score'].idmax()])
-		
-                for allele, row in best_binder1.iterrows():
-                    #allele_name = allele.replace('*', '_').replace(':','_').replace('-','_')
-		    allele_name = str(allele).replace('*', '_').replace(':', '_').replace('-', '_')
-
-                    peptide = row['peptide']
-                    exec(f"{allele_name} = '{peptide}'")    #create a variable for every allele (8 in total, 0101, 0301, 0401, 0701, 0801, 1101, 1301, 1501)
-			
+                filtered_binders2 = mhcii_predictor.get_binders(names=results_mhc2_raw, cutoff=0.95)
                 # save filtered binders
                 filtered_binders2.to_csv(new_dir_path+'MHC2_epitopes_FILTERED{}.csv'.format(p.accession), index=False)
-                # find promiscuous binders
-                pb2 = mhcii_predictor.promiscuous_binders(cutoff=0.95)                                               ###########################salvare il migliore e colonna
-                best_pb2 = pb2.loc[pb2['score'].idxmax()]
+                binders2= pd.read_csv(new_dir_path + 'MHC2_epitopes_FILTERED{}.csv'.format(p.accession))
+                if not binders2.empty:
+                    best_binders2 = binders2.groupby('allele').apply(lambda x: x.loc[x['score'].idxmax()])
+                    best_binders2= best_binders2.loc[:, ['allele', 'score', 'peptide']]
 
-                # save pbs 
+                    p.MHC2_binders = best_binders2
+                else:
+                    p.MHC2_pb_binders = 'None'
+
+
+
+                # find promiscuous binders
+                pb2 = mhcii_predictor.promiscuous_binders(cutoff=0.95)
+
+                # save pbs
                 pb2.to_csv(new_dir_path+'Promiscuous_binders_MHC2_{}.csv'.format(p.accession), index=False)
-                
+                binders_pb2 = pd.read_csv(new_dir_path + 'Promiscuous_binders_MHC2_{}.csv'.format(p.accession))
+                if not binders_pb2.empty:
+                    best_binders_pb2 = binders_pb2.groupby('name').apply(lambda x: x.loc[x['score'].idxmax()])
+                    best_binders_pb2 = best_binders_pb2.loc[:, ['alleles', 'score', 'peptide']]
+
+                    p.MHC2_pb_binders = best_binders_pb2
                 # plot binders in a sequence
                 names_i = mhci_predictor.get_names()
                 for name in names_i:
@@ -134,27 +146,10 @@ def epitope(final_proteins, autoimmunity, mouse, mouse_peptides_sum_limit, worki
                 for name in names_ii:
                    ax = plotting.plot_binder_map(mhcii_predictor, name=name)
                    ax.figure.savefig(fname=new_dir_path+'heatmap_pbs_MHC2_{}.png'.format(p.accession))
-			
-		
-                p.HLA_A_01_01 = HLA_A_01_01
-                p.HLA_A_02_01 = HLA_A_02_01
-                p.HLA_A_03_01 = HLA_A_03_01
-                p.HLA_A_24_02 = HLA_A_24_02
-                p.HLA_B_07_02 = HLA_B_07_02
-                p.HLA_B_44_03 = HLA_B_44_03
-		
-                p.HLA_DRB1_01_01 = HLA_DRB1_01_01
-                p.HLA_DRB1_03_01 = HLA_DRB1_03_01
-                p.HLA_DRB1_04_01 = HLA_DRB1_04_01
-                p.HLA_DRB1_07_01 = HLA_DRB1_07_01
-                p.HLA_DRB1_08_01 = HLA_DRB1_08_01
-                p.HLA_DRB1_11_01 = HLA_DRB1_11_01
-                p.HLA_DRB1_13_01 = HLA_DRB1_13_01
-                p.HLA_DRB1_15_01 = HLA_DRB1_15_01
-		
-                p.pb1 = best_pb1
-                p.pb2 = best_pb2
-                                   
+                
+
+
+
+
                 
     return final_proteins
-
