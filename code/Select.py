@@ -90,8 +90,7 @@ def output(list_of_proteins:list, outfile, mouse_peptides_sum_limit:float, mouse
                  str("".join([str(protein.MHC2_binders) if str(protein.MHC2_binders) != None else ''])),
                  str("".join([str(protein.MHC1_pb_binders) if str(protein.MHC1_pb_binders) != None else ''])),
                  str("".join([str(protein.MHC2_pb_binders) if str(protein.MHC2_pb_binders) != None else ''])),
-                 str("".join([str(protein.instability_index) if str(protein.instability_index) != None else ''])),
-                 str("".join([str(protein.charge_at_pH_7) if str(protein.charge_at_pH_7) != None else '']))
+               
                  
                  
                  ] for protein in list_of_proteins
@@ -121,8 +120,7 @@ def output(list_of_proteins:list, outfile, mouse_peptides_sum_limit:float, mouse
                     'MHC2_binders',
                     'MHC1_pb_binders',
                     'MHC2_pb_binders',
-                    'Instability_index',
-                    'Charge_at_pH7'
+                   
                      ]
                 )
     df = df.sort_values(by = 'score', ascending = False)
