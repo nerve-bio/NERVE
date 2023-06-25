@@ -7,6 +7,7 @@ class Protein:
 		
 	def __init__(self, identifier, sequence_string):
 		self.id = identifier
+		self.score = None        
 		self.accession = identifier.split('|')[1] if identifier.count("|")==2 else None
 		self.sequence = sequence_string # the sequence used for the analyses
 		self.original_sequence_if_razor = None # put the original sequence if razor is performed

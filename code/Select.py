@@ -5,22 +5,22 @@ import pandas as pd
 from Protein import Protein
     
 def select(list_of_proteins, transmemb_doms_limit,
-           padlimit, mouse, mouse_peptides_sum_limit, virlimit, virulent, annotation)->list:
+           padlimit, mouse, mouse_peptides_sum_limit, virlimit, virulent, razor)->list:
     """Selects suitable candidate proteins for vaccine production"""
-    
-    # annotations to exclude proteins
-    exclusion_annotations = ['structural constituent of ribosome', 'DNA binding', 'DNA-binding transcription factor activity',
-                             'transcription regulator activity', 'rRNA binding', 'RNA binding',
-                             'aminoacyl-tRNA ligase activity', 'sequence-specific DNA binding', 
-                             'catalytic activity, acting on a tRNA', 'catalytic activity, acting on RNA',
-                             'tyrosine-tRNA ligase activity', 'aminoacyl-tRNA editing activity',
-                             'translation factor activity, RNA binding', 'translation regulator activity',
-                             'translation regulator activity, nucleic acid binding', 
-                             'translation elongation factor activity', 'catalytic activity, acting on DNA'
-                            ]
-    
+        
     final_list = []
     for protein in list_of_proteins:
+
+        if protein.localization[0].localization == "Cytoplasmic" or protein.localization[0].reliability < 7.49: continue
+        if virulent == 'False':
+            if protein.p_ad < padlimit: continue
+        if virulent == 'True':
+            if protein.p_ad < padlimit and protein.p_vir < virlimit: continue
+        if razor == 'True':
+            if (protein.transmembrane_doms >= transmemb_doms_limit) and (protein.original_sequence_if_razor is None): continue
+        if razor == 'False':
+            if protein.transmembrane_doms >= transmemb_doms_limit: continue
+
         # exclude cytoplasmatic proteins if low PAD or VIR
         if virulent == "True":
             if (protein.localization[0].localization == "Cytoplasmic" and (protein.p_ad < padlimit and protein.p_vir < virlimit)): continue 
@@ -35,21 +35,15 @@ def select(list_of_proteins, transmemb_doms_limit,
             if protein.localization[0].reliability < 7.49 and protein.p_ad < padlimit: continue
         
         if (protein.transmembrane_doms >= transmemb_doms_limit) and (protein.original_sequence_if_razor is None): continue
+
         if protein.sapiens_peptides_sum > .15: continue
         if len(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens) >= 1: continue
         if mouse == "True":
             if protein.mouse_peptides_sum > mouse_peptides_sum_limit: continue 
-            if len(protein.list_of_peptides_from_comparison_with_mhcpep_mouse) >= 1: continue 
-        
-        annotation_flag = "False"
-        if annotation == "True":
-            for annot in exclusion_annotations:
-                if annot in str(protein.annotations): 
-                    annotation_flag = "True"
-        if annotation_flag == "True": continue
+            if len(protein.list_of_peptides_from_comparison_with_mhcpep_mouse) >= 1: continue
 
         final_list.append(protein)
-    return final_list
+    return final_list 
 
 def scorer(protein:Protein, mouse_peptides_sum_limit:float, mouse:str) -> float:
     """Provides a score for protein candidates"""
@@ -71,7 +65,7 @@ def output(list_of_proteins:list, outfile, mouse_peptides_sum_limit:float, mouse
     """Produces output .csv table"""
     df = pd.DataFrame([[str(protein.id),
                  str("".join([str(protein.accession) if protein.accession!=None else ""])),
-                 (round(scorer(protein, mouse_peptides_sum_limit, mouse), 4)),
+                 (round(protein.score, 4)),
                  str(protein.length),
                  str(protein.transmembrane_doms),
                  str(protein.localization[0].localization),

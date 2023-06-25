@@ -6,18 +6,17 @@ from typing import NamedTuple
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # disable warnings
 
-from Protein import *
-from Utils import bashCmdMethod, dir_path
-from Function import annotation
-from Adhesin import extract_features, adhesin_predict
-from Virulent_factor import virulent_factor_predict
-from Quality_control import proteome_downloader, proteome_uploader, quality_control
-from Subcellular import psortb
-from Topology import tmhelices
-from Razor import razor
-from Immunity import  autoimmunity, conservation, mouse
-from Select import output, select
-from Epitope import *
+from code.Protein import Protein
+from code.Utils import bashCmdMethod, dir_path
+from code.Function import annotation
+from code.Adhesin import extract_features, adhesin_predict
+from code.Virulent_factor import virulent_factor_predict
+from code.Quality_control import proteome_downloader, proteome_uploader, quality_control
+from code.Subcellular import psortb
+from code.Topology import tmhelices
+from code.Razor import razor
+from code.Immunity import  autoimmunity, conservation, mouse
+from code.Select import output, select, scorer
 
 class Args(NamedTuple):
     '''Command-line arguments'''
@@ -453,13 +452,17 @@ def main():
         logging.debug("Done run in: {:.4f} seconds".format(end - start))
     print("90% done")
     
+    # score
+    for protein in list_of_proteins:
+        protein.score = scorer(protein, args.mouse_peptides_sum_limit, args.mouse)
+    
     # select
     final_proteins=list_of_proteins
     if args.select == "True":
         logging.debug("Select start...")
         start=time.time()
         final_proteins = select(list_of_proteins, args.transmemb_doms_limit,
-                                args.padlimit, args.mouse, args.mouse_peptides_sum_limit, args.virlimit, args.virulent, args.annotation)
+                                args.padlimit, args.mouse, args.mouse_peptides_sum_limit, args.virlimit, args.virulent, args.razor)
         end = time.time()
         logging.debug("Done run in: {:.4f} seconds".format(end - start))
 
