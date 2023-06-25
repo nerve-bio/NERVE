@@ -17,7 +17,7 @@ from code.Topology import tmhelices
 from code.Razor import razor
 from code.Immunity import  autoimmunity, conservation, mouse
 from code.Select import output, select, scorer
-from code.Epitope import *
+from code.Epitope import epitope
 
 class Args(NamedTuple):
     '''Command-line arguments'''
