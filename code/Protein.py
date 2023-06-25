@@ -33,8 +33,7 @@ class Protein:
 		self.MHC2_binders = []
 		self.MHC1_pb_binders = []
 		self.MHC2_pb_binders = []
-		self.instability_index = []
-		self.charge_at_ph_7 = []
+		
 
 	def print_information(self):
 		print("Information about protein " + str(self.id) + ":")
@@ -158,8 +157,7 @@ class Protein:
                     
                  str("".join([str(protein.MHC1_pb_binders) if protein.MHC1_pb_binders != None else ""])),
                  str("".join([str(protein.MHC2_pb_binders) if protein.MHC2_pb_binders != None else ""])),
-                 str("".join([str(protein.instability_index) if str(protein.instability_index) != None else ''])),
-                 str("".join([str(protein.charge_at_pH_7) if str(protein.charge_at_pH_7) != None else '']))
+                 
                  ] for protein in list_of_proteins
                 ], 
                 columns= ['id ',
@@ -186,7 +184,6 @@ class Protein:
                     'MHC2_binders',
                     'MHC1_pb_binders',
                     'MHC2_pb_binders',
-                    'Instability_index',
-                    'charge_at_pH7'
+                   
                      ]
                 ).to_csv(outfile) 
