@@ -153,7 +153,7 @@ class Protein:
                  str(protein.sequence),
                  str("".join([str(protein.original_sequence_if_razor) if protein.original_sequence_if_razor!=None else ""])),
                  str("".join([str(protein.tmhmm_seq) if "M" in str(protein.tmhmm_seq) else ""])),
-		 str("".join([str(protein.MHC1_binders) if protein.MHC1_binders != None else ""])),
+		         str("".join([str(protein.MHC1_binders) if protein.MHC1_binders != None else ""])),
                  str("".join([str(protein.MHC2_binders) if protein.MHC2_binders != None else ""])),
                     
                  str("".join([str(protein.MHC1_pb_binders) if protein.MHC1_pb_binders != None else ""])),
@@ -182,11 +182,11 @@ class Protein:
                     'sequence',
                     'original_sequence_if_razor',
                     'tmhmm_seq'
-		     'MHC1_binders',
-                           'MHC2_binders',
-                           'MHC1_pb_binders',
-                           'MHC2_pb_binders',
-                           'Instability_index',
-                           'charge_at_pH7'
+		            'MHC1_binders',
+                    'MHC2_binders',
+                    'MHC1_pb_binders',
+                    'MHC2_pb_binders',
+                    'Instability_index',
+                    'charge_at_pH7'
                      ]
                 ).to_csv(outfile) 
