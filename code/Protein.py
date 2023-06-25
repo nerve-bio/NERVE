@@ -28,22 +28,13 @@ class Protein:
 		self.conservation_score = None
 		self.annotations = None
 		self.model_raw_data = []
-		self.HLA_A_01_01 = []
-		self.HLA_A_02_01 = []
-		self.HLA_A_03_01 = []
-		self.HLA_A_24_02 = []
-		self.HLA_B_07_02 = []
-		self.HLA_B_44_03 = []
-		self.HLA_DRB1_01_01 = []
-		self.HLA_DRB1_03_01 = []
-		self.HLA_DRB1_04_01 = []
-		self.HLA_DRB1_07_01 = []
-		self.HLA_DRB1_08_01 = []
-		self.HLA_DRB1_11_01 = []
-		self.HLA_DRB1_13_01 = []
-		self.HLA_DRB1_15_01 = []
-		self.pb1 = []
-		self.pb2 = []
+		self.model_raw_data1 = []
+		self.MHC1_binders = []
+		self.MHC2_binders = []
+		self.MHC1_pb_binders = []
+		self.MHC2_pb_binders = []
+		self.instability_index = []
+		self.charge_at_ph_7 = []
 
 	def print_information(self):
 		print("Information about protein " + str(self.id) + ":")
