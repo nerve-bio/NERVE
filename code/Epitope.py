@@ -3,6 +3,7 @@
 
 
 from epitopepredict import base, sequtils, analysis, plotting
+import logging
 import math
 from Utils import *
 from code.Select import *
