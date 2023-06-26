@@ -78,7 +78,7 @@ class Protein:
                 elif label in ['m', 'M']:
                     new_seq += 'X'
                 elif label in ['i', 'I']:
-                    new_seq += '.'
+                    new_seq += 'GGG'
                     i_lengths.append(1)
                 
             avg_i_length = sum(i_lengths) / len(i_lengths) if i_lengths else 0
