@@ -85,7 +85,7 @@ def output(list_of_proteins:list, outfile, mouse_peptides_sum_limit:float, mouse
                  str(protein.sequence),
                  str("".join([str(protein.original_sequence_if_razor) if protein.original_sequence_if_razor!=None else ""])),
                  str("".join([str(protein.tmhmm_seq) if "M" in str(protein.tmhmm_seq) else ""])), # should be shown anyways
-                 str("".join([str(protein.tmhmm_seq) if "M" in str(protein.tmhmm_seq) else ""])),
+          
                  str("".join([str(protein.MHC1_binders) if str(protein.MHC1_binders) != None else ''])),
                  str("".join([str(protein.MHC2_binders) if str(protein.MHC2_binders) != None else ''])),
                  str("".join([str(protein.MHC1_pb_binders) if str(protein.MHC1_pb_binders) != None else ''])),
