@@ -1,4 +1,5 @@
 FROM francecosta/nerve:v0.0.1 AS final
+RUN pip install epitopepredict
 
 WORKDIR /workdir
 RUN pip install epitopepredict
