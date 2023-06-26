@@ -8,6 +8,7 @@ ENV LANG C
 FROM base AS dependencies
 WORKDIR /usr/nerve_python
 RUN pip install setuptools==65.4.1
+RUN pip install epitopepredict
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
     apt-get install git-lfs && \
     git lfs install && \
