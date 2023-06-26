@@ -65,8 +65,43 @@ class Protein:
                 std_dataset = (dataset - means) / std_devs
                 reduced_dataset = std_dataset.dot(projection_matrix)
                 return reduced_dataset
+	def provide_raw_loops(self, transmem_doms_limit):
+    
+        if transmem_doms_limit == 0:
+        
+        
+            new_seq = ''
+            i_lengths = []
+            for t, label in zip(self.sequence, self.tmhmm_seq):
+                if label in ['o', 'O']:
+                    new_seq += t
+                elif label in ['m', 'M']:
+                    new_seq += 'X'
+                elif label in ['i', 'I']:
+                    new_seq += '.'
+                    i_lengths.append(1)
+                
+            avg_i_length = sum(i_lengths) / len(i_lengths) if i_lengths else 0
+      
+        
+            new_seq = new_seq.replace('X', '')
+        
+            
+            return new_seq
+        else:
+            conds = ['o', 'O']
+            if self.localization == "out":
+                conds += ['i', 'I']
+            new_seq = ""
+            for i in range(self.length):
+                if self.tmhmm_seq[i] in conds:
+                    new_seq += self.sequence[i]
+                elif len(new_seq) > 0 and not new_seq[len(new_seq)-1] == "X":
+                    new_seq += "X"
+            return new_seq.split('X')
+
 	
-	def provide_raw_loops(self):
+	def provide_raw_loops_std(self):
 		#print("Warning: this method uses X as a exclusive symbol to split the final protein. Check if X is used inside the protein sequence!")
 		conds = ['o', 'O']
 		if self.localization == "OuterMembrane":
