@@ -1,6 +1,7 @@
 FROM francecosta/nerve:v0.0.1 AS final
 
 WORKDIR /workdir
+RUN pip install epitopepredict
 EXPOSE 8880
 RUN chmod +x /usr/nerve_python/NERVE/code/NERVE.py
 
