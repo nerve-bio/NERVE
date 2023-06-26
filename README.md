@@ -23,7 +23,8 @@ Expected output:
 ```
 usage: NERVE.py [-h] [-a] [-ev] -g [-ml] [-mm] [-m] [-mpsl] -p1 [-p2]
                 [-paefilter] [-pacfilter] [-pl] [-rz] [-rl] [-s] [-ss]
-                [-tdl] [-vl] [-vir] [-wd] [-nd] [-id] [-dfd]
+                [-tdl] [-vl] [-vir] [-wd] [-nd] [-id] [-dfd] [-ep]
+                [-m1l] [-m2l] [-m1ovr] [-m2ovr] [-prt]
 
 Run vaccine candidate prediction
 
@@ -105,6 +106,12 @@ optional arguments:
                         Path to DeepFri folder (download from:
                         https://github.com/flatironinstitute/DeepFRI) (default:
                         /usr/nerve_python/assets/DeepFri)
+-ep (epitope prediction module), [True, False, default=True];
+-m1l (mhc1 ligands length), [9,10,11, default=9];
+-m2l (mhc2 ligands length), [9,11,13,15, default=11];
+-m1ovr (mhc1 ligands max overlap), [1,2,default=1];
+-m2ovr (mhc2 ligands max overlap), [1,2, default=1];
+-prt (epitope binders percentile), [float, default=0.80]
 ```
 Example run:
 ```
