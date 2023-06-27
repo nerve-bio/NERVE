@@ -13,13 +13,13 @@ def razor(list_of_proteins, working_dir, transmemb_doms_limit, razlen)->list:
                         
     #logging.debug("Warning: razor uses X as an exclusive symbol to split the final protein. Check if X is used inside the protein sequence!")
     for protein in list_of_proteins:
-        if transmem_doms_limit == 0:
-            if protein.transmembrane_doms >= transmem_doms_limit:
+        if transmemb_doms_limit == 0:
+            if protein.transmembrane_doms >= transmemb_doms_limit:
             
-                new_loop = protein.provide_raw_loops(transmem_doms_limit)
+                new_loop = protein.provide_raw_loops(transmemb_doms_limit)
             else:
-                if transmem_doms_limit > 0:
-                    if protein.transmembrane_doms >= transmem_doms_limit:
+                if transmemb_doms_limit > 0:
+                    if protein.transmembrane_doms >= transmemb_doms_limit:
                         new_loop = max(p.provide_raw_loops_std(), key = lambda k: len(k))
             
             
