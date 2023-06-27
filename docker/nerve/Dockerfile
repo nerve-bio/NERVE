@@ -1,5 +1,6 @@
 FROM francecosta/nerve:v0.0.1 AS final
 RUN pip install epitopepredict
+RUN pip install pandas==2.0.2
 
 WORKDIR /workdir
 RUN pip install epitopepredict
