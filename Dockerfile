@@ -1,6 +1,7 @@
 FROM francecosta/nerve:v0.0.1 AS final
 RUN pip install epitopepredict
 RUN pip install pandas==2.0.2
+RUN pip install matplotlib==3.5.0
 
 COPY ./ /usr/nerve_python/NERVE
 WORKDIR /workdir
