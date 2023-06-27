@@ -110,7 +110,8 @@ class Protein:
 		for i in range(self.length):
 			if self.tmhmm_seq[i] in conds:
 				new_seq += self.sequence[i]
-		elif len(new_seq) > 0 and not new_seq[len(new_seq)-1] == "X":
+		elif
+			len(new_seq) > 0 and not new_seq[len(new_seq)-1] == "X":
 			new_seq += "X"
 		return new_seq.split('X')
 		
