@@ -33,7 +33,7 @@ class Args(NamedTuple):
     p_ad_extracellular_filter:float
     p_ad_no_citoplasm_filter:float
     padlimit:float
-    razor:bool
+    razor:int
     razlen:int
     select:bool
     substitution:float
@@ -151,7 +151,8 @@ def get_args() -> Args:
                         required=False,
                         )
     parser.add_argument('-rz','--razor',
-                        metavar='\b', 
+                        metavar='\b',
+                        default=2 
                         help="Activation (True) or deactivation (False) of the loop-razor module. This module allows the recovery of protein vaccine candidates, with more than 2 transmembrane domains, that would otherwise be discarded in the select module. The longest loop with minimum len == 'razlen' aa will replace the original protein sequence for following NERVE steps",
                         type=str,
                         default="True",
@@ -471,7 +472,7 @@ def main():
     #    final_proteins.sort(key = lambda p: p.p_vir, reverse = True)
     
     # 12.Epitope prediction
-    if args.epitopes == "True" and args.transmemb_doms_limit != 0:
+    if args.epitopes == "True" and args.transmemb_doms_limit == 0:
         print("=" * 50)
         print("{:^50}".format('Epitope prediction of best candidates with epitopepredict starts'))
         print("=" * 50)
