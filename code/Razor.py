@@ -24,7 +24,7 @@ def razor(list_of_proteins, working_dir, transmemb_doms_limit, razlen)->list:
             
             
             
-            if len(new_loop) > min_loop_length:
+            if len(new_loop) > razlen:
                 logging.debug(f'Substituting {str(protein.id)} sequence with its outer loops')
                 protein.original_sequence_if_razor = protein.sequence
                 protein.sequence = new_loop
