@@ -471,7 +471,7 @@ def main():
     #    final_proteins.sort(key = lambda p: p.p_vir, reverse = True)
     
     # 12.Epitope prediction
-    if args.epitopes == "True":
+    if args.epitopes == "True" and args.transmemb_doms_limit ==0:
         print("=" * 50)
         print("{:^50}".format('Epitope prediction of best candidates with epitopepredict starts'))
         print("=" * 50)
