@@ -217,7 +217,7 @@ def get_args() -> Args:
     parser.add_argument('-m2l', '--mhcii_length',
                         metavar='\b',
                         type=int,
-                        help='mhcii binders length (9, 11, 13, 15 are available)',
+                        help='mhcii binders length (9, 11, 12, 15 are available)',
                         required=False,
                         choices=[9, 11, 13, 15],
                         default=11
