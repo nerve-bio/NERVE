@@ -110,11 +110,10 @@ def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
                 binders2= pd.read_csv(new_dir_path + 'MHC2_epitopes_FILTERED{}.csv'.format(p.accession))
                 if not binders2.empty:
                     best_binders2 = binders2.groupby('allele').apply(lambda x: x.loc[x['score'].idxmax()])
-                    best_binders2= best_binders2.loc[:, ['allele', 'score', 'peptide']]
+                    best_binders2= best_binders2.loc[:, ['peptide']]
 
                     p.MHC2_binders = best_binders2
-                else:
-                    p.MHC2_pb_binders = 'None'
+                
 
 
 
