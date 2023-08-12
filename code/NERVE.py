@@ -180,7 +180,7 @@ def get_args() -> Args:
                         )
     parser.add_argument('-tdl','--transmemb_doms_limit',
                         metavar='\b', 
-                        help="Parameter of select module. Proiteins with trasmembrane domains >= transmemb_doms_limit are discarded",
+                        help="Parameter of select module. Proteins with trasmembrane domains >= transmemb_doms_limit are discarded",
                         type=int,
                         default=3,
                         required=False,
