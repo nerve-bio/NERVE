@@ -53,11 +53,12 @@ def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
                     os.makedirs(new_dir_path)
                 # run predictions for MHC I and II epitopes
                 # use 'threads=0' to use all available cores
-                mhci_epitopes = mhci_predictor.predict_sequences(p.sequence, alleles=m1alleles, length=mhci_length,
+                sequence = p.sequence_out if p.sequence_out != None else p.sequence
+                mhci_epitopes = mhci_predictor.predict_sequences(sequence, alleles=m1alleles, length=mhci_length,
                                                                  verbose=False, overlap=mhci_overlap)
                                                                 	
                                                                  
-                mhcii_epitopes = mhcii_predictor.predict_sequences(p.sequence, alleles=m2alleles, length=mhcii_length,
+                mhcii_epitopes = mhcii_predictor.predict_sequences(sequence, alleles=m2alleles, length=mhcii_length,
                                                                    verbose=False, overlap=mhcii_overlap)
                                                                    	
                 mhci_epitopes['protein id'] = p.id
