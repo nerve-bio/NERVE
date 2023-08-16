@@ -68,7 +68,7 @@ class Protein:
 				return reduced_dataset
 	def provide_raw_loops(self, transmem_doms_limit):
     
-		if transmem_doms_limit == 0:
+		if transmem_doms_limit:
         
         
 			new_seq = ''
