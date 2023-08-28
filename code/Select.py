@@ -2,7 +2,7 @@
 """Select module"""
 
 import pandas as pd
-from Protein import Protein
+from code.Protein import Protein
     
 def select(list_of_proteins, transmemb_doms_limit,
            padlimit, mouse, mouse_peptides_sum_limit, virlimit, virulent, razor)->list:
@@ -10,6 +10,7 @@ def select(list_of_proteins, transmemb_doms_limit,
         
     final_list = []
     for protein in list_of_proteins:
+
         if protein.localization[0].localization == "Cytoplasmic" or protein.localization[0].reliability < 7.49: continue
         if virulent == 'False':
             if protein.p_ad < padlimit: continue
@@ -19,6 +20,22 @@ def select(list_of_proteins, transmemb_doms_limit,
             if (protein.transmembrane_doms >= transmemb_doms_limit) and (protein.original_sequence_if_razor is None): continue
         if razor == 'False':
             if protein.transmembrane_doms >= transmemb_doms_limit: continue
+
+        # exclude cytoplasmatic proteins if low PAD or VIR
+        if virulent == "True":
+            if (protein.localization[0].localization == "Cytoplasmic" and (protein.p_ad < padlimit and protein.p_vir < virlimit)): continue 
+        if virulent != "True":
+            if protein.localization[0].localization == "Cytoplasmic" and protein.p_ad < padlimit: continue 
+        if protein.localization[0].localization == "Cytoplasmic" and protein.localization[0].reliability >= 7.49: continue
+        
+        # exlude low fidelity localization prediction proteins if low PAD or VIR
+        if virulent == "True":
+            if protein.localization[0].reliability < 7.49 and (protein.p_vir < virlimit and protein.p_ad < padlimit): continue
+        if virulent != "True":
+            if protein.localization[0].reliability < 7.49 and protein.p_ad < padlimit: continue
+        
+        if (protein.transmembrane_doms >= transmemb_doms_limit) and (protein.original_sequence_if_razor is None): continue
+
         if protein.sapiens_peptides_sum > .15: continue
         if len(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens) >= 1: continue
         if mouse == "True":
@@ -67,7 +84,16 @@ def output(list_of_proteins:list, outfile, mouse_peptides_sum_limit:float, mouse
                  str(", ".join(list(set(protein.list_of_peptides_from_comparison_with_mhcpep_mouse)))),  
                  str(protein.sequence),
                  str("".join([str(protein.original_sequence_if_razor) if protein.original_sequence_if_razor!=None else ""])),
-                 str("".join([str(protein.tmhmm_seq) if "M" in str(protein.tmhmm_seq) else ""])) # should be shown anyways
+                 str("".join([str(protein.sequence_out) if protein.sequence_out!=None else ""])),
+                 str("".join([str(protein.tmhmm_seq) if "M" in str(protein.tmhmm_seq) else ""])), # should be shown anyways
+          
+                 str("".join([str(protein.MHC1_binders) if str(protein.MHC1_binders) != None else ''])),
+                 str("".join([str(protein.MHC2_binders) if str(protein.MHC2_binders) != None else ''])),
+                 str("".join([str(protein.MHC1_pb_binders) if str(protein.MHC1_pb_binders) != None else ''])),
+                 str("".join([str(protein.MHC2_pb_binders) if str(protein.MHC2_pb_binders) != None else ''])),
+               
+                 
+                 
                  ] for protein in list_of_proteins
                 ], 
                 columns= ['id',
@@ -90,7 +116,13 @@ def output(list_of_proteins:list, outfile, mouse_peptides_sum_limit:float, mouse
                     'list_of_peptides_from_comparison_with_mhcpep_mouse',
                     'sequence',
                     'original_sequence_if_razor',
+                    'sequence_out',
                     'tmhmm_seq',
+                    'MHC1_binders',
+                    'MHC2_binders',
+                    'MHC1_pb_binders',
+                    'MHC2_pb_binders',
+                   
                      ]
                 )
     df = df.sort_values(by = 'score', ascending = False)
