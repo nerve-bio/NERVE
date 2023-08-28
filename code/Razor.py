@@ -15,6 +15,7 @@ def razor(list_of_proteins, working_dir, transmemb_doms_limit, razlen)->list:
    
                         
     for protein in list_of_proteins:
+        new_loop=[]
         if transmemb_doms_limit:
             if protein.transmembrane_doms >= transmemb_doms_limit:
             
