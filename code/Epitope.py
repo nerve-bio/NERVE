@@ -9,7 +9,7 @@ from Select import *
 
 
 def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
-            mhci_length, mhcii_length, mhci_overlap, mhcii_overlap, epitope_percentile) -> list:
+            mhci_length, mhcii_length, mhci_overlap, mhcii_overlap, epitope_percentile, ep_plots) -> list:
     """Module to run epitopes prediction"""
     
     logging.basicConfig(filename = os.path.join(working_dir, 'logfile.log'),
@@ -128,36 +128,37 @@ def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
 
                     p.MHC2_pb_binders = best_binders_pb2
                 # plot binders in a sequence
-                '''
-                names_i = mhci_predictor.get_names()
-                for name in names_i:
+                if ep_plots==True:
+                
+                    names_i = mhci_predictor.get_names()
+                    for name in names_i:
                   
-                   ax = plotting.plot_tracks([mhci_predictor], name=name)
-                   if ax != None:
-                      ax.figure.savefig(fname=new_dir_path+'tracks_plot_pbs_MHC1_{}.png'.format(p.accession))
+                       ax = plotting.plot_tracks([mhci_predictor], name=name)
+                       if ax != None:
+                          ax.figure.savefig(fname=new_dir_path+'tracks_plot_pbs_MHC1_{}.png'.format(p.accession))
                   
                    
-                names_ii = mhcii_predictor.get_names()
-                for name in names_ii:
+                    names_ii = mhcii_predictor.get_names()
+                    for name in names_ii:
                    
-                   ax = plotting.plot_tracks([mhcii_predictor], name=name)
-                   if ax != None:
-                      ax.figure.savefig(fname=new_dir_path+'tracks_plot_pbs_MHC2_{}.png'.format(p.accession))
+                       ax = plotting.plot_tracks([mhcii_predictor], name=name)
+                       if ax != None:
+                          ax.figure.savefig(fname=new_dir_path+'tracks_plot_pbs_MHC2_{}.png'.format(p.accession))
                    
                 
                 # plot heatmap colored by ranks
-                for name in names_i:
+                    for name in names_i:
                    
-                   ax = plotting.plot_binder_map(mhci_predictor, name=name)
-                   if ax != None:
-                      ax.figure.savefig(fname=new_dir_path+'heatmap_pbs_MHC1_{}.png'.format(p.accession))
+                       ax = plotting.plot_binder_map(mhci_predictor, name=name)
+                       if ax != None:
+                          ax.figure.savefig(fname=new_dir_path+'heatmap_pbs_MHC1_{}.png'.format(p.accession))
                   
                 
-                for name in names_ii:
+                    for name in names_ii:
                    
-                   ax = plotting.plot_binder_map(mhcii_predictor, name=name)
-                   if ax != None:
-                      ax.figure.savefig(fname=new_dir_path+'heatmap_pbs_MHC2_{}.png'.format(p.accession))
-                '''         
+                       ax = plotting.plot_binder_map(mhcii_predictor, name=name)
+                       if ax != None:
+                          ax.figure.savefig(fname=new_dir_path+'heatmap_pbs_MHC2_{}.png'.format(p.accession))
+                         
                 
     return final_proteins
