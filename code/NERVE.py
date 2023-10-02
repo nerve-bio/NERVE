@@ -50,6 +50,7 @@ class Args(NamedTuple):
     NERVE_dir:str
     iFeature_dir:str
     DeepFri_dir:str
+    ep_plots:bool
     
     def print_args(self):
         return (f'''annotation: {self.annotation}, e_value: {self.e_value}, gram: {self.gram},
@@ -61,7 +62,7 @@ class Args(NamedTuple):
                 virlimit: {self.virlimit}, virulent: {self.virulent},epitopes: {self.epitopes}, mhci_length: {self.mhci_length},
                 mhcii_length: {self.mhcii_length}, mhci_overlap: {self.mhci_overlap}, mhcii_overlap: {self.mhcii_overlap},
                 epitope_percentile: {self.epitope_percentile}, working_dir: {self.working_dir},
-                NERVE_dir: {self.NERVE_dir}, iFeature_dir: {self.iFeature_dir},  DeepFri_dir: {self.DeepFri_dir}''')
+                NERVE_dir: {self.NERVE_dir}, iFeature_dir: {self.iFeature_dir},  DeepFri_dir: {self.DeepFri_dir}, ep_plots: {self.ep_plots}''')
     
 def get_args() -> Args:
     '''Get command-line arguments'''
@@ -274,6 +275,13 @@ def get_args() -> Args:
                         required=False,
                         default='/usr/nerve_python/assets/DeepFri'
                         )
+    parser.add_argument('-epp', '--ep_plots',
+                        metavar='\b',
+                        help='Epitopes plotting script',
+                        type=bool,
+                        required=False,
+                        default="True"
+                       )
     
     
     args = parser.parse_args()
@@ -284,7 +292,7 @@ def get_args() -> Args:
                 args.razlen, args.select, args.substitution, args.transmemb_doms_limit, args.virlimit, 
                 args.virulent, args.epitopes,
                 args.mhci_length, args.mhcii_length, args.mhci_overlap, args.mhcii_overlap,
-                args.epitope_percentile,args.working_dir, args.NERVE_dir, args.iFeature_dir, args.DeepFri_dir)
+                args.epitope_percentile,args.working_dir, args.NERVE_dir, args.iFeature_dir, args.DeepFri_dir, args.ep_plots)
 
 
 def main():
@@ -479,7 +487,7 @@ def main():
         logging.debug('Epitope prediction starts ...')
         final_proteins = epitope(final_proteins, args.mouse, args.mouse_peptides_sum_limit,
                                  args.working_dir, args.mhci_length, args.mhcii_length,
-                                 args.mhci_overlap, args.mhcii_overlap, args.epitope_percentile)
+                                 args.mhci_overlap, args.mhcii_overlap, args.epitope_percentile, args.ep_plots)
         end = time.time()
         logging.debug(f'Epitope prediction done in {end - start} seconds')
     
