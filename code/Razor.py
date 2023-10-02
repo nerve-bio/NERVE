@@ -15,14 +15,14 @@ def razor(list_of_proteins, working_dir, transmemb_doms_limit, razlen)->list:
    
                         
     for protein in list_of_proteins:
-        new_loop=[]
+        new_loop = []
         if transmemb_doms_limit:
             if protein.transmembrane_doms >= transmemb_doms_limit:
             
                 new_loop = max(protein.provide_raw_loops_std(), key = lambda k: len(k))
 
             if protein.transmembrane_doms > 0:
-                new_loop_out = protein.provide_raw_loops(transmem_doms_limit)
+                new_loop_out = protein.provide_raw_loops(transmemb_doms_limit)
                 protein.sequence_out = new_loop_out
             
             
