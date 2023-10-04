@@ -91,7 +91,7 @@ class Protein:
 			return new_seq
 		else:
 			conds = ['o', 'O']
-			if self.localization == "out":
+			if self.localization == "OuterMembrane":
 				conds += ['i', 'I']
 			new_seq = ""
 			for i in range(self.length):
