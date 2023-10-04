@@ -1,11 +1,11 @@
 
 """Run epitope prediction of proteins"""
 
-
+import logging
 from epitopepredict import base, sequtils, analysis, plotting
 import math
-from Utils import *
-from Select import *
+from code.Utils import *
+from code.Select import *
 
 
 def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
@@ -44,7 +44,7 @@ def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
         for p, score in zip(final_proteins, protein_scores):
             if score >= epitope_percentile:
                 # create a dir for every protein
-                new_dir_path = working_dir+'{}/'.format(p.accession)
+                new_dir_path = os.path.join(working_dir, 'epitope', p.accession)
                 if os.path.isfile(new_dir_path):
                     os.removedirs(new_dir_path)
                 else:
@@ -64,11 +64,11 @@ def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
                 mhcii_epitopes['protein id'] = p.id
                 # data_ii.append(mhcii_epitopes)
                 
-                mhci_epitopes.to_csv(new_dir_path+'mhci_epitopes_{}.csv'.format(p.accession), index=False)
-                mhcii_epitopes.to_csv(new_dir_path+'mhcii_epitopes_{}.csv'.format(p.accession), index=False)
+                mhci_epitopes.to_csv(os.path.join(new_dir_path, 'mhci_epitopes_{}.csv'.format(p.accession)), index=False)
+                mhcii_epitopes.to_csv(os.path.join(new_dir_path, 'mhcii_epitopes_{}.csv'.format(p.accession)), index=False)
 
                 
-                results_mhc1_raw = base.results_from_csv(path=new_dir_path+'mhci_epitopes_{}.csv'.format(p.accession))
+                results_mhc1_raw = base.results_from_csv(path=os.path.join(new_dir_path, 'mhci_epitopes_{}.csv'.format(p.accession)))
                 ###
                 
                 score_threshold = results_mhc1_raw['score'].quantile(0.95)
@@ -78,23 +78,24 @@ def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
                 #filtered_binders1 = mhci_predictor.get_binders(names=results_mhc1_raw, cutoff=0.95)  #non funziona, vedi sopra
                 
                 #save filtered binders
-                filtered_binders1.to_csv(new_dir_path+'MHC1_epitopes_FILTERED{}.csv'.format(p.accession), index=False) #####
-                binders1 = pd.read_csv(new_dir_path + 'mhci_epitopes_{}.csv'.format(p.accession))
+                filtered_binders1.to_csv(os.path.join(new_dir_path, 'MHC1_epitopes_FILTERED{}.csv'.format(p.accession)), index=False) #####
+                binders1 = pd.read_csv(os.path.join(new_dir_path, 'mhci_epitopes_{}.csv'.format(p.accession)))
 
                 # Seleziona le righe con il valore di score più alto per ogni allele
-                pd.set_option('display.max_colwidth', None)
+                #pd.set_option('display.max_colwidth', None)
                 #binders1 = binders1.reset_index()
                 if not binders1.empty:
                     best_binders = binders1.groupby('allele').apply(lambda x: x.loc[x['score'].idxmax()])
-                    best_binders = best_binders.loc[:, ['allele', 'score', 'peptide']]
+                    best_binders = best_binders.loc[:, ['allele', 'score', 'peptide', 'pos']]
                     p.MHC1_binders = best_binders
+    
                 # find promiscuous binders
                 pb1 = mhci_predictor.promiscuous_binders(cutoff=.95, cutoff_method='score') #cutoff=.95, cutoff_method='score'
 
                 # save pbs
-                pb1.to_csv(new_dir_path+'Promiscuous_binders_MHC1_{}.csv'.format(p.accession), index=False)
+                pb1.to_csv(os.path.join(new_dir_path, 'Promiscuous_binders_MHC1_{}.csv'.format(p.accession)), index=False)
 
-                binders_pb1 = pd.read_csv(new_dir_path + 'Promiscuous_binders_MHC1_{}.csv'.format(p.accession))
+                binders_pb1 = pd.read_csv(os.path.join(new_dir_path, 'Promiscuous_binders_MHC1_{}.csv'.format(p.accession)))
                 if not binders_pb1.empty:
                     best_binders_pb1 = binders_pb1.groupby('name').apply(lambda x: x.loc[x['score'].idxmax()])
                     best_binders_pb1 = best_binders_pb1.loc[:, ['peptide']]
@@ -104,29 +105,28 @@ def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
                 results_mhc2_raw = base.results_from_csv(path=new_dir_path+'mhcii_epitopes_{}.csv'.format(p.accession))
                 filtered_binders2 = mhcii_predictor.get_binders(names=results_mhc2_raw, cutoff=0.95)
                 # save filtered binders
-                filtered_binders2.to_csv(new_dir_path+'MHC2_epitopes_FILTERED{}.csv'.format(p.accession), index=False)
-                binders2= pd.read_csv(new_dir_path + 'MHC2_epitopes_FILTERED{}.csv'.format(p.accession))
+                filtered_binders2.to_csv(os.path.join(new_dir_path, 'MHC2_epitopes_FILTERED{}.csv'.format(p.accession)), index=False)
+                binders2= pd.read_csv(os.path.join(new_dir_path, 'MHC2_epitopes_FILTERED{}.csv'.format(p.accession)))
                 if not binders2.empty:
                     best_binders2 = binders2.groupby('allele').apply(lambda x: x.loc[x['score'].idxmax()])
-                    best_binders2= best_binders2.loc[:, ['allele', 'score', 'peptide']]
+                    best_binders2= best_binders2.loc[:, ['allele', 'score', 'peptide', 'pos']]
 
                     p.MHC2_binders = best_binders2
                 else:
                     p.MHC2_pb_binders = 'None'
 
-
-
                 # find promiscuous binders
                 pb2 = mhcii_predictor.promiscuous_binders(cutoff=0.95)
 
                 # save pbs
-                pb2.to_csv(new_dir_path+'Promiscuous_binders_MHC2_{}.csv'.format(p.accession), index=False)
-                binders_pb2 = pd.read_csv(new_dir_path + 'Promiscuous_binders_MHC2_{}.csv'.format(p.accession))
+                pb2.to_csv(os.path.join(new_dir_path, 'Promiscuous_binders_MHC2_{}.csv'.format(p.accession)), index=False)
+                binders_pb2 = pd.read_csv(os.path.join(new_dir_path, 'Promiscuous_binders_MHC2_{}.csv'.format(p.accession)))
                 if not binders_pb2.empty:
                     best_binders_pb2 = binders_pb2.groupby('name').apply(lambda x: x.loc[x['score'].idxmax()])
-                    best_binders_pb2 = best_binders_pb2.loc[:, ['alleles', 'score', 'peptide']]
+                    best_binders_pb2 = best_binders_pb2.loc[:, ['alleles', 'score', 'peptide', 'pos']]
 
                     p.MHC2_pb_binders = best_binders_pb2
+                
                 # plot binders in a sequence
                 if ep_plots==True:
                 
@@ -135,7 +135,7 @@ def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
                   
                        ax = plotting.plot_tracks([mhci_predictor], name=name)
                        if ax != None:
-                          ax.figure.savefig(fname=new_dir_path+'tracks_plot_pbs_MHC1_{}.png'.format(p.accession))
+                          ax.figure.savefig(fname=os.path.join(new_dir_path, 'tracks_plot_pbs_MHC1_{}.png'.format(p.accession)))
                   
                    
                     names_ii = mhcii_predictor.get_names()
@@ -143,7 +143,7 @@ def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
                    
                        ax = plotting.plot_tracks([mhcii_predictor], name=name)
                        if ax != None:
-                          ax.figure.savefig(fname=new_dir_path+'tracks_plot_pbs_MHC2_{}.png'.format(p.accession))
+                          ax.figure.savefig(fname=os.path.join(new_dir_path, 'tracks_plot_pbs_MHC2_{}.png'.format(p.accession)))
                    
                 
                 # plot heatmap colored by ranks
@@ -151,14 +151,14 @@ def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
                    
                        ax = plotting.plot_binder_map(mhci_predictor, name=name)
                        if ax != None:
-                          ax.figure.savefig(fname=new_dir_path+'heatmap_pbs_MHC1_{}.png'.format(p.accession))
+                          ax.figure.savefig(fname=os.path.join(new_dir_path, 'heatmap_pbs_MHC1_{}.png'.format(p.accession)))
                   
                 
                     for name in names_ii:
                    
                        ax = plotting.plot_binder_map(mhcii_predictor, name=name)
                        if ax != None:
-                          ax.figure.savefig(fname=new_dir_path+'heatmap_pbs_MHC2_{}.png'.format(p.accession))
+                          ax.figure.savefig(fname=os.path.join(new_dir_path, 'heatmap_pbs_MHC2_{}.png'.format(p.accession)))
                          
                 
     return final_proteins
