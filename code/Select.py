@@ -2,7 +2,7 @@
 """Select module"""
 
 import pandas as pd
-from Protein import Protein
+from code.Protein import Protein
     
 def select(list_of_proteins, transmemb_doms_limit,
            padlimit, mouse, mouse_peptides_sum_limit, virlimit, virulent, razor)->list:
@@ -26,7 +26,8 @@ def select(list_of_proteins, transmemb_doms_limit,
             if len(protein.list_of_peptides_from_comparison_with_mhcpep_mouse) >= 1: continue
 
         final_list.append(protein)
-    return final_list 
+    return final_list
+
 
 def scorer(protein:Protein, mouse_peptides_sum_limit:float, mouse:str) -> float:
     """Provides a score for protein candidates"""
@@ -67,7 +68,16 @@ def output(list_of_proteins:list, outfile, mouse_peptides_sum_limit:float, mouse
                  str(", ".join(list(set(protein.list_of_peptides_from_comparison_with_mhcpep_mouse)))),  
                  str(protein.sequence),
                  str("".join([str(protein.original_sequence_if_razor) if protein.original_sequence_if_razor!=None else ""])),
-                 str("".join([str(protein.tmhmm_seq) if "M" in str(protein.tmhmm_seq) else ""])) # should be shown anyways
+                 str("".join([str(protein.sequence_out) if protein.sequence_out!=None else ""])),
+                 #str("".join([str(protein.tmhmm_seq) if "M" in str(protein.tmhmm_seq) else ""])),
+                 str(str(protein.tmhmm_seq)),
+                 str("".join([str(protein.MHC1_binders) if str(protein.MHC1_binders) != None else ''])),
+                 str("".join([str(protein.MHC2_binders) if str(protein.MHC2_binders) != None else ''])),
+                 str("".join([str(protein.MHC1_pb_binders) if str(protein.MHC1_pb_binders) != None else ''])),
+                 str("".join([str(protein.MHC2_pb_binders) if str(protein.MHC2_pb_binders) != None else ''])),
+               
+                 
+                 
                  ] for protein in list_of_proteins
                 ], 
                 columns= ['id',
@@ -90,7 +100,13 @@ def output(list_of_proteins:list, outfile, mouse_peptides_sum_limit:float, mouse
                     'list_of_peptides_from_comparison_with_mhcpep_mouse',
                     'sequence',
                     'original_sequence_if_razor',
+                    'sequence_out',
                     'tmhmm_seq',
+                    'MHC1_binders',
+                    'MHC2_binders',
+                    'MHC1_pb_binders',
+                    'MHC2_pb_binders',
+                   
                      ]
                 )
     df = df.sort_values(by = 'score', ascending = False)
