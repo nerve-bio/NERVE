@@ -110,7 +110,7 @@ def epitope(final_proteins, working_dir,
                     best_binders2 = binders2.groupby('allele').apply(lambda x: x.loc[x['score'].idxmax()])
                     best_binders2= best_binders2.loc[:, ['allele', 'score', 'peptide', 'pos']]
 
-                    p.MHC2_binders = best_binders2
+                    p.MHC2_binders = best_binders2.reset_index()
                 else:
                     p.MHC2_pb_binders = 'None'
 
@@ -124,7 +124,7 @@ def epitope(final_proteins, working_dir,
                     best_binders_pb2 = binders_pb2.groupby('name').apply(lambda x: x.loc[x['score'].idxmax()])
                     best_binders_pb2 = best_binders_pb2.loc[:, ['alleles', 'score', 'peptide', 'pos']]
 
-                    p.MHC2_pb_binders = best_binders_pb2
+                    p.MHC2_pb_binders = best_binders_pb2.reset_index()
                 
                 # plot binders in a sequence
                 if ep_plots=="True":
