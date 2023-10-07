@@ -86,7 +86,7 @@ def epitope(final_proteins, working_dir,
                 if not binders1.empty:
                     best_binders = binders1.groupby('allele').apply(lambda x: x.loc[x['score'].idxmax()])
                     best_binders = best_binders.loc[:, ['allele', 'score', 'peptide', 'pos']]
-                    p.MHC1_binders = best_binders
+                    p.MHC1_binders = best_binders.reset_index(drop=True)
     
                 # find promiscuous binders
                 pb1 = mhci_predictor.promiscuous_binders(cutoff=.95, cutoff_method='score') #cutoff=.95, cutoff_method='score'
@@ -98,7 +98,7 @@ def epitope(final_proteins, working_dir,
                 if not binders_pb1.empty:
                     best_binders_pb1 = binders_pb1.groupby('name').apply(lambda x: x.loc[x['score'].idxmax()])
                     best_binders_pb1 = best_binders_pb1.loc[:, ['peptide']]
-                    p.MHC1_pb_binders = best_binders_pb1
+                    p.MHC1_pb_binders = best_binders_pb1.reset_index(drop=True)
                 
                 # promiscuous binders mhc2
                 results_mhc2_raw = base.results_from_csv(path=new_dir_path+'mhcii_epitopes_{}.csv'.format(p.accession))
@@ -110,7 +110,7 @@ def epitope(final_proteins, working_dir,
                     best_binders2 = binders2.groupby('allele').apply(lambda x: x.loc[x['score'].idxmax()])
                     best_binders2= best_binders2.loc[:, ['allele', 'score', 'peptide', 'pos']]
 
-                    p.MHC2_binders = best_binders2.reset_index()
+                    p.MHC2_binders = best_binders2.reset_index(drop=True)
                 else:
                     p.MHC2_pb_binders = 'None'
 
@@ -124,7 +124,7 @@ def epitope(final_proteins, working_dir,
                     best_binders_pb2 = binders_pb2.groupby('name').apply(lambda x: x.loc[x['score'].idxmax()])
                     best_binders_pb2 = best_binders_pb2.loc[:, ['alleles', 'score', 'peptide', 'pos']]
 
-                    p.MHC2_pb_binders = best_binders_pb2.reset_index()
+                    p.MHC2_pb_binders = best_binders_pb2.reset_index(drop=True)
                 
                 # plot binders in a sequence
                 if ep_plots=="True":
