@@ -148,14 +148,14 @@ def get_args() -> Args:
                         metavar='\b',
                         help="Set the probability of adhesin (pad) value cut-off for proteins with 'Unknown' localization in the select module. Thus, these proteins with a pad value < cut-off are discarded (0.-1)",
                         type=float,
-                        default=0.85,
+                        default=0.5,
                         required=False,
                         )
     parser.add_argument('-rz','--razor',
                         metavar='\b', 
                         help="Activation (True) or deactivation (False) of the loop-razor module. This module allows the recovery of protein vaccine candidates, with more than 2 transmembrane domains, that would otherwise be discarded in the select module. The longest loop with minimum len == 'razlen' aa will replace the original protein sequence for following NERVE steps",
                         type=str,
-                        default="True",
+                        default="False",
                         required=False,
                         )
     parser.add_argument('-rl','--razlen',
@@ -197,7 +197,7 @@ def get_args() -> Args:
                         metavar='\b', 
                         help="Activation (True) or deactivation (False) of NERVirulent module, predictor of the probability of being a virulence factor",
                         type=str,
-                        default="True",
+                        default="False",
                         required=False,
                         )
     parser.add_argument('-ep', '--epitopes',
@@ -300,7 +300,7 @@ def main():
     # record time:
     nerve_start = time.time()
     args=get_args()
-    print("Start NERVE 1.5")
+    print("Start NERVE 2.0")
     
     # init workdir:
     if args.working_dir[-1] != '/':
@@ -452,7 +452,6 @@ def main():
     print("80% done")
         
     # annotation
-    #logging.debug(f'list of proteins before annotation:\n{list_of_proteins}')
     if args.annotation == "True":
         start = time.time()
         logging.debug("Annotation start...")
@@ -480,14 +479,14 @@ def main():
     
     # 12.Epitope prediction
     if args.epitopes == "True":
-        print("=" * 50)
-        print("{:^50}".format('Epitope prediction of best candidates with epitopepredict starts'))
-        print("=" * 50)
+        #print("=" * 50)
+        #print("{:^50}".format('Epitope prediction of best candidates with epitopepredict starts'))
+        #print("=" * 50)
         start = time.time()
         logging.debug('Epitope prediction starts ...')
-        final_proteins = epitope(final_proteins, args.mouse, args.mouse_peptides_sum_limit,
+        final_proteins = epitope(final_proteins,
                                  args.working_dir, args.mhci_length, args.mhcii_length,
-                                 args.mhci_overlap, args.mhcii_overlap, args.epitope_percentile, args.ep_plots)
+                                 args.mhci_overlap, args.mhcii_overlap, args.epitope_percentile, ep_plots = args.ep_plots)
         end = time.time()
         logging.debug(f'Epitope prediction done in {end - start} seconds')
     

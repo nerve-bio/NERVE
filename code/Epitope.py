@@ -8,7 +8,7 @@ from code.Utils import *
 from code.Select import *
 
 
-def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
+def epitope(final_proteins, working_dir,
             mhci_length, mhcii_length, mhci_overlap, mhcii_overlap, epitope_percentile, ep_plots) -> list:
     """Module to run epitopes prediction"""
     
@@ -16,6 +16,7 @@ def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
                         filemode = 'a',
                         level = logging.DEBUG,
                         force = True)
+    
 
     # create predictor object for mhcii
     mhcii_predictor = base.get_predictor('tepitope')
@@ -32,6 +33,7 @@ def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
     for protein in final_proteins:
         score = protein.score
         protein_scores.append(score)
+    
 
     if len(protein_scores) != 0:
 
@@ -40,15 +42,12 @@ def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
         n = len(sorted_scores)
         percentile_index = math.ceil(n * epitope_percentile) - 1
         percentile = sorted_scores[percentile_index]
-
+        
         for p, score in zip(final_proteins, protein_scores):
-            if score >= epitope_percentile:
+            if score >= percentile:
                 # create a dir for every protein
                 new_dir_path = os.path.join(working_dir, 'epitope', p.accession)
-                if os.path.isfile(new_dir_path):
-                    os.removedirs(new_dir_path)
-                else:
-                    os.makedirs(new_dir_path)
+                os.makedirs(new_dir_path, exist_ok=True)
                 # run predictions for MHC I and II epitopes
                 # use 'threads=0' to use all available cores
                 sequence = p.sequence_out if p.sequence_out != None else p.sequence
@@ -128,7 +127,7 @@ def epitope(final_proteins, mouse, mouse_peptides_sum_limit, working_dir,
                     p.MHC2_pb_binders = best_binders_pb2
                 
                 # plot binders in a sequence
-                if ep_plots==True:
+                if ep_plots=="True":
                 
                     names_i = mhci_predictor.get_names()
                     for name in names_i:
