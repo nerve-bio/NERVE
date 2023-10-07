@@ -108,7 +108,7 @@ def get_args() -> Args:
                         metavar='\b', 
                         help="Activation (True) or deactivation (False) of the mouse immunity module. This module compares proteome1 with mouse proteome and a further analysis of the eventual shared peptides is carried out as in the autoimmunity module",
                         type=str,
-                        default="True",
+                        default="False",
                         required=False,
                         )
     parser.add_argument('-mpsl','--mouse_peptides_sum_limit',
