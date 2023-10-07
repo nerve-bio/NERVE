@@ -2,7 +2,7 @@
 """Run epitope prediction of proteins"""
 
 import logging
-from epitopepredict import base, sequtils, analysis, plotting
+from epitopepredict import base, plotting
 import math
 from code.Utils import *
 from code.Select import *
