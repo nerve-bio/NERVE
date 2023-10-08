@@ -486,7 +486,7 @@ def main():
         logging.debug('Epitope prediction starts ...')
         final_proteins = epitope(final_proteins,
                                  args.working_dir, args.mhci_length, args.mhcii_length,
-                                 args.mhci_overlap, args.mhcii_overlap, args.epitope_percentile, ep_plots = args.ep_plots)
+                                 args.mhci_overlap, args.mhcii_overlap, args.epitope_percentile, args.ep_plots, args.transmemb_doms_limit)
         end = time.time()
         logging.debug(f'Epitope prediction done in {end - start} seconds')
     

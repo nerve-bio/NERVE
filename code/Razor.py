@@ -21,13 +21,6 @@ def razor(list_of_proteins, working_dir, transmemb_doms_limit, razlen)->list:
             
                 new_loop = max(protein.provide_raw_loops_std(), key = lambda k: len(k))
 
-            if protein.transmembrane_doms > 0:
-                new_loop_out = protein.provide_raw_loops(transmemb_doms_limit)
-                protein.sequence_out = new_loop_out
-            
-            
-            
-            
             if len(new_loop) > razlen:
                 logging.debug(f'Substituting {str(protein.id)} sequence with its outer loops')
                 protein.original_sequence_if_razor = protein.sequence

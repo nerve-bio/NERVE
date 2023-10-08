@@ -9,14 +9,14 @@ from code.Select import *
 
 
 def epitope(final_proteins, working_dir,
-            mhci_length, mhcii_length, mhci_overlap, mhcii_overlap, epitope_percentile, ep_plots) -> list:
+            mhci_length, mhcii_length, mhci_overlap, mhcii_overlap, epitope_percentile, ep_plots, transmemb_doms_limit) -> list:
     """Module to run epitopes prediction"""
     
     logging.basicConfig(filename = os.path.join(working_dir, 'logfile.log'),
                         filemode = 'a',
                         level = logging.DEBUG,
                         force = True)
-    
+    print(ep_plots)
 
     # create predictor object for mhcii
     mhcii_predictor = base.get_predictor('tepitope')
@@ -33,6 +33,11 @@ def epitope(final_proteins, working_dir,
     for protein in final_proteins:
         score = protein.score
         protein_scores.append(score)
+
+        # initialize protein sequence
+        if protein.transmembrane_doms > 0:
+            new_loop_out = protein.provide_raw_loops(transmemb_doms_limit)
+            protein.sequence_out = new_loop_out
     
 
     if len(protein_scores) != 0:
@@ -53,81 +58,68 @@ def epitope(final_proteins, working_dir,
                 sequence = p.sequence_out if p.sequence_out != None else p.sequence
                 mhci_epitopes = mhci_predictor.predict_sequences(sequence, alleles=m1alleles, length=mhci_length,
                                                                  verbose=False, overlap=mhci_overlap)
-                                                                	
-                                                                 
+                                                                	    
                 mhcii_epitopes = mhcii_predictor.predict_sequences(sequence, alleles=m2alleles, length=mhcii_length,
                                                                    verbose=False, overlap=mhcii_overlap)
                                                                    	
                 mhci_epitopes['protein id'] = p.id
-                # data_i.append(mhci_epitopes)
-                mhcii_epitopes['protein id'] = p.id
-                # data_ii.append(mhcii_epitopes)
+                mhcii_epitopes['protein id'] = p.id   
+
+                # filter based on default cutoff (0.95) and default by allele method
+                filtered_binders1 = mhci_epitopes.copy()
+                filtered_binders2 = mhcii_epitopes.copy()
                 
+                if not filtered_binders1.empty:
+                    filtered_binders1 = mhci_predictor.get_binders()
+    
+                if not filtered_binders2.empty:
+                    filtered_binders2 = mhcii_predictor.get_binders()
+                
+                # find promiscuous binders (use names = ... to work only on filtered ones)
+                pb1 = pd.DataFrame(columns=['peptide', 'pos',  'alleles', 'core', 'score'])
+                if not filtered_binders1.empty:
+                    pb1 = mhci_predictor.promiscuous_binders(names = filtered_binders1)
+                if not filtered_binders2.empty:
+                    pb2 = mhcii_predictor.promiscuous_binders(names = filtered_binders2)
+
+                if not filtered_binders1.empty:
+                    tmp_dic = {}
+                    for allele in filtered_binders1.allele.unique():
+                        seq_cov = [0 for _ in sequence]
+                        for start in filtered_binders1[filtered_binders1.allele == allele].pos.to_list():
+                            for pos in range(start, start+mhci_length):
+                                seq_cov[pos - 1] += 1
+                        tmp_dic[allele] = " ".join([str(_) for _ in seq_cov])
+
+                    p.MHC1_binders = tmp_dic
+            
+                if not filtered_binders2.empty:
+                    tmp_dic = {}
+                    for allele in filtered_binders2.allele.unique():
+                        seq_cov = [0 for _ in sequence]
+                        for start in filtered_binders2[filtered_binders2.allele == allele].pos.to_list():
+                            for pos in range(start, start+mhcii_length):
+                                seq_cov[pos - 1] += 1
+                        tmp_dic[allele] = " ".join([str(_) for _ in seq_cov])
+
+                    p.MHC2_binders = tmp_dic
+
+                if not pb1.empty:
+                    p.MHC1_pb_binders = pb1[['peptide', 'pos',  'alleles', 'core', 'score']].reset_index(drop=True).to_csv(sep='\t')
+
+                if not pb2.empty:
+                    p.MHC2_pb_binders = pb2[['peptide', 'pos',  'alleles', 'core', 'score']].reset_index(drop=True).to_csv(sep='\t')
+
+                # save files
                 mhci_epitopes.to_csv(os.path.join(new_dir_path, 'mhci_epitopes_{}.csv'.format(p.accession)), index=False)
                 mhcii_epitopes.to_csv(os.path.join(new_dir_path, 'mhcii_epitopes_{}.csv'.format(p.accession)), index=False)
-
-                
-                results_mhc1_raw = base.results_from_csv(path=os.path.join(new_dir_path, 'mhci_epitopes_{}.csv'.format(p.accession)))
-                ###
-                
-                score_threshold = results_mhc1_raw['score'].quantile(0.95)
-                filtered_binders1 = results_mhc1_raw.loc[results_mhc1_raw['score'] >= score_threshold]
-                ###
-
-                #filtered_binders1 = mhci_predictor.get_binders(names=results_mhc1_raw, cutoff=0.95)  #non funziona, vedi sopra
-                
-                #save filtered binders
-                filtered_binders1.to_csv(os.path.join(new_dir_path, 'MHC1_epitopes_FILTERED{}.csv'.format(p.accession)), index=False) #####
-                binders1 = pd.read_csv(os.path.join(new_dir_path, 'mhci_epitopes_{}.csv'.format(p.accession)))
-
-                # Seleziona le righe con il valore di score più alto per ogni allele
-                #pd.set_option('display.max_colwidth', None)
-                #binders1 = binders1.reset_index()
-                if not binders1.empty:
-                    best_binders = binders1.groupby('allele').apply(lambda x: x.loc[x['score'].idxmax()])
-                    best_binders = best_binders.loc[:, ['allele', 'score', 'peptide', 'pos']]
-                    p.MHC1_binders = best_binders.reset_index(drop=True)
-    
-                # find promiscuous binders
-                pb1 = mhci_predictor.promiscuous_binders(cutoff=.95, cutoff_method='score') #cutoff=.95, cutoff_method='score'
-
-                # save pbs
+                filtered_binders1.to_csv(os.path.join(new_dir_path, 'MHC1_epitopes_FILTERED_{}.csv'.format(p.accession)), index=False)
+                filtered_binders2.to_csv(os.path.join(new_dir_path, 'MHC2_epitopes_FILTERED_{}.csv'.format(p.accession)), index=False)
                 pb1.to_csv(os.path.join(new_dir_path, 'Promiscuous_binders_MHC1_{}.csv'.format(p.accession)), index=False)
-
-                binders_pb1 = pd.read_csv(os.path.join(new_dir_path, 'Promiscuous_binders_MHC1_{}.csv'.format(p.accession)))
-                if not binders_pb1.empty:
-                    best_binders_pb1 = binders_pb1.groupby('name').apply(lambda x: x.loc[x['score'].idxmax()])
-                    best_binders_pb1 = best_binders_pb1.loc[:, ['peptide']]
-                    p.MHC1_pb_binders = best_binders_pb1.reset_index(drop=True)
-                
-                # promiscuous binders mhc2
-                results_mhc2_raw = base.results_from_csv(path=new_dir_path+'mhcii_epitopes_{}.csv'.format(p.accession))
-                filtered_binders2 = mhcii_predictor.get_binders(names=results_mhc2_raw, cutoff=0.95)
-                # save filtered binders
-                filtered_binders2.to_csv(os.path.join(new_dir_path, 'MHC2_epitopes_FILTERED{}.csv'.format(p.accession)), index=False)
-                binders2= pd.read_csv(os.path.join(new_dir_path, 'MHC2_epitopes_FILTERED{}.csv'.format(p.accession)))
-                if not binders2.empty:
-                    best_binders2 = binders2.groupby('allele').apply(lambda x: x.loc[x['score'].idxmax()])
-                    best_binders2= best_binders2.loc[:, ['allele', 'score', 'peptide', 'pos']]
-
-                    p.MHC2_binders = best_binders2.reset_index(drop=True)
-                else:
-                    p.MHC2_pb_binders = 'None'
-
-                # find promiscuous binders
-                pb2 = mhcii_predictor.promiscuous_binders(cutoff=0.95)
-
-                # save pbs
                 pb2.to_csv(os.path.join(new_dir_path, 'Promiscuous_binders_MHC2_{}.csv'.format(p.accession)), index=False)
-                binders_pb2 = pd.read_csv(os.path.join(new_dir_path, 'Promiscuous_binders_MHC2_{}.csv'.format(p.accession)))
-                if not binders_pb2.empty:
-                    best_binders_pb2 = binders_pb2.groupby('name').apply(lambda x: x.loc[x['score'].idxmax()])
-                    best_binders_pb2 = best_binders_pb2.loc[:, ['alleles', 'score', 'peptide', 'pos']]
-
-                    p.MHC2_pb_binders = best_binders_pb2.reset_index(drop=True)
                 
                 # plot binders in a sequence
-                if ep_plots=="True":
+                if ep_plots==True:
                 
                     names_i = mhci_predictor.get_names()
                     for name in names_i:
