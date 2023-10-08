@@ -280,7 +280,7 @@ def get_args() -> Args:
                         help='Epitopes plotting script',
                         type=bool,
                         required=False,
-                        default="True"
+                        default=True
                        )
     
     

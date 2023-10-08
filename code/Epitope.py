@@ -16,7 +16,6 @@ def epitope(final_proteins, working_dir,
                         filemode = 'a',
                         level = logging.DEBUG,
                         force = True)
-    print(ep_plots)
 
     # create predictor object for mhcii
     mhcii_predictor = base.get_predictor('tepitope')
@@ -35,9 +34,9 @@ def epitope(final_proteins, working_dir,
         protein_scores.append(score)
 
         # initialize protein sequence
-        if protein.transmembrane_doms > 0:
-            new_loop_out = protein.provide_raw_loops(transmemb_doms_limit)
-            protein.sequence_out = new_loop_out
+        #if protein.transmembrane_doms > 0:
+        #    new_loop_out = protein.provide_raw_loops(transmemb_doms_limit)
+        #    protein.sequence_out = new_loop_out
     
 
     if len(protein_scores) != 0:
@@ -55,7 +54,9 @@ def epitope(final_proteins, working_dir,
                 os.makedirs(new_dir_path, exist_ok=True)
                 # run predictions for MHC I and II epitopes
                 # use 'threads=0' to use all available cores
-                sequence = p.sequence_out if p.sequence_out != None else p.sequence
+                
+                sequence = p.sequence
+                #sequence = p.sequence_out if p.sequence_out != None else p.sequence
                 mhci_epitopes = mhci_predictor.predict_sequences(sequence, alleles=m1alleles, length=mhci_length,
                                                                  verbose=False, overlap=mhci_overlap)
                                                                 	    
@@ -79,8 +80,10 @@ def epitope(final_proteins, working_dir,
                 pb1 = pd.DataFrame(columns=['peptide', 'pos',  'alleles', 'core', 'score'])
                 if not filtered_binders1.empty:
                     pb1 = mhci_predictor.promiscuous_binders(names = filtered_binders1)
+                    pb1 = pb1[pb1.alleles > 1]
                 if not filtered_binders2.empty:
                     pb2 = mhcii_predictor.promiscuous_binders(names = filtered_binders2)
+                    pb2 = pb2[pb2.alleles > 1]
 
                 if not filtered_binders1.empty:
                     tmp_dic = {}
