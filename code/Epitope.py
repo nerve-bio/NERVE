@@ -1,7 +1,6 @@
 
 """Run epitope prediction of proteins"""
 
-import logging
 from epitopepredict import base, plotting
 import math
 from code.Utils import *
@@ -11,11 +10,6 @@ from code.Select import *
 def epitope(final_proteins, working_dir,
             mhci_length, mhcii_length, mhci_overlap, mhcii_overlap, epitope_percentile, ep_plots, transmemb_doms_limit) -> list:
     """Module to run epitopes prediction"""
-    
-    logging.basicConfig(filename = os.path.join(working_dir, 'logfile.log'),
-                        filemode = 'a',
-                        level = logging.DEBUG,
-                        force = True)
 
     # create predictor object for mhcii
     mhcii_predictor = base.get_predictor('tepitope')
