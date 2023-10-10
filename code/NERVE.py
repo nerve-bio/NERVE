@@ -6,7 +6,7 @@ from typing import NamedTuple
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # disable warnings
 
-from code import Protein
+from code.Protein import Protein
 from code.Utils import bashCmdMethod, dir_path
 from code.Function import annotation
 from code.Adhesin import extract_features, adhesin_predict
@@ -16,8 +16,8 @@ from code.Subcellular import psortb
 from code.Topology import tmhelices
 from code.Razor import razor
 from code.Immunity import  autoimmunity, conservation, mouse
-from code.Select import output, select
-
+from code.Select import output, select, scorer
+from code.Epitope import epitope
 
 class Args(NamedTuple):
     '''Command-line arguments'''
@@ -40,10 +40,17 @@ class Args(NamedTuple):
     transmemb_doms_limit:int
     virlimit:float
     virulent:bool
+    epitopes:str
+    mhci_length:int
+    mhcii_length:int
+    mhci_overlap:int
+    mhcii_overlap:int
+    epitope_percentile:float
     working_dir:str
     NERVE_dir:str
     iFeature_dir:str
     DeepFri_dir:str
+    ep_plots:bool
     
     def print_args(self):
         return (f'''annotation: {self.annotation}, e_value: {self.e_value}, gram: {self.gram},
@@ -52,8 +59,10 @@ class Args(NamedTuple):
                 proteome2: {self.proteome2}, p_ad_extracellular_filter: {self.p_ad_extracellular_filter},
                 padlimit: {self.padlimit}, razor: {self.razor}, razlen: {self.razlen}, select: {self.select},
                 substitution: {self.substitution}, transmemb_doms_limit: {self.transmemb_doms_limit},
-                virlimit: {self.virlimit}, virulent: {self.virulent}, working_dir: {self.working_dir},
-                NERVE_dir: {self.NERVE_dir}, iFeature_dir: {self.iFeature_dir},  DeepFri_dir: {self.DeepFri_dir}''')
+                virlimit: {self.virlimit}, virulent: {self.virulent},epitopes: {self.epitopes}, mhci_length: {self.mhci_length},
+                mhcii_length: {self.mhcii_length}, mhci_overlap: {self.mhci_overlap}, mhcii_overlap: {self.mhcii_overlap},
+                epitope_percentile: {self.epitope_percentile}, working_dir: {self.working_dir},
+                NERVE_dir: {self.NERVE_dir}, iFeature_dir: {self.iFeature_dir},  DeepFri_dir: {self.DeepFri_dir}, ep_plots: {self.ep_plots}''')
     
 def get_args() -> Args:
     '''Get command-line arguments'''
@@ -99,7 +108,7 @@ def get_args() -> Args:
                         metavar='\b', 
                         help="Activation (True) or deactivation (False) of the mouse immunity module. This module compares proteome1 with mouse proteome and a further analysis of the eventual shared peptides is carried out as in the autoimmunity module",
                         type=str,
-                        default="True",
+                        default="False",
                         required=False,
                         )
     parser.add_argument('-mpsl','--mouse_peptides_sum_limit',
@@ -139,14 +148,14 @@ def get_args() -> Args:
                         metavar='\b',
                         help="Set the probability of adhesin (pad) value cut-off for proteins with 'Unknown' localization in the select module. Thus, these proteins with a pad value < cut-off are discarded (0.-1)",
                         type=float,
-                        default=0.85,
+                        default=0.5,
                         required=False,
                         )
     parser.add_argument('-rz','--razor',
                         metavar='\b', 
                         help="Activation (True) or deactivation (False) of the loop-razor module. This module allows the recovery of protein vaccine candidates, with more than 2 transmembrane domains, that would otherwise be discarded in the select module. The longest loop with minimum len == 'razlen' aa will replace the original protein sequence for following NERVE steps",
                         type=str,
-                        default="True",
+                        default="False",
                         required=False,
                         )
     parser.add_argument('-rl','--razlen',
@@ -172,7 +181,7 @@ def get_args() -> Args:
                         )
     parser.add_argument('-tdl','--transmemb_doms_limit',
                         metavar='\b', 
-                        help="Parameter of select module. Proiteins with trasmembrane domains >= transmemb_doms_limit are discarded",
+                        help="Parameter of select module. Proteins with trasmembrane domains >= transmemb_doms_limit are discarded",
                         type=int,
                         default=3,
                         required=False,
@@ -188,8 +197,54 @@ def get_args() -> Args:
                         metavar='\b', 
                         help="Activation (True) or deactivation (False) of NERVirulent module, predictor of the probability of being a virulence factor",
                         type=str,
-                        default="True",
+                        default="False",
                         required=False,
+                        )
+    parser.add_argument('-ep', '--epitopes',
+                        metavar='\b',
+                        type=str,
+                        help='Activate or deactivate epitopes module',
+                        required=False,
+                        default="True"
+                        )
+    parser.add_argument('-m1l', '--mhci_length',
+                        metavar='\b',
+                        type=int,
+                        help='mhci binders length (9, 10, 11 are available)',
+                        required=False,
+                        choices=[9, 10, 11],
+                        default=9
+                        )
+    parser.add_argument('-m2l', '--mhcii_length',
+                        metavar='\b',
+                        type=int,
+                        help='mhcii binders length (9, 11, 12, 15 are available)',
+                        required=False,
+                        choices=[9, 11, 13, 15],
+                        default=11
+                        )
+    parser.add_argument('-m1ovr', '--mhci_overlap',
+                        metavar='\b',
+                        type=int,
+                        help='mhci-epitope overlap',
+                        required=False,
+                        choices=[1, 2],
+                        default=1
+                        )
+    parser.add_argument('-m2ovr', '--mhcii_overlap',
+                        metavar='\b',
+                        type=int,
+                        help='mhcii-epitope overlap',
+                        required=False,
+                        choices=[1, 2],
+                        default=1
+                        )
+    parser.add_argument('-prt', '--epitope_percentile',
+                        metavar='\b',
+                        type=float,
+                        help='percentile decision threshold on whick to predict epitopes from full length proteins',
+                        required=False,
+                        default=0.9
                         )
      
     parser.add_argument('-wd','--working_dir',
@@ -220,6 +275,13 @@ def get_args() -> Args:
                         required=False,
                         default='/usr/nerve_python/assets/DeepFri'
                         )
+    parser.add_argument('-epp', '--ep_plots',
+                        metavar='\b',
+                        help='Epitopes plotting script',
+                        type=bool,
+                        required=False,
+                        default=True
+                       )
     
     
     args = parser.parse_args()
@@ -228,7 +290,9 @@ def get_args() -> Args:
                 args.mouse, args.mouse_peptides_sum_limit, args.proteome1, args.proteome2, 
                 args.p_ad_extracellular_filter, args.p_ad_no_citoplasm_filter, args.padlimit, args.razor, 
                 args.razlen, args.select, args.substitution, args.transmemb_doms_limit, args.virlimit, 
-                args.virulent, args.working_dir, args.NERVE_dir, args.iFeature_dir, args.DeepFri_dir)
+                args.virulent, args.epitopes,
+                args.mhci_length, args.mhcii_length, args.mhci_overlap, args.mhcii_overlap,
+                args.epitope_percentile,args.working_dir, args.NERVE_dir, args.iFeature_dir, args.DeepFri_dir, args.ep_plots)
 
 
 def main():
@@ -236,7 +300,7 @@ def main():
     # record time:
     nerve_start = time.time()
     args=get_args()
-    print("Start NERVE 1.5")
+    print("Start NERVE 2.0")
     
     # init workdir:
     if args.working_dir[-1] != '/':
@@ -308,7 +372,7 @@ def main():
     for p in list_of_fasta_proteins:
         p_id = str(p.name)
         p_seq = str(p.seq)
-        list_of_proteins.append(Protein.Protein(p_id, p_seq))
+        list_of_proteins.append(Protein(p_id, p_seq))
     end=time.time()
     logging.debug(f'{len(list_of_fasta_proteins)} proteins loaded in {end-start} seconds')
             
@@ -388,7 +452,6 @@ def main():
     print("80% done")
         
     # annotation
-    #logging.debug(f'list of proteins before annotation:\n{list_of_proteins}')
     if args.annotation == "True":
         start = time.time()
         logging.debug("Annotation start...")
@@ -397,18 +460,35 @@ def main():
         logging.debug("Done run in: {:.4f} seconds".format(end - start))
     print("90% done")
     
+    # score
+    for protein in list_of_proteins:
+        protein.score = scorer(protein, args.mouse_peptides_sum_limit, args.mouse)
+    
     # select
     final_proteins=list_of_proteins
     if args.select == "True":
         logging.debug("Select start...")
         start=time.time()
         final_proteins = select(list_of_proteins, args.transmemb_doms_limit,
-                                args.padlimit, args.mouse, args.mouse_peptides_sum_limit, args.virlimit, args.virulent, args.annotation)
+                                args.padlimit, args.mouse, args.mouse_peptides_sum_limit, args.virlimit, args.virulent, args.razor)
         end = time.time()
         logging.debug("Done run in: {:.4f} seconds".format(end - start))
 
     #if args.virulent == "True":
     #    final_proteins.sort(key = lambda p: p.p_vir, reverse = True)
+    
+    # 12.Epitope prediction
+    if args.epitopes == "True":
+        #print("=" * 50)
+        #print("{:^50}".format('Epitope prediction of best candidates with epitopepredict starts'))
+        #print("=" * 50)
+        start = time.time()
+        logging.debug('Epitope prediction starts ...')
+        final_proteins = epitope(final_proteins,
+                                 args.working_dir, args.mhci_length, args.mhcii_length,
+                                 args.mhci_overlap, args.mhcii_overlap, args.epitope_percentile, args.ep_plots, args.transmemb_doms_limit)
+        end = time.time()
+        logging.debug(f'Epitope prediction done in {end - start} seconds')
     
     # return .csv outputs
     output(final_proteins, os.path.join(args.working_dir, 'vaccine_candidates.csv'), args.mouse_peptides_sum_limit, args.mouse)
