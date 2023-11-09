@@ -278,9 +278,9 @@ def get_args() -> Args:
     parser.add_argument('-epp', '--ep_plots',
                         metavar='\b',
                         help='Epitopes plotting script',
-                        type=bool,
+                        type=str,
                         required=False,
-                        default=True
+                        default="True"
                        )
     
     
