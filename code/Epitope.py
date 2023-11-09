@@ -116,7 +116,7 @@ def epitope(final_proteins, working_dir,
                 pb2.to_csv(os.path.join(new_dir_path, 'Promiscuous_binders_MHC2_{}.csv'.format(p.accession)), index=False)
                 
                 # plot binders in a sequence
-                if ep_plots==True:
+                if ep_plots=="True":
                 
                     names_i = mhci_predictor.get_names()
                     for name in names_i:
