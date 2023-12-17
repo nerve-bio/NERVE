@@ -1,0 +1,91 @@
+DEBUG:root:Running NERVE with the following parameters:
+annotation: True, e_value: 1e-10, gram: n,
+                minlength: 9, mismatch: 1, mouse: True,
+                mouse_peptides_sum_limit: 0.15, proteome1: UP000000431,
+                proteome2: None, p_ad_extracellular_filter: 0.38,
+                padlimit: 0.85, razor: True, razlen: 50, select: False,
+                substitution: 3, transmemb_doms_limit: 3,
+                virlimit: 0.5, virulent: True, working_dir: ./UP000000431/,
+                NERVE_dir: ../../, iFeature_dir: /iFeature,  DeepFri_dir: /DeepFri
+DEBUG:root:UP000000431 is not a file, download from Uniprot.
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): rest.uniprot.org:443
+DEBUG:urllib3.connectionpool:https://rest.uniprot.org:443 "GET /uniprotkb/stream?compressed=false&format=fasta&query=%28proteome%3AUP000000431%29 HTTP/1.1" 200 None
+DEBUG:root:UP000000431 successfully downloaded
+DEBUG:root:Start quality control of proteome1 (./UP000000431/proteome1.fasta)
+DEBUG:root:Finish quality control of proteome1. Updated path: (/workdir/NERVE/docker/workdir/UP000000431/cleaned_proteome1.fasta)
+DEBUG:root:Extract protein sequences and IDs from proteome1
+DEBUG:root:895 proteins loaded in 0.06814122200012207 seconds
+DEBUG:root:Subcelloc start with psortb...
+DEBUG:root:Sending request to psortb
+DEBUG:root:Psortb stdout:
+Saving results to /result.txt
+
+- Running PSORTb: /usr/local/psortb/bin/psortb3.pl -n -v /usr/local/nodeapi/src/temp_wd/7/input.fasta > /usr/local/nodeapi/src/temp_wd/7/result.txt
+
+Psortb stderr:
+* Using /usr/local/psortb as PSort root directory
+* Reading sequences from file "/usr/local/nodeapi/src/temp_wd/7/input.fasta"
+
+DEBUG:root:Parsing psortb output
+DEBUG:root:Done run in: 324.6411 seconds
+DEBUG:root:Adhesin start...
+DEBUG:root:Done run in: 50.2364 seconds
+DEBUG:root:Tmhelices start...
+DEBUG:root:Done run in: 30.0386 seconds
+DEBUG:root:Loop-razor start...
+DEBUG:root:Substituting tr|O84015|O84015_CHLTR Diadenylate cyclase OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=ybbP PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|O84072|Y069_CHLTR Probable metal transport system membrane protein CT_069 OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_069 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|O84253|YIDC_CHLTR Membrane protein insertase YidC OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=yidC PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|O84280|NQRB_CHLTR Na(+)-translocating NADH-quinone reductase subunit B OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=nqrB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|O84539|LNT_CHLTR Apolipoprotein N-acyltransferase OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=lnt PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|O84744|FTSK_CHLTR DNA translocase FtsK OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=ftsK PE=2 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|O84008|Y005_CHLTR Uncharacterized protein CT_005 OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_005 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|O84009|Y006_CHLTR Uncharacterized protein CT_006 OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_006 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84016|O84016_CHLTR Cytochrome Oxidase Subunit I OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=cydA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|O84075|Y072_CHLTR Putative zinc metalloprotease CT_072 OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_072 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84092|O84092_CHLTR Low Calcium Response D OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=lcrD PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84197|O84197_CHLTR Magnesium transporter MgtE OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=mgtE PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|O84307|VATI_CHLTR V-type ATP synthase subunit I OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=atpI PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|O84416|LPXB_CHLTR Lipid-A-disaccharide synthase OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=lpxB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|O84548|UHPT_CHLTR Probable hexose phosphate transport protein OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_544 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84864|O84864_CHLTR Sulfate Transporter OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=ychM PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84063|O84063_CHLTR Flagellar Secretion Protein OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=flhA PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84093|O84093_CHLTR Yop proteins translocation protein U OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=yscU PE=1 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84103|O84103_CHLTR Membrane associated protein OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_101 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84137|O84137_CHLTR Inner membrane protein OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_135 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84149|O84149_CHLTR Type IV secretion protein Dot OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_147 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84153|O84153_CHLTR FtsX domain-containing protein OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_151 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84198|O84198_CHLTR Integral membrane protein OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_195 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84202|O84202_CHLTR Oligopeptide Permease OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=oppB_1 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84234|O84234_CHLTR Sodium-dependent amino acid transporter OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_231 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84237|O84237_CHLTR ADP,ATP carrier protein OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_234 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84258|O84258_CHLTR CorC_HlyC domain-containing protein OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_256 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84259|O84259_CHLTR CNNM transmembrane domain-containing protein OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_257 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84266|O84266_CHLTR Transport ATP Binding Protein OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=msbA PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84326|O84326_CHLTR Transmembrane protein OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_324 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84343|O84343_CHLTR Competence domain-containing protein OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_339 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84430|O84430_CHLTR CBS Domain protein OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_423 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84454|O84454_CHLTR SecD/SecF fusion protein OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=secD/secF PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84484|O84484_CHLTR Oligopeptide Permease OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=oppC_2 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84485|O84485_CHLTR Oligopeptide Permease OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=oppB_2 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84597|O84597_CHLTR Succinate Dehydrogenase OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=sdhC PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84600|O84600_CHLTR Thio:disulfide Interchange Protein OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=dsbD PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84731|O84731_CHLTR Rod Shape Protein OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=rodA PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84765|O84765_CHLTR Cell Division Protein FtsW OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=ftsW PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84845|O84845_CHLTR Permease YjgP/YjgQ family protein OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_838 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84846|O84846_CHLTR YjgP/YjgQ family permease OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_839 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84858|O84858_CHLTR Integral membrane protein OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_850 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84862|O84862_CHLTR ABC transporter permease fused to pyrimidine biosynthesis enzyme OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_854 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O84869|O84869_CHLTR Type III secretion translocator OS=Chlamydia trachomatis (strain D/UW-3/Cx) OX=272561 GN=CT_861 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Done run in: 0.0103 seconds
+DEBUG:root:Autoimmunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 303.7992 seconds
+DEBUG:root:Mouse immunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 153.1226 seconds
+DEBUG:root:Virulence start...
+DEBUG:root:Done run in: 38.3795 seconds
+DEBUG:root:Annotation start...
+DEBUG:root:Done run in: 56.7634 seconds
+DEBUG:root:Done: NERVE has finished its analysis in: 957.5218 seconds

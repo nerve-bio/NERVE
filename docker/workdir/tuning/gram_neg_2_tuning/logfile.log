@@ -1,0 +1,45 @@
+DEBUG:root:Running NERVE with the following parameters:
+annotation: True, e_value: 1e-10, gram: n,
+                minlength: 9, mismatch: 1, mouse: True,
+                mouse_peptides_sum_limit: 0.15, proteome1: ./tuning/gram_neg_2/gram_neg_2.fasta,
+                proteome2: None, p_ad_extracellular_filter: 0.38,
+                padlimit: 0.5, razor: True, razlen: 50, select: False,
+                substitution: 3, transmemb_doms_limit: 3,
+                virlimit: 0.5, virulent: True, working_dir: ./tuning/gram_neg_2/,
+                NERVE_dir: ../../, iFeature_dir: /iFeature,  DeepFri_dir: /DeepFri
+DEBUG:root:./tuning/gram_neg_2/gram_neg_2.fasta found as ./tuning/gram_neg_2/gram_neg_2.fasta
+DEBUG:root:Start quality control of proteome1 (/workdir/NERVE/docker/workdir/tuning/gram_neg_2/gram_neg_2.fasta)
+DEBUG:root:Finish quality control of proteome1. Updated path: (/workdir/NERVE/docker/workdir/tuning/gram_neg_2/cleaned_gram_neg_2.fasta)
+DEBUG:root:Extract protein sequences and IDs from proteome1
+DEBUG:root:60 proteins loaded in 0.006762504577636719 seconds
+DEBUG:root:Subcelloc start with psortb...
+DEBUG:root:Sending request to psortb
+DEBUG:root:Psortb stdout:
+Saving results to /result.txt
+
+- Running PSORTb: /usr/local/psortb/bin/psortb3.pl -n -v /usr/local/nodeapi/src/temp_wd/3/input.fasta > /usr/local/nodeapi/src/temp_wd/3/result.txt
+
+Psortb stderr:
+* Using /usr/local/psortb as PSort root directory
+* Reading sequences from file "/usr/local/nodeapi/src/temp_wd/3/input.fasta"
+
+DEBUG:root:Parsing psortb output
+DEBUG:root:Done run in: 22.3216 seconds
+DEBUG:root:Adhesin start...
+DEBUG:root:Done run in: 3.0587 seconds
+DEBUG:root:Tmhelices start...
+DEBUG:root:Done run in: 2.1601 seconds
+DEBUG:root:Loop-razor start...
+DEBUG:root:Substituting A0A0H2VA37_Escherichia coli O6:H1 (strain CFT073 / ATCC 700928 / UPEC) sequence with its longest loop.
+DEBUG:root:Done run in: 0.0279 seconds
+DEBUG:root:Autoimmunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 8.6077 seconds
+DEBUG:root:Mouse immunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 7.7637 seconds
+DEBUG:root:Virulence start...
+DEBUG:root:Done run in: 2.3828 seconds
+DEBUG:root:Annotation start...
+DEBUG:root:Done run in: 4.6687 seconds
+DEBUG:root:Done: NERVE has finished its analysis in: 51.0066 seconds

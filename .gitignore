@@ -2,7 +2,6 @@ test_new/
 code/__pycache__/
 test_new.zip
 .gitignore
-docker/workdir/
 Dockerfile_backup_old
 .gitignore
 test_new/

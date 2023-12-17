@@ -1,0 +1,790 @@
+DEBUG:root:Running NERVE with the following parameters:
+annotation: True, e_value: 1e-10, gram: n,
+                minlength: 9, mismatch: 1, mouse: True,
+                mouse_peptides_sum_limit: 0.15, proteome1: UP000002493,
+                proteome2: UP000032406, p_ad_extracellular_filter: 0.38,
+                padlimit: 0.85, razor: True, razlen: 50, select: True,
+                substitution: 3, transmemb_doms_limit: 3,
+                virlimit: 0.5, virulent: True, working_dir: ./UP000002493/,
+                NERVE_dir: ../NERVE, iFeature_dir: /iFeature,  DeepFri_dir: /DeepFri
+DEBUG:root:UP000002493 is not a file, download from Uniprot.
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): rest.uniprot.org:443
+DEBUG:urllib3.connectionpool:https://rest.uniprot.org:443 "GET /uniprotkb/stream?compressed=false&format=fasta&query=%28proteome%3AUP000002493%29 HTTP/1.1" 200 None
+DEBUG:root:UP000002493 successfully downloaded
+DEBUG:root:UP000032406 is not a file, download from Uniprot.
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): rest.uniprot.org:443
+DEBUG:urllib3.connectionpool:https://rest.uniprot.org:443 "GET /uniprotkb/stream?compressed=false&format=fasta&query=%28proteome%3AUP000032406%29 HTTP/1.1" 200 None
+DEBUG:root:UP000032406 successfully downloaded
+DEBUG:root:Start quality control of proteome1 (./UP000002493/proteome1.fasta)
+DEBUG:root:Finish quality control of proteome1. Updated path: (/workdir/UP000002493/cleaned_proteome1.fasta)
+DEBUG:root:Start quality control of proteome2 (./UP000002493/proteome2.fasta)
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F6C4|A0A0D1F6C4_VIBPH Bifunctional aspartokinase/homoserine dehydrogenase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=metL PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1F6C4|A0A0D1F6C4_VIBPH Bifunctional aspartokinase/homoserine dehydrogenase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=metL PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DB53|A0A0D1DB53_VIBPH Stress response kinase A OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=srkA PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DB53|A0A0D1DB53_VIBPH Stress response kinase A OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=srkA PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DBJ0|A0A0D1DBJ0_VIBPH tRNA N6-adenosine threonylcarbamoyltransferase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=tsaD PE=3 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DBJ0|A0A0D1DBJ0_VIBPH tRNA N6-adenosine threonylcarbamoyltransferase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=tsaD PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DBJ0|A0A0D1DBJ0_VIBPH tRNA N6-adenosine threonylcarbamoyltransferase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=tsaD PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DDW2|A0A0D1DDW2_VIBPH Protein-glutamate methylesterase/protein-glutamine glutaminase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=cheB PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DDW2|A0A0D1DDW2_VIBPH Protein-glutamate methylesterase/protein-glutamine glutaminase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=cheB PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DFX9|A0A0D1DFX9_VIBPH DNA ligase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=ligA PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DFX9|A0A0D1DFX9_VIBPH DNA ligase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=ligA PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DGI7|A0A0D1DGI7_VIBPH Chromosome partition protein MukB OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=mukB PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DGI7|A0A0D1DGI7_VIBPH Chromosome partition protein MukB OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=mukB PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DH83|A0A0D1DH83_VIBPH Oxygen-dependent choline dehydrogenase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=betA PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DH83|A0A0D1DH83_VIBPH Oxygen-dependent choline dehydrogenase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=betA PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DKR7|A0A0D1DKR7_VIBPH Ribonuclease E OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=rne PE=3 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DKR7|A0A0D1DKR7_VIBPH Ribonuclease E OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=rne PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DKR7|A0A0D1DKR7_VIBPH Ribonuclease E OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=rne PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DXJ1|A0A0D1DXJ1_VIBPH Hydroxyethylthiazole kinase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=thiM PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DXJ1|A0A0D1DXJ1_VIBPH Hydroxyethylthiazole kinase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=thiM PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E025|A0A0D1E025_VIBPH DNA topoisomerase 4 subunit B OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=parE PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1E025|A0A0D1E025_VIBPH DNA topoisomerase 4 subunit B OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=parE PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E3V4|A0A0D1E3V4_VIBPH Amidophosphoribosyltransferase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=purF PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1E3V4|A0A0D1E3V4_VIBPH Amidophosphoribosyltransferase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=purF PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ERV4|A0A0D1ERV4_VIBPH RNA polymerase-associated protein RapA OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=rapA PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1ERV4|A0A0D1ERV4_VIBPH RNA polymerase-associated protein RapA OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=rapA PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ESD2|A0A0D1ESD2_VIBPH 3-dehydroquinate synthase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=aroB PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1ESD2|A0A0D1ESD2_VIBPH 3-dehydroquinate synthase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=aroB PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EUA2|A0A0D1EUA2_VIBPH tRNA-dihydrouridine(16) synthase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=dusC PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1EUA2|A0A0D1EUA2_VIBPH tRNA-dihydrouridine(16) synthase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=dusC PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EUD5|A0A0D1EUD5_VIBPH 3-dehydroquinate dehydratase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=aroQ PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1EUD5|A0A0D1EUD5_VIBPH 3-dehydroquinate dehydratase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=aroQ PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F2Z6|A0A0D1F2Z6_VIBPH Succinyl-diaminopimelate desuccinylase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=dapE PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1F2Z6|A0A0D1F2Z6_VIBPH Succinyl-diaminopimelate desuccinylase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=dapE PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FAI8|A0A0D1FAI8_VIBPH DNA topoisomerase 1 OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=topA PE=3 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FAI8|A0A0D1FAI8_VIBPH DNA topoisomerase 1 OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=topA PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FAI8|A0A0D1FAI8_VIBPH DNA topoisomerase 1 OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=topA PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FGL1|A0A0D1FGL1_VIBPH Protein translocase subunit SecA OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=secA PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FGL1|A0A0D1FGL1_VIBPH Protein translocase subunit SecA OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=secA PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FGL7|A0A0D1FGL7_VIBPH UDP-N-acetylglucosamine--N-acetylmuramyl-(pentapeptide) pyrophosphoryl-undecaprenol N-acetylglucosamine transferase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=murG PE=3 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FGL7|A0A0D1FGL7_VIBPH UDP-N-acetylglucosamine--N-acetylmuramyl-(pentapeptide) pyrophosphoryl-undecaprenol N-acetylglucosamine transferase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=murG PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FGL7|A0A0D1FGL7_VIBPH UDP-N-acetylglucosamine--N-acetylmuramyl-(pentapeptide) pyrophosphoryl-undecaprenol N-acetylglucosamine transferase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=murG PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1CU25|A0A0D1CU25_VIBPH Lipopolysaccharide assembly protein B OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=lapB PE=3 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1CU25|A0A0D1CU25_VIBPH Lipopolysaccharide assembly protein B OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=lapB PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1CU25|A0A0D1CU25_VIBPH Lipopolysaccharide assembly protein B OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=lapB PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1CU88|A0A0D1CU88_VIBPH Uracil-DNA glycosylase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=ung PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1CU88|A0A0D1CU88_VIBPH Uracil-DNA glycosylase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=ung PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1CY43|A0A0D1CY43_VIBPH L-serine dehydratase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_09290 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1CY43|A0A0D1CY43_VIBPH L-serine dehydratase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_09290 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1D2T7|A0A0D1D2T7_VIBPH Carbonic anhydrase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_06345 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1D2T7|A0A0D1D2T7_VIBPH Carbonic anhydrase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_06345 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1D3C9|A0A0D1D3C9_VIBPH guanosine-3',5'-bis(diphosphate) 3'-diphosphatase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_05720 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1D3C9|A0A0D1D3C9_VIBPH guanosine-3',5'-bis(diphosphate) 3'-diphosphatase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_05720 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1D8N0|A0A0D1D8N0_VIBPH Thiazole synthase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=thiG PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1D8N0|A0A0D1D8N0_VIBPH Thiazole synthase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=thiG PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DB37|A0A0D1DB37_VIBPH ATP synthase subunit beta OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=atpD PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DB37|A0A0D1DB37_VIBPH ATP synthase subunit beta OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=atpD PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DDW9|A0A0D1DDW9_VIBPH Heme exporter protein B OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_19475 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DDW9|A0A0D1DDW9_VIBPH Heme exporter protein B OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_19475 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DEE0|A0A0D1DEE0_VIBPH phosphoenolpyruvate--protein phosphotransferase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12545 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DEE0|A0A0D1DEE0_VIBPH phosphoenolpyruvate--protein phosphotransferase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12545 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DHH6|A0A0D1DHH6_VIBPH oxoglutarate dehydrogenase (succinyl-transferring) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_01295 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DHH6|A0A0D1DHH6_VIBPH oxoglutarate dehydrogenase (succinyl-transferring) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_01295 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DL17|A0A0D1DL17_VIBPH 30S ribosomal protein S1 OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=rpsA PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DL17|A0A0D1DL17_VIBPH 30S ribosomal protein S1 OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=rpsA PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DP91|A0A0D1DP91_VIBPH Thymidine phosphorylase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=deoA PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DP91|A0A0D1DP91_VIBPH Thymidine phosphorylase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=deoA PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E1E1|A0A0D1E1E1_VIBPH Flagellar motor switch protein FliG OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=fliG PE=3 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E1E1|A0A0D1E1E1_VIBPH Flagellar motor switch protein FliG OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=fliG PE=3 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E1E1|A0A0D1E1E1_VIBPH Flagellar motor switch protein FliG OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=fliG PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1E1E1|A0A0D1E1E1_VIBPH Flagellar motor switch protein FliG OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=fliG PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ELB5|A0A0D1ELB5_VIBPH Phospho-2-dehydro-3-deoxyheptonate aldolase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12430 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1ELB5|A0A0D1ELB5_VIBPH Phospho-2-dehydro-3-deoxyheptonate aldolase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12430 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EMU6|A0A0D1EMU6_VIBPH lactoylglutathione lyase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12680 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1EMU6|A0A0D1EMU6_VIBPH lactoylglutathione lyase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12680 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EQS5|A0A0D1EQS5_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_01020 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1EQS5|A0A0D1EQS5_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_01020 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EQT1|A0A0D1EQT1_VIBPH Aminotransferase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_09380 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1EQT1|A0A0D1EQT1_VIBPH Aminotransferase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_09380 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EVZ0|A0A0D1EVZ0_VIBPH Asparagine--tRNA ligase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=asnS PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1EVZ0|A0A0D1EVZ0_VIBPH Asparagine--tRNA ligase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=asnS PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EX83|A0A0D1EX83_VIBPH L-aspartate oxidase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_05010 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1EX83|A0A0D1EX83_VIBPH L-aspartate oxidase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_05010 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EXR3|A0A0D1EXR3_VIBPH tRNA (guanosine(18)-2'-O)-methyltransferase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=trmH PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1EXR3|A0A0D1EXR3_VIBPH tRNA (guanosine(18)-2'-O)-methyltransferase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=trmH PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EYY1|A0A0D1EYY1_VIBPH Anti-sigma-E factor RseA OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_05020 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1EYY1|A0A0D1EYY1_VIBPH Anti-sigma-E factor RseA OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_05020 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EZN5|A0A0D1EZN5_VIBPH 30S ribosomal protein S11 OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=rpsK PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1EZN5|A0A0D1EZN5_VIBPH 30S ribosomal protein S11 OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=rpsK PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F0N4|A0A0D1F0N4_VIBPH Whole genome shotgun sequence (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_04640 PE=3 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F0N4|A0A0D1F0N4_VIBPH Whole genome shotgun sequence (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_04640 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1F0N4|A0A0D1F0N4_VIBPH Whole genome shotgun sequence (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_04640 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F2B5|A0A0D1F2B5_VIBPH Negative regulator of flagellin synthesis OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_23235 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1F2B5|A0A0D1F2B5_VIBPH Negative regulator of flagellin synthesis OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_23235 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F2G2|A0A0D1F2G2_VIBPH GTPase Era OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=era PE=3 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F2G2|A0A0D1F2G2_VIBPH GTPase Era OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=era PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1F2G2|A0A0D1F2G2_VIBPH GTPase Era OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=era PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F327|A0A0D1F327_VIBPH Glycerol-3-phosphate dehydrogenase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=glpD PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1F327|A0A0D1F327_VIBPH Glycerol-3-phosphate dehydrogenase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=glpD PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F497|A0A0D1F497_VIBPH NAD(P) transhydrogenase subunit alpha OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_21760 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1F497|A0A0D1F497_VIBPH NAD(P) transhydrogenase subunit alpha OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_21760 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F4N0|A0A0D1F4N0_VIBPH 16S rRNA (cytosine(967)-C(5))-methyltransferase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_21500 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1F4N0|A0A0D1F4N0_VIBPH 16S rRNA (cytosine(967)-C(5))-methyltransferase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_21500 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F7X2|A0A0D1F7X2_VIBPH FadI protein OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=fadI PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1F7X2|A0A0D1F7X2_VIBPH FadI protein OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=fadI PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FBC4|A0A0D1FBC4_VIBPH Uronate isomerase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=uxaC PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FBC4|A0A0D1FBC4_VIBPH Uronate isomerase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=uxaC PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FBJ4|A0A0D1FBJ4_VIBPH Flagellar M-ring protein OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16945 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FBJ4|A0A0D1FBJ4_VIBPH Flagellar M-ring protein OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16945 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FC67|A0A0D1FC67_VIBPH Glutathione-dependent peroxiredoxin OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20305 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FC67|A0A0D1FC67_VIBPH Glutathione-dependent peroxiredoxin OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20305 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FCW1|A0A0D1FCW1_VIBPH Methylated-DNA--protein-cysteine methyltransferase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15815 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FCW1|A0A0D1FCW1_VIBPH Methylated-DNA--protein-cysteine methyltransferase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15815 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FCX1|A0A0D1FCX1_VIBPH Peptidyl-prolyl cis-trans isomerase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15910 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FCX1|A0A0D1FCX1_VIBPH Peptidyl-prolyl cis-trans isomerase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15910 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FDX5|A0A0D1FDX5_VIBPH Phenylalanine--tRNA ligase alpha subunit OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=pheS PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FDX5|A0A0D1FDX5_VIBPH Phenylalanine--tRNA ligase alpha subunit OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=pheS PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FEX1|A0A0D1FEX1_VIBPH Glyceraldehyde-3-phosphate dehydrogenase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_18460 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FEX1|A0A0D1FEX1_VIBPH Glyceraldehyde-3-phosphate dehydrogenase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_18460 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FEY4|A0A0D1FEY4_VIBPH S-formylglutathione hydrolase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15715 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FEY4|A0A0D1FEY4_VIBPH S-formylglutathione hydrolase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15715 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FF97|A0A0D1FF97_VIBPH Fructose-1,6-bisphosphatase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13755 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FF97|A0A0D1FF97_VIBPH Fructose-1,6-bisphosphatase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13755 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FFG8|A0A0D1FFG8_VIBPH histidine kinase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13660 PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FFG8|A0A0D1FFG8_VIBPH histidine kinase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13660 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FFG8|A0A0D1FFG8_VIBPH histidine kinase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13660 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FG07|A0A0D1FG07_VIBPH MalS protein (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=malS PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FG07|A0A0D1FG07_VIBPH MalS protein (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=malS PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FG38|A0A0D1FG38_VIBPH Pyruvate formate-lyase-activating enzyme OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=pflA PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FG38|A0A0D1FG38_VIBPH Pyruvate formate-lyase-activating enzyme OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=pflA PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FH49|A0A0D1FH49_VIBPH 50S ribosomal protein L25 OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=rplY PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FH49|A0A0D1FH49_VIBPH 50S ribosomal protein L25 OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=rplY PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FI32|A0A0D1FI32_VIBPH HTH-type transcriptional regulator MetR OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13705 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FI32|A0A0D1FI32_VIBPH HTH-type transcriptional regulator MetR OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13705 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FI70|A0A0D1FI70_VIBPH UvrABC system protein C OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=uvrC PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FI70|A0A0D1FI70_VIBPH UvrABC system protein C OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=uvrC PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FIV4|A0A0D1FIV4_VIBPH S-(hydroxymethyl)glutathione dehydrogenase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15710 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FIV4|A0A0D1FIV4_VIBPH S-(hydroxymethyl)glutathione dehydrogenase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15710 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1CU53|A0A0D1CU53_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12700 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1CU53|A0A0D1CU53_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12700 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1CU82|A0A0D1CU82_VIBPH Single-stranded-DNA-specific exonuclease RecJ OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12600 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1CU82|A0A0D1CU82_VIBPH Single-stranded-DNA-specific exonuclease RecJ OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12600 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1CUH1|A0A0D1CUH1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_11970 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1CUH1|A0A0D1CUH1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_11970 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1CUN0|A0A0D1CUN0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_11805 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1CUN0|A0A0D1CUN0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_11805 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1CVV2|A0A0D1CVV2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10450 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1CVV2|A0A0D1CVV2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10450 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1CWB0|A0A0D1CWB0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10190 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1CWB0|A0A0D1CWB0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10190 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1CX69|A0A0D1CX69_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_01025 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1CX69|A0A0D1CX69_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_01025 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1CYH3|A0A0D1CYH3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08755 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1CYH3|A0A0D1CYH3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08755 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1CYH9|A0A0D1CYH9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08830 PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1CYH9|A0A0D1CYH9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08830 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1CYH9|A0A0D1CYH9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08830 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1CYK1|A0A0D1CYK1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_09035 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1CYK1|A0A0D1CYK1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_09035 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1D080|A0A0D1D080_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_07265 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1D080|A0A0D1D080_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_07265 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1D3H5|A0A0D1D3H5_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_05915 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1D3H5|A0A0D1D3H5_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_05915 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1D3H9|A0A0D1D3H9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_05940 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1D3H9|A0A0D1D3H9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_05940 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DAW3|A0A0D1DAW3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_21805 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DAW3|A0A0D1DAW3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_21805 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DCM4|A0A0D1DCM4_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20565 PE=3 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DCM4|A0A0D1DCM4_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20565 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DCM4|A0A0D1DCM4_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20565 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DCX3|A0A0D1DCX3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20450 PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DCX3|A0A0D1DCX3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20450 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DCX3|A0A0D1DCX3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20450 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DD25|A0A0D1DD25_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20145 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DD25|A0A0D1DD25_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20145 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DD31|A0A0D1DD31_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20220 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DD31|A0A0D1DD31_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20220 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DDA0|A0A0D1DDA0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20025 PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DDA0|A0A0D1DDA0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20025 PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DDA0|A0A0D1DDA0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20025 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DDA0|A0A0D1DDA0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20025 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DEM7|A0A0D1DEM7_VIBPH SsaR protein OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=ssaR PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DEM7|A0A0D1DEM7_VIBPH SsaR protein OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=ssaR PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DF27|A0A0D1DF27_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_11365 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DF27|A0A0D1DF27_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_11365 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DF51|A0A0D1DF51_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_11495 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DF51|A0A0D1DF51_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_11495 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DFI9|A0A0D1DFI9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_18285 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DFI9|A0A0D1DFI9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_18285 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DFY7|A0A0D1DFY7_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_18055 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DFY7|A0A0D1DFY7_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_18055 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DG20|A0A0D1DG20_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_17845 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DG20|A0A0D1DG20_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_17845 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DGN3|A0A0D1DGN3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_02435 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DGN3|A0A0D1DGN3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_02435 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DGV3|A0A0D1DGV3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_09895 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DGV3|A0A0D1DGV3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_09895 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DGX1|A0A0D1DGX1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_17490 PE=3 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DGX1|A0A0D1DGX1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_17490 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DGX1|A0A0D1DGX1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_17490 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DH23|A0A0D1DH23_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_17365 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DH23|A0A0D1DH23_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_17365 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DHL6|A0A0D1DHL6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16795 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DHL6|A0A0D1DHL6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16795 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DHP7|A0A0D1DHP7_VIBPH Protein Syd OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=syd PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DHP7|A0A0D1DHP7_VIBPH Protein Syd OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=syd PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DII4|A0A0D1DII4_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16095 PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DII4|A0A0D1DII4_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16095 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DII4|A0A0D1DII4_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16095 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DIV6|A0A0D1DIV6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15860 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DIV6|A0A0D1DIV6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15860 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DIW9|A0A0D1DIW9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15885 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DIW9|A0A0D1DIW9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15885 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DIZ8|A0A0D1DIZ8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08905 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DIZ8|A0A0D1DIZ8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08905 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DJK0|A0A0D1DJK0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08605 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DJK0|A0A0D1DJK0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08605 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DJM9|A0A0D1DJM9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15145 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DJM9|A0A0D1DJM9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15145 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DL19|A0A0D1DL19_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13970 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DL19|A0A0D1DL19_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13970 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DMC1|A0A0D1DMC1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00060 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DMC1|A0A0D1DMC1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00060 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DMD8|A0A0D1DMD8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00150 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DMD8|A0A0D1DMD8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00150 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DRG6|A0A0D1DRG6_VIBPH Whole genome shotgun sequence (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_24660 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DRG6|A0A0D1DRG6_VIBPH Whole genome shotgun sequence (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_24660 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DRK9|A0A0D1DRK9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_04525 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DRK9|A0A0D1DRK9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_04525 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DT82|A0A0D1DT82_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_23870 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DT82|A0A0D1DT82_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_23870 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DU71|A0A0D1DU71_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_03775 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DU71|A0A0D1DU71_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_03775 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DU75|A0A0D1DU75_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_03800 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DU75|A0A0D1DU75_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_03800 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DUW0|A0A0D1DUW0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_03645 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DUW0|A0A0D1DUW0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_03645 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DVC7|A0A0D1DVC7_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_22160 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DVC7|A0A0D1DVC7_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_22160 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DVV7|A0A0D1DVV7_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_21520 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1DVV7|A0A0D1DVV7_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_21520 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DW66|A0A0D1DW66_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00235 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DW66|A0A0D1DW66_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00235 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DWJ1|A0A0D1DWJ1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20755 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DWJ1|A0A0D1DWJ1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20755 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DWQ0|A0A0D1DWQ0_VIBPH Whole genome shotgun sequence (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20715 PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DWQ0|A0A0D1DWQ0_VIBPH Whole genome shotgun sequence (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20715 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DWQ0|A0A0D1DWQ0_VIBPH Whole genome shotgun sequence (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20715 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DXG8|A0A0D1DXG8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20030 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DXG8|A0A0D1DXG8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20030 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DZ13|A0A0D1DZ13_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_18620 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DZ13|A0A0D1DZ13_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_18620 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1DZY8|A0A0D1DZY8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_17850 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1DZY8|A0A0D1DZY8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_17850 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E009|A0A0D1E009_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_17775 PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E009|A0A0D1E009_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_17775 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1E009|A0A0D1E009_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_17775 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E0I4|A0A0D1E0I4_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_02290 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1E0I4|A0A0D1E0I4_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_02290 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E0W5|A0A0D1E0W5_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_17435 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1E0W5|A0A0D1E0W5_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_17435 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E2D7|A0A0D1E2D7_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16135 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1E2D7|A0A0D1E2D7_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16135 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E2J9|A0A0D1E2J9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15700 PE=3 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E2J9|A0A0D1E2J9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15700 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1E2J9|A0A0D1E2J9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15700 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E2M1|A0A0D1E2M1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15870 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1E2M1|A0A0D1E2M1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15870 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E2U4|A0A0D1E2U4_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15465 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1E2U4|A0A0D1E2U4_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15465 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E344|A0A0D1E344_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15150 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1E344|A0A0D1E344_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15150 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E3J2|A0A0D1E3J2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14875 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1E3J2|A0A0D1E3J2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14875 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E4F2|A0A0D1E4F2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13920 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1E4F2|A0A0D1E4F2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13920 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E4Y5|A0A0D1E4Y5_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13330 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1E4Y5|A0A0D1E4Y5_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13330 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E530|A0A0D1E530_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13160 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1E530|A0A0D1E530_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13160 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1E5F1|A0A0D1E5F1_VIBPH UPF0397 protein H323_00130 OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00130 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1E5F1|A0A0D1E5F1_VIBPH UPF0397 protein H323_00130 OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00130 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EL28|A0A0D1EL28_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12805 PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EL28|A0A0D1EL28_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12805 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EL28|A0A0D1EL28_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12805 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ELD5|A0A0D1ELD5_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12245 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1ELD5|A0A0D1ELD5_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12245 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ELE6|A0A0D1ELE6_VIBPH Whole genome shotgun sequence (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12370 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1ELE6|A0A0D1ELE6_VIBPH Whole genome shotgun sequence (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12370 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EMV1|A0A0D1EMV1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12730 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EMV1|A0A0D1EMV1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12730 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EN67|A0A0D1EN67_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12175 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EN67|A0A0D1EN67_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12175 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ENA8|A0A0D1ENA8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10520 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1ENA8|A0A0D1ENA8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10520 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1END3|A0A0D1END3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12025 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1END3|A0A0D1END3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12025 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ENN0|A0A0D1ENN0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10125 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1ENN0|A0A0D1ENN0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10125 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ENS7|A0A0D1ENS7_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_11485 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1ENS7|A0A0D1ENS7_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_11485 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EPF0|A0A0D1EPF0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10780 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1EPF0|A0A0D1EPF0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10780 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EPM8|A0A0D1EPM8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10570 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EPM8|A0A0D1EPM8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10570 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EPN9|A0A0D1EPN9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_01180 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EPN9|A0A0D1EPN9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_01180 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EPS0|A0A0D1EPS0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10285 PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EPS0|A0A0D1EPS0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10285 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EPS0|A0A0D1EPS0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10285 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EPX8|A0A0D1EPX8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_09750 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EPX8|A0A0D1EPX8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_09750 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EQ06|A0A0D1EQ06_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10185 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EQ06|A0A0D1EQ06_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10185 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EQ38|A0A0D1EQ38_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_09910 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EQ38|A0A0D1EQ38_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_09910 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ERK8|A0A0D1ERK8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08585 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1ERK8|A0A0D1ERK8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08585 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ERL8|A0A0D1ERL8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12860 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1ERL8|A0A0D1ERL8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12860 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ES41|A0A0D1ES41_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12040 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1ES41|A0A0D1ES41_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_12040 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ESA6|A0A0D1ESA6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08040 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1ESA6|A0A0D1ESA6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08040 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ESD1|A0A0D1ESD1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08825 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1ESD1|A0A0D1ESD1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08825 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ESX0|A0A0D1ESX0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08675 PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ESX0|A0A0D1ESX0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08675 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1ESX0|A0A0D1ESX0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08675 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ET19|A0A0D1ET19_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08595 PE=3 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ET19|A0A0D1ET19_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08595 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1ET19|A0A0D1ET19_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08595 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ET28|A0A0D1ET28_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10950 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1ET28|A0A0D1ET28_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_10950 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1ETZ4|A0A0D1ETZ4_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_07585 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1ETZ4|A0A0D1ETZ4_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_07585 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EVC3|A0A0D1EVC3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_07155 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EVC3|A0A0D1EVC3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_07155 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EVH7|A0A0D1EVH7_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_06360 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1EVH7|A0A0D1EVH7_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_06360 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EVI3|A0A0D1EVI3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_06355 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1EVI3|A0A0D1EVI3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_06355 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EVK5|A0A0D1EVK5_VIBPH Transport permease protein OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_09565 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1EVK5|A0A0D1EVK5_VIBPH Transport permease protein OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_09565 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EVP0|A0A0D1EVP0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_06180 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EVP0|A0A0D1EVP0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_06180 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EW58|A0A0D1EW58_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_09225 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EW58|A0A0D1EW58_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_09225 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EW61|A0A0D1EW61_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_05950 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1EW61|A0A0D1EW61_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_05950 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EWA6|A0A0D1EWA6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08805 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EWA6|A0A0D1EWA6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08805 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EWG8|A0A0D1EWG8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_06625 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1EWG8|A0A0D1EWG8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_06625 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EWW0|A0A0D1EWW0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_06465 PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EWW0|A0A0D1EWW0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_06465 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EWW0|A0A0D1EWW0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_06465 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EX18|A0A0D1EX18_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08520 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EX18|A0A0D1EX18_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_08520 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EY61|A0A0D1EY61_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_07440 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EY61|A0A0D1EY61_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_07440 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EYL2|A0A0D1EYL2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_24745 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EYL2|A0A0D1EYL2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_24745 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EYP2|A0A0D1EYP2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_05280 PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EYP2|A0A0D1EYP2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_05280 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EYP2|A0A0D1EYP2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_05280 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EZ58|A0A0D1EZ58_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_04420 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EZ58|A0A0D1EZ58_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_04420 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1EZ88|A0A0D1EZ88_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_04545 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1EZ88|A0A0D1EZ88_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_04545 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F1B9|A0A0D1F1B9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_23900 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1F1B9|A0A0D1F1B9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_23900 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F1G1|A0A0D1F1G1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_04195 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1F1G1|A0A0D1F1G1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_04195 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F1S6|A0A0D1F1S6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00485 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1F1S6|A0A0D1F1S6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00485 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F1T2|A0A0D1F1T2_VIBPH Nucleoside permease OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00535 PE=3 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F1T2|A0A0D1F1T2_VIBPH Nucleoside permease OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00535 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1F1T2|A0A0D1F1T2_VIBPH Nucleoside permease OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00535 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F1W7|A0A0D1F1W7_VIBPH Whole genome shotgun sequence (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_24435 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1F1W7|A0A0D1F1W7_VIBPH Whole genome shotgun sequence (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_24435 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F2X8|A0A0D1F2X8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_22520 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1F2X8|A0A0D1F2X8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_22520 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F364|A0A0D1F364_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_24080 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1F364|A0A0D1F364_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_24080 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F3L1|A0A0D1F3L1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_03865 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1F3L1|A0A0D1F3L1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_03865 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F3W9|A0A0D1F3W9_VIBPH Whole genome shotgun sequence (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_22015 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1F3W9|A0A0D1F3W9_VIBPH Whole genome shotgun sequence (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_22015 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F406|A0A0D1F406_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_23585 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1F406|A0A0D1F406_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_23585 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F4I8|A0A0D1F4I8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00300 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1F4I8|A0A0D1F4I8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00300 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F4J9|A0A0D1F4J9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_21615 PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F4J9|A0A0D1F4J9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_21615 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1F4J9|A0A0D1F4J9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_21615 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F4Q6|A0A0D1F4Q6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_04280 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1F4Q6|A0A0D1F4Q6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_04280 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F625|A0A0D1F625_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20730 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1F625|A0A0D1F625_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20730 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F768|A0A0D1F768_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_02885 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1F768|A0A0D1F768_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_02885 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F7J4|A0A0D1F7J4_VIBPH Whole genome shotgun sequence (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20895 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1F7J4|A0A0D1F7J4_VIBPH Whole genome shotgun sequence (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20895 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F8J5|A0A0D1F8J5_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20505 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1F8J5|A0A0D1F8J5_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20505 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F8N0|A0A0D1F8N0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20385 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1F8N0|A0A0D1F8N0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20385 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F8S2|A0A0D1F8S2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20085 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1F8S2|A0A0D1F8S2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20085 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F949|A0A0D1F949_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_19905 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1F949|A0A0D1F949_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_19905 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F955|A0A0D1F955_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_18630 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1F955|A0A0D1F955_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_18630 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F983|A0A0D1F983_VIBPH FabG protein OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=fabG PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1F983|A0A0D1F983_VIBPH FabG protein OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=fabG PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1F9T1|A0A0D1F9T1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_19275 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1F9T1|A0A0D1F9T1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_19275 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FA11|A0A0D1FA11_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_19055 PE=3 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FA11|A0A0D1FA11_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_19055 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FA11|A0A0D1FA11_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_19055 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FA36|A0A0D1FA36_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_21530 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FA36|A0A0D1FA36_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_21530 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FA53|A0A0D1FA53_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_21470 PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FA53|A0A0D1FA53_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_21470 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FA53|A0A0D1FA53_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_21470 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FAG7|A0A0D1FAG7_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_18830 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FAG7|A0A0D1FAG7_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_18830 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FAY7|A0A0D1FAY7_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20935 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FAY7|A0A0D1FAY7_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20935 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FAZ9|A0A0D1FAZ9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20865 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FAZ9|A0A0D1FAZ9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_20865 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FB49|A0A0D1FB49_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_18295 PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FB49|A0A0D1FB49_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_18295 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FB49|A0A0D1FB49_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_18295 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FBL9|A0A0D1FBL9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16825 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FBL9|A0A0D1FBL9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16825 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FC83|A0A0D1FC83_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_02005 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FC83|A0A0D1FC83_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_02005 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FCL6|A0A0D1FCL6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16045 PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FCL6|A0A0D1FCL6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16045 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FCL6|A0A0D1FCL6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16045 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FCU9|A0A0D1FCU9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15735 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FCU9|A0A0D1FCU9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15735 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FCW4|A0A0D1FCW4_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15845 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FCW4|A0A0D1FCW4_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15845 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FCX2|A0A0D1FCX2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_19975 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FCX2|A0A0D1FCX2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_19975 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FD22|A0A0D1FD22_VIBPH Whole genome shotgun sequence (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15550 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FD22|A0A0D1FD22_VIBPH Whole genome shotgun sequence (Fragment) OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15550 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FD51|A0A0D1FD51_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_17260 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FD51|A0A0D1FD51_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_17260 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FDH7|A0A0D1FDH7_VIBPH histidine kinase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_19325 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FDH7|A0A0D1FDH7_VIBPH histidine kinase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_19325 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FDJ3|A0A0D1FDJ3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16790 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FDJ3|A0A0D1FDJ3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16790 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FDN2|A0A0D1FDN2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16635 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FDN2|A0A0D1FDN2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16635 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FE44|A0A0D1FE44_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14885 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FE44|A0A0D1FE44_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14885 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FE67|A0A0D1FE67_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14860 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FE67|A0A0D1FE67_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14860 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FEE3|A0A0D1FEE3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_18825 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FEE3|A0A0D1FEE3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_18825 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FEV1|A0A0D1FEV1_VIBPH protein-tyrosine-phosphatase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15985 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FEV1|A0A0D1FEV1_VIBPH protein-tyrosine-phosphatase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15985 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FEW6|A0A0D1FEW6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15590 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FEW6|A0A0D1FEW6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15590 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FEX2|A0A0D1FEX2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15640 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FEX2|A0A0D1FEX2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15640 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FF17|A0A0D1FF17_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15890 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FF17|A0A0D1FF17_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15890 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FF56|A0A0D1FF56_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13895 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FF56|A0A0D1FF56_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13895 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FFL0|A0A0D1FFL0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13515 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FFL0|A0A0D1FFL0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13515 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FFR7|A0A0D1FFR7_VIBPH Phosphofructokinase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=fruK PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FFR7|A0A0D1FFR7_VIBPH Phosphofructokinase OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=fruK PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FFX8|A0A0D1FFX8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13195 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FFX8|A0A0D1FFX8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13195 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FG80|A0A0D1FG80_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00010 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FG80|A0A0D1FG80_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00010 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FGC6|A0A0D1FGC6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00105 PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FGC6|A0A0D1FGC6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00105 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FGC6|A0A0D1FGC6_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_00105 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FGZ7|A0A0D1FGZ7_VIBPH FabG protein OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=fabG PE=4 SV=1
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FGZ7|A0A0D1FGZ7_VIBPH FabG protein OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=fabG PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FGZ7|A0A0D1FGZ7_VIBPH FabG protein OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=fabG PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FH06|A0A0D1FH06_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14545 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FH06|A0A0D1FH06_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14545 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FH26|A0A0D1FH26_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_17130 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FH26|A0A0D1FH26_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_17130 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FH52|A0A0D1FH52_VIBPH Bcr/CflA family efflux transporter OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14215 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FH52|A0A0D1FH52_VIBPH Bcr/CflA family efflux transporter OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14215 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FHA4|A0A0D1FHA4_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14015 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FHA4|A0A0D1FHA4_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14015 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FHQ9|A0A0D1FHQ9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16605 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FHQ9|A0A0D1FHQ9_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_16605 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FHZ0|A0A0D1FHZ0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13735 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FHZ0|A0A0D1FHZ0_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13735 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FI01|A0A0D1FI01_VIBPH Autonomous glycyl radical cofactor OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=grcA PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FI01|A0A0D1FI01_VIBPH Autonomous glycyl radical cofactor OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=grcA PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FIW1|A0A0D1FIW1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15765 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FIW1|A0A0D1FIW1_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15765 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FJ64|A0A0D1FJ64_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15470 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FJ64|A0A0D1FJ64_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_15470 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FK74|A0A0D1FK74_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14890 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FK74|A0A0D1FK74_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14890 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FKE3|A0A0D1FKE3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14700 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FKE3|A0A0D1FKE3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14700 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FKM8|A0A0D1FKM8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14110 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FKM8|A0A0D1FKM8_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14110 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FKN2|A0A0D1FKN2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14140 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FKN2|A0A0D1FKN2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_14140 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FL91|A0A0D1FL91_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13900 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FL91|A0A0D1FL91_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13900 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FLH2|A0A0D1FLH2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13730 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FLH2|A0A0D1FLH2_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13730 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FLT3|A0A0D1FLT3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13485 PE=4 SV=1
+DEBUG:root:Sequence tr|A0A0D1FLT3|A0A0D1FLT3_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_13485 PE=4 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Found non-canonical aminoacid "X" in sequence: tr|A0A0D1FM85|A0A0D1FM85_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_01485 PE=3 SV=1
+DEBUG:root:Sequence tr|A0A0D1FM85|A0A0D1FM85_VIBPH Whole genome shotgun sequence OS=Vibrio parahaemolyticus VP766 OX=1288782 GN=H323_01485 PE=3 SV=1 has been discarded for the presence of non-canonical aminoacids.
+DEBUG:root:Finish quality control of proteome2. Updated path: (/workdir/UP000002493/cleaned_proteome2.fasta)
+DEBUG:root:Extract protein sequences and IDs from proteome1
+DEBUG:root:4821 proteins loaded in 0.506422758102417 seconds
+DEBUG:root:Subcelloc start with psortb...
+DEBUG:root:Sending request to psortb
+DEBUG:root:Psortb stdout:
+Saving results to /result.txt
+
+- Running PSORTb: /usr/local/psortb/bin/psortb3.pl -n -v /usr/local/nodeapi/src/temp_wd/0/input.fasta > /usr/local/nodeapi/src/temp_wd/0/result.txt
+
+Psortb stderr:
+* Using /usr/local/psortb as PSort root directory
+* Reading sequences from file "/usr/local/nodeapi/src/temp_wd/0/input.fasta"
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+
+DEBUG:root:Parsing psortb output
+DEBUG:root:Done run in: 1621.1841 seconds
+DEBUG:root:Adhesin start...
+DEBUG:root:Done run in: 244.5721 seconds
+DEBUG:root:Tmhelices start...
+DEBUG:root:Done run in: 141.6526 seconds
+DEBUG:root:Loop-razor start...
+DEBUG:root:Substituting tr|Q87IH8|Q87IH8_VIBPA Cytochrome bo(3) ubiquinol oxidase subunit 1 OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0628 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87K86|Q87K86_VIBPA Peptidoglycan glycosyltransferase MrdB OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=mrdB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q87MA7|NQRB_VIBPA Na(+)-translocating NADH-quinone reductase subunit B OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=nqrB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q87Q45|COBS_VIBPA Adenosylcobinamide-GDP ribazoletransferase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=cobS PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q87QP4|FTSK_VIBPA DNA translocase FtsK OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=ftsK PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q87R16|MSBA_VIBPA ATP-dependent lipid A-core flippase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=msbA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q87RP8|LNT_VIBPA Apolipoprotein N-acyltransferase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=lnt PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87SG5|Q87SG5_VIBPA Probable peptidoglycan glycosyltransferase FtsW OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=ftsW PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q87SL0|UPPP_VIBPA Undecaprenyl-diphosphatase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=uppP PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87FH5|Q87FH5_VIBPA TRAP transporter large permease protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1704 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87FL2|Q87FL2_VIBPA PTS system glucose-specific EIICB component OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1667 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87FX4|Q87FX4_VIBPA Flagellar biosynthesis protein FlhA OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=flhA PE=1 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q87GB7|MALF_VIBPA Maltose/maltodextrin transport system permease protein MalF OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=malF PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q87GB8|MALG_VIBPA Maltose/maltodextrin transport system permease protein MalG OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=malG PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87GT6|Q87GT6_VIBPA histidine kinase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1229 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87GV6|Q87GV6_VIBPA Protein translocase subunit SecD OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=secD PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87GV7|Q87GV7_VIBPA Protein-export membrane protein SecF OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=secF PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87GX5|Q87GX5_VIBPA Efflux pump membrane transporter OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1190 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87HP1|Q87HP1_VIBPA NAD(P) transhydrogenase subunit alpha OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0922 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87I96|Q87I96_VIBPA histidine kinase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0710 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87IH9|Q87IH9_VIBPA Ubiquinol oxidase subunit 2 OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0627 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87IS0|Q87IS0_VIBPA Cytochrome c oxidase subunit 2 OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0536 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87IV5|Q87IV5_VIBPA protein-N(pi)-phosphohistidine--D-mannitol phosphotransferase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0501 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87IY5|Q87IY5_VIBPA Efflux pump membrane transporter OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0471 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q87JM4|MACB_VIBPA Macrolide export ATP-binding/permease protein MacB OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=macB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87JQ3|Q87JQ3_VIBPA Nucleoside permease OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0195 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87KM3|Q87KM3_VIBPA Cell division protein FtsX OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2954 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87KV1|Q87KV1_VIBPA histidine kinase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2874 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87L31|Q87L31_VIBPA Glutathione-regulated potassium-efflux system protein KefB OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=kefB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87LG9|Q87LG9_VIBPA Lipopolysaccharide export system permease protein LptF OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2643 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87LR8|Q87LR8_VIBPA Oxaloacetate decarboxylase beta chain OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2543 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87M21|Q87M21_VIBPA Nucleoside permease OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2437 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87ME4|Q87ME4_VIBPA Zinc metalloprotease OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2311 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87MJ9|Q87MJ9_VIBPA Flagellar biosynthetic protein FliP OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=fliP PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87MK0|Q87MK0_VIBPA Flagellar biosynthesis protein FlhA OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=flhA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q87MX1|RNFD_VIBPA Ion-translocating oxidoreductase complex subunit D OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=rnfD PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q87N03|DSBB_VIBPA Disulfide bond formation protein B OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=dsbB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87N29|Q87N29_VIBPA PTS system glucose-specific EIICB component OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2046 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87NY2|Q87NY2_VIBPA Sulfatase domain-containing protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1736 PE=1 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87P06|Q87P06_VIBPA histidine kinase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1712 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87PI7|Q87PI7_VIBPA Formate dehydrogenase, cytochrome b556 subunit OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1515 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87PY8|Q87PY8_VIBPA Intermembrane phospholipid transport system permease protein MlaE OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1361 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87QQ7|Q87QQ7_VIBPA Efflux pump membrane transporter OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1092 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87R82|Q87R82_VIBPA histidine kinase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0915 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87RD9|Q87RD9_VIBPA Ferrous iron transport protein B OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0858 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87S33|Q87S33_VIBPA Protein-export membrane protein SecF OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=secF PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87S34|Q87S34_VIBPA Protein translocase subunit SecD OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=secD PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87S49|Q87S49_VIBPA Phosphate transport system permease protein PstA OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0575 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87SQ2|Q87SQ2_VIBPA PTS system mannitol-specific EIICBA component OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0370 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q87TR5|YIDC_VIBPA Membrane protein insertase YidC OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=yidC PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87FE3|Q87FE3_VIBPA Toxin secretion ATP-binding protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1736 PE=1 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87FG4|Q87FG4_VIBPA ABC transporter, ATP-binding protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1715 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87FL9|Q87FL9_VIBPA Putative transport protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1660 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87FQ4|Q87FQ4_VIBPA DUF368 domain-containing protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1624 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87FR9|Q87FR9_VIBPA Proton/glutamate symporter OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1609 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87FU5|Q87FU5_VIBPA Putative membrane protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1583 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87G08|Q87G08_VIBPA ScrC (Sensory box/GGDEF family protein) (Involved in swarmer cell regulation) OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1511 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87G16|Q87G16_VIBPA Putative membrane protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1501 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87G34|Q87G34_VIBPA Putative ABC transporter membrane-spanning permease OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1483 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87G73|Q87G73_VIBPA Putative transport protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1444 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87G83|Q87G83_VIBPA Putative hemolysin secretion ATP-binding protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1434 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87G87|Q87G87_VIBPA Putative Na+-transporting ATP synthase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1430 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87G93|Q87G93_VIBPA PTS system, fructose-specific IIABC component OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1424 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87GA8|Q87GA8_VIBPA Ligase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1409 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87GB4|Q87GB4_VIBPA Putative capsular polysaccharide biosynthesis glycosyltransferase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1403 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87GK9|Q87GK9_VIBPA Metal ABC transporter permease OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1306 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87GN5|Q87GN5_VIBPA Phosphoethanolamine--lipid A transferase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1280 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87GS5|Q87GS5_VIBPA Putative magnesium transporter MgtE OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1240 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87H28|Q87H28_VIBPA Cytochrome BD2, subunit I OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1137 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87H60|Q87H60_VIBPA Putative membrane protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1105 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87H68|Q87H68_VIBPA Fatty acid hydroxylase domain-containing protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1097 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87HA8|Q87HA8_VIBPA Putative nitrate transporter OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1057 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87HC6|Q87HC6_VIBPA Type VI secretion system membrane subunit TssM OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1039 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87HF1|Q87HF1_VIBPA Putative S-transferase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA1014 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87HJ8|Q87HJ8_VIBPA Putative sensor histidine protein kinase UhpB OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0965 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87HL9|Q87HL9_VIBPA Putative cation efflux system (AcrB/AcrD/AcrF family) OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0944 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87HN8|Q87HN8_VIBPA GGDEF family protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0925 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87HT3|Q87HT3_VIBPA Putative permease OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0873 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87HU1|Q87HU1_VIBPA DUF2238 domain-containing protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0865 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87HY2|Q87HY2_VIBPA Putative regulatory protein UhpC OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0824 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87HY5|Q87HY5_VIBPA Amino acid ABC transporter, permease protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0821 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87HY7|Q87HY7_VIBPA Amino acid ABC transporter, permease protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0819 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87HZ5|Q87HZ5_VIBPA PTS system, fructose-specific IIBC component OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0811 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87I16|Q87I16_VIBPA Putative YhfP protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0790 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87I28|Q87I28_VIBPA Putative Mg transporter MgtE OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0778 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87I35|Q87I35_VIBPA Putative lipopolysaccharide modification acyltransferase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0771 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87I80|Q87I80_VIBPA Putative TadC OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0726 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87I99|Q87I99_VIBPA Putative delta-9 fatty acid desaturase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0707 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87ID5|Q87ID5_VIBPA Putative efflux (PET) family transporter OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0671 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87IF1|Q87IF1_VIBPA Preprotein translocase subunit SecY OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0655 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87IJ7|Q87IJ7_VIBPA Bifunctional diguanylate cyclase/phosphodiesterase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0609 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87IP7|Q87IP7_VIBPA ABC transporter permease OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0559 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87IP8|Q87IP8_VIBPA FtsX domain-containing protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0558 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87IR3|Q87IR3_VIBPA Putative cytochrome c oxidase assembly protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0543 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87IW8|Q87IW8_VIBPA Transport permease protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0488 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87IX0|Q87IX0_VIBPA Endo/exonuclease/phosphatase domain-containing protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0486 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87IX6|Q87IX6_VIBPA Putative cation efflux system transmembrane protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0480 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87IX8|Q87IX8_VIBPA Putative oxidoreductase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0478 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87J14|Q87J14_VIBPA Putative integral membrane protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0441 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87J47|Q87J47_VIBPA DUF808 domain-containing protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0406 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87J75|Q87J75_VIBPA Lysine transporter LysE OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0378 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87J90|Q87J90_VIBPA Putative efflux protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0363 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87JA9|Q87JA9_VIBPA Putative multidrug resistance protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0344 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87JJ6|Q87JJ6_VIBPA Putative transport protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0253 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87JQ9|Q87JQ9_VIBPA DctM domain-containing protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0189 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87K00|Q87K00_VIBPA Putative efflux pump protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0098 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87K39|Q87K39_VIBPA GGDEF family protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0059 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87K47|Q87K47_VIBPA NhaD OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0051 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87K81|Q87K81_VIBPA ABC transporter permease OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VPA0017 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87KB1|Q87KB1_VIBPA Putative amino acid ABC transporter, permease protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP3066 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87KC5|Q87KC5_VIBPA FixG-related protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP3052 PE=1 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87KK9|Q87KK9_VIBPA Putative transporter OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2968 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87KV6|Q87KV6_VIBPA Sodium/solute symporter OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2869 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87L99|Q87L99_VIBPA Ligase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2713 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87LH0|Q87LH0_VIBPA Putative permease OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2642 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87LS5|Q87LS5_VIBPA Putative hemolysin OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2536 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87LX7|Q87LX7_VIBPA Peptide ABC transporter, permease protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2481 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87LX8|Q87LX8_VIBPA Peptide ABC transporter, permease protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2480 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87LY2|Q87LY2_VIBPA Putative permease OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2476 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87LY6|Q87LY6_VIBPA Putative multidrug resistance protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2472 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87M26|Q87M26_VIBPA Putative smp protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2432 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87M50|Q87M50_VIBPA PAP2_3 domain-containing protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2408 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87M82|Q87M82_VIBPA Hydrolase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2376 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87MG5|Q87MG5_VIBPA Sulfate permease family protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2290 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87MH9|Q87MH9_VIBPA Permease PerM OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2276 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87ML3|Q87ML3_VIBPA Cytochrome c-type biogenesis protein CcmF OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2218 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87MV1|Q87MV1_VIBPA Hydrolase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2130 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87MY6|Q87MY6_VIBPA Oligopeptide ABC transporter, permease protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2090 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87N13|Q87N13_VIBPA Sulfate permease family protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2063 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87N55|Q87N55_VIBPA PMT_2 domain-containing protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2020 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87N69|Q87N69_VIBPA Putative suppressor for copper-sensitivity B OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP2006 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87N78|Q87N78_VIBPA ABC transporter substrate-binding protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1997 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87N79|Q87N79_VIBPA Peptide ABC transporter permease OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1996 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87NA9|Q87NA9_VIBPA Proton/glutamate symporter OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1966 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87NC5|Q87NC5_VIBPA CDP-diacylglycerol-glycerol-3-phosphate 3-phosphatidyltransferase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1943 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87NE3|Q87NE3_VIBPA NrfE OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1925 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87NI7|Q87NI7_VIBPA EAL domain-containing protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1881 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87P01|Q87P01_VIBPA ABC transporter OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1717 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87P02|Q87P02_VIBPA Multidrug ABC transporter permease OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1715 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87P11|Q87P11_VIBPA DUF1980 domain-containing protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1707 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87P43|Q87P43_VIBPA Translocation protein in type III secretion OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1675 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87P61|Q87P61_VIBPA Putative translocator protein PopB OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1657 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87P77|Q87P77_VIBPA MutT/nudix family protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1641 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87PA8|Q87PA8_VIBPA ABC transporter, ATP-binding protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1609 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87PL0|Q87PL0_VIBPA Fatty acid hydroxylase domain-containing protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1492 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87PN7|Q87PN7_VIBPA Putative membrane protein of ExoQ family, involved in exopolysaccharide production OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1464 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87PP2|Q87PP2_VIBPA Putative intercellular adhesion protein A (Biofilm formation) OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1459 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87PS0|Q87PS0_VIBPA Putative ATP-binding component of a transport system OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1431 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87PU3|Q87PU3_VIBPA Putative IcmF-related protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1408 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87Q04|Q87Q04_VIBPA Oligopeptide ABC transporter, permease protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1346 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87Q13|Q87Q13_VIBPA Putative permease of ABC transporter OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1337 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87Q64|Q87Q64_VIBPA Putative integral membrane protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1286 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87QC3|Q87QC3_VIBPA ABC transporter permease OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1226 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87QH1|Q87QH1_VIBPA Transporter, AcrB/D/F family OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1178 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87QI5|Q87QI5_VIBPA Putative, 10TM heavy-metal exporter OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1164 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87QU5|Q87QU5_VIBPA Cytochrome d ubiquinol oxidase, subunit II OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1054 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87QU6|Q87QU6_VIBPA Cytochrome d ubiquinol oxidase, subunit I OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1053 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87QV8|Q87QV8_VIBPA Gonadoliberin III-related protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1041 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87QZ2|Q87QZ2_VIBPA Probable membrane transporter protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP1006 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87R17|Q87R17_VIBPA Rec2-related protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0981 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87R19|Q87R19_VIBPA Lipoprotein transporter subunit LolE OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0979 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87R57|Q87R57_VIBPA Putative multidrug resistance protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0941 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87R95|Q87R95_VIBPA Putative hemolysin OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0902 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87RX4|Q87RX4_VIBPA GltP OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0652 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87S50|Q87S50_VIBPA Phosphate ABC transporter, permease protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0574 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87SK2|Q87SK2_VIBPA Putative potassium channel protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0422 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87SS4|Q87SS4_VIBPA acidPPc domain-containing protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0348 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87SV2|Q87SV2_VIBPA DctM domain-containing protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0320 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87SX2|Q87SX2_VIBPA Peptide ABC transporter permease OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0300 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87T35|Q87T35_VIBPA Putative epimerase/dehydratase OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0235 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87T42|Q87T42_VIBPA Putative integral membrane protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0228 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87T99|Q87T99_VIBPA Putative peptide ABC transporter, permease protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0171 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87TB4|Q87TB4_VIBPA Xanthine/uracil permease family protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0156 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87TH8|Q87TH8_VIBPA Putative permease protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0091 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87TI4|Q87TI4_VIBPA Diacylglycerol kinase catalytic region OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0085 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87TL9|Q87TL9_VIBPA Peptide ABC transporter, permease protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0050 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87TM0|Q87TM0_VIBPA Peptide ABC transporter, permease protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0049 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q87TN1|Q87TN1_VIBPA Putative multidrug resistance protein OS=Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633) OX=223926 GN=VP0038 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Done run in: 0.0567 seconds
+DEBUG:root:Autoimmunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 1375.8505 seconds
+DEBUG:root:Mouse immunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 705.1656 seconds
+DEBUG:root:Conservation start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 54.0024 seconds
+DEBUG:root:Virulence start...
+DEBUG:root:Done run in: 207.9046 seconds
+DEBUG:root:Annotation start...
+DEBUG:root:Done run in: 793.3268 seconds
+DEBUG:root:Select start...
+DEBUG:root:Done run in: 0.0073 seconds
+DEBUG:root:Done: NERVE has finished its analysis in: 5148.1053 seconds

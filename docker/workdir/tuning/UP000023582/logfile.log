@@ -1,0 +1,108 @@
+DEBUG:root:Running NERVE with the following parameters:
+annotation: True, e_value: 1e-10, gram: n,
+                minlength: 9, mismatch: 1, mouse: True,
+                mouse_peptides_sum_limit: 0.15, proteome1: UP000023582,
+                proteome2: None, p_ad_extracellular_filter: 0.38,
+                padlimit: 0.85, razor: True, razlen: 50, select: False,
+                substitution: 3, transmemb_doms_limit: 3,
+                virlimit: 0.5, virulent: True, working_dir: ./UP000023582/,
+                NERVE_dir: ../../, iFeature_dir: /iFeature,  DeepFri_dir: /DeepFri
+DEBUG:root:UP000023582 is not a file, download from Uniprot.
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): rest.uniprot.org:443
+DEBUG:urllib3.connectionpool:https://rest.uniprot.org:443 "GET /uniprotkb/stream?compressed=false&format=fasta&query=%28proteome%3AUP000023582%29 HTTP/1.1" 200 None
+DEBUG:root:UP000023582 successfully downloaded
+DEBUG:root:Start quality control of proteome1 (./UP000023582/proteome1.fasta)
+DEBUG:root:Finish quality control of proteome1. Updated path: (/workdir/NERVE/docker/workdir/UP000023582/cleaned_proteome1.fasta)
+DEBUG:root:Extract protein sequences and IDs from proteome1
+DEBUG:root:2431 proteins loaded in 0.11901712417602539 seconds
+DEBUG:root:Subcelloc start with psortb...
+DEBUG:root:Sending request to psortb
+DEBUG:root:Psortb stdout:
+Saving results to /result.txt
+
+- Running PSORTb: /usr/local/psortb/bin/psortb3.pl -n -v /usr/local/nodeapi/src/temp_wd/9/input.fasta > /usr/local/nodeapi/src/temp_wd/9/result.txt
+
+Psortb stderr:
+* Using /usr/local/psortb as PSort root directory
+* Reading sequences from file "/usr/local/nodeapi/src/temp_wd/9/input.fasta"
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+
+DEBUG:root:Parsing psortb output
+DEBUG:root:Done run in: 825.9299 seconds
+DEBUG:root:Adhesin start...
+DEBUG:root:Done run in: 183.9757 seconds
+DEBUG:root:Tmhelices start...
+DEBUG:root:Done run in: 71.9992 seconds
+DEBUG:root:Loop-razor start...
+DEBUG:root:Substituting tr|X5EHI8|X5EHI8_NEIME Na(+)-translocating NADH-quinone reductase subunit B OS=Neisseria meningitidis OX=487 GN=nqrB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5ESV8|X5ESV8_NEIME Probable peptidoglycan glycosyltransferase FtsW OS=Neisseria meningitidis OX=487 GN=ftsW PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5FAK2|X5FAK2_NEIME Thiol:disulfide interchange protein DsbD OS=Neisseria meningitidis OX=487 GN=dipZ PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EFR9|X5EFR9_NEIME histidine kinase OS=Neisseria meningitidis OX=487 GN=ntrY PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EI61|X5EI61_NEIME Apolipoprotein N-acyltransferase OS=Neisseria meningitidis OX=487 GN=lnt PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EJX9|X5EJX9_NEIME DNA translocase ftsK OS=Neisseria meningitidis OX=487 GN=ftsK-2 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5ENA7|X5ENA7_NEIME Zinc metalloprotease OS=Neisseria meningitidis OX=487 GN=rseP PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EPK2|X5EPK2_NEIME Signal peptidase I OS=Neisseria meningitidis OX=487 GN=lepB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EPL4|X5EPL4_NEIME Lipid A export ATP-binding/permease MsbA OS=Neisseria meningitidis OX=487 GN=msbA PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EQ65|X5EQ65_NEIME ABC transporter ATP-binding protein OS=Neisseria meningitidis OX=487 GN=ybjZ PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EQE5|X5EQE5_NEIME Protein-export membrane protein SecF OS=Neisseria meningitidis OX=487 GN=secF PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5ER59|X5ER59_NEIME CDP-diacylglycerol--serine O-phosphatidyltransferase OS=Neisseria meningitidis OX=487 GN=pss PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5ESJ1|X5ESJ1_NEIME Efflux pump membrane transporter OS=Neisseria meningitidis OX=487 GN=mtrD PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F3F0|X5F3F0_NEIME Phosphatidate cytidylyltransferase OS=Neisseria meningitidis OX=487 GN=cdsA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F417|X5F417_NEIME Ribosomal RNA small subunit methyltransferase I OS=Neisseria meningitidis OX=487 GN=rsmI PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F5J0|X5F5J0_NEIME Ammonium transporter OS=Neisseria meningitidis OX=487 GN=amtB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F6W9|X5F6W9_NEIME Membrane protein insertase YidC OS=Neisseria meningitidis OX=487 GN=yidC PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F7L1|X5F7L1_NEIME Na(+)-translocating NADH-quinone reductase subunit D OS=Neisseria meningitidis OX=487 GN=nqrD PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F7T3|X5F7T3_NEIME Protein translocase subunit SecD OS=Neisseria meningitidis OX=487 GN=secD PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F8U7|X5F8U7_NEIME NAD(P) transhydrogenase subunit alpha OS=Neisseria meningitidis OX=487 GN=pntA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|O34609|O34609_NEIME Lipooligosaccharide phosphoethanolamine transferase LptA OS=Neisseria meningitidis OX=487 GN=eptA PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EG11|X5EG11_NEIME Transmembrane transport protein OS=Neisseria meningitidis OX=487 GN=alx PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EH41|X5EH41_NEIME Putative LipO-oligosaccharide acyltransferase OS=Neisseria meningitidis OX=487 GN=wbpC PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EI50|X5EI50_NEIME Competence protein ComA OS=Neisseria meningitidis OX=487 GN=comA PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EI80|X5EI80_NEIME FxsA protein OS=Neisseria meningitidis OX=487 GN=fxsA PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EJM9|X5EJM9_NEIME Integral membrane protein OS=Neisseria meningitidis OX=487 GN=lolC PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EK73|X5EK73_NEIME Integral membrane protein OS=Neisseria meningitidis OX=487 GN=CNQ34_09565 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EKI8|X5EKI8_NEIME Fimbrial assembly protein OS=Neisseria meningitidis OX=487 GN=fimB PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EKT6|X5EKT6_NEIME LPS export ABC transporter permease LptG OS=Neisseria meningitidis OX=487 GN=lptG PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EM83|X5EM83_NEIME Inner membrane trans-acylase protein OS=Neisseria meningitidis OX=487 GN=NMA510612_2504 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EMC9|X5EMC9_NEIME Lipid A export ATP-binding/permease protein msbA OS=Neisseria meningitidis OX=487 GN=NMA510612_2529 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EMT6|X5EMT6_NEIME Sulfatase OS=Neisseria meningitidis OX=487 GN=lpt6 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EN83|X5EN83_NEIME Glutathione-regulated potassium-efflux system protein OS=Neisseria meningitidis OX=487 GN=kefB PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5ENA5|X5ENA5_NEIME Integral membrane protein OS=Neisseria meningitidis OX=487 GN=NMA510612_0102 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5ENM0|X5ENM0_NEIME Integral membrane protein, YccS/YhfK family OS=Neisseria meningitidis OX=487 GN=NMA510612_0237 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EP18|X5EP18_NEIME Integral membrane protein OS=Neisseria meningitidis OX=487 GN=ERS040961_01029 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5EQE8|X5EQE8_NEIME ABC transporter permease, polyamine OS=Neisseria meningitidis OX=487 GN=potB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5ERR4|X5ERR4_NEIME Integral membrane protein (CstA-like) OS=Neisseria meningitidis OX=487 GN=cstA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5ERS7|X5ERS7_NEIME Sulfatase domain-containing protein OS=Neisseria meningitidis OX=487 GN=NMA510612_1918 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5ESA6|X5ESA6_NEIME Nitric oxide reductase OS=Neisseria meningitidis OX=487 GN=norB PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5ET44|X5ET44_NEIME ABC transporter permease subunit OS=Neisseria meningitidis OX=487 GN=glnP PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F386|X5F386_NEIME Integral membrane protein OS=Neisseria meningitidis OX=487 GN=CNQ34_05405 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F4K1|X5F4K1_NEIME Inner membrane protein OS=Neisseria meningitidis OX=487 GN=ERS040961_01198 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F556|X5F556_NEIME NhaC OS=Neisseria meningitidis OX=487 GN=nhaC PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F6H0|X5F6H0_NEIME Membrane protein OS=Neisseria meningitidis OX=487 GN=ERS040961_01873 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F6J6|X5F6J6_NEIME Sulfatase domain-containing protein OS=Neisseria meningitidis OX=487 GN=NMA510612_0468 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F765|X5F765_NEIME Pilin glycosylation protein OS=Neisseria meningitidis OX=487 GN=pglD PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F793|X5F793_NEIME ResB domain-containing protein OS=Neisseria meningitidis OX=487 GN=NMA510612_0735 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F7A0|X5F7A0_NEIME Integral membrane protein OS=Neisseria meningitidis OX=487 GN=ERS040961_00426 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F7D6|X5F7D6_NEIME Alginate O-acetylation-like protein OS=Neisseria meningitidis OX=487 GN=algI PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F7Q4|X5F7Q4_NEIME Iron-regulated protein frpC OS=Neisseria meningitidis OX=487 GN=frpC1 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F8I1|X5F8I1_NEIME Integral membrane protein OS=Neisseria meningitidis OX=487 GN=ERS040961_01593 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F8K3|X5F8K3_NEIME Two component sensor kinase OS=Neisseria meningitidis OX=487 GN=kinE PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F996|X5F996_NEIME Dca domain protein OS=Neisseria meningitidis OX=487 GN=dca PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5F9C5|X5F9C5_NEIME ABC transporter, permease protein, SbmA/BacA family OS=Neisseria meningitidis OX=487 GN=yddA_1 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5FAC4|X5FAC4_NEIME Cytochrome c oxidase accessory protein CcoG OS=Neisseria meningitidis OX=487 GN=ERS040961_01153 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5FAZ9|X5FAZ9_NEIME Putative inner membrane protein OS=Neisseria meningitidis OX=487 GN=ERS040961_01309 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5FB68|X5FB68_NEIME PepSY domain-containing protein OS=Neisseria meningitidis OX=487 GN=NMA510612_2226 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|X5FBM1|X5FBM1_NEIME AmpG-related permease OS=Neisseria meningitidis OX=487 GN=NMA510612_2405 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Done run in: 0.0192 seconds
+DEBUG:root:Autoimmunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 589.1691 seconds
+DEBUG:root:Mouse immunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 291.3438 seconds
+DEBUG:root:Virulence start...
+DEBUG:root:Done run in: 102.8519 seconds
+DEBUG:root:Annotation start...
+DEBUG:root:Done run in: 233.7571 seconds
+DEBUG:root:Done: NERVE has finished its analysis in: 2300.1435 seconds

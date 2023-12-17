@@ -1,0 +1,103 @@
+DEBUG:root:Running NERVE with the following parameters:
+annotation: True, e_value: 1e-10, gram: n,
+                minlength: 9, mismatch: 1, mouse: True,
+                mouse_peptides_sum_limit: 0.15, proteome1: UP000000535,
+                proteome2: None, p_ad_extracellular_filter: 0.38,
+                padlimit: 0.85, razor: True, razlen: 50, select: False,
+                substitution: 3, transmemb_doms_limit: 3,
+                virlimit: 0.5, virulent: True, working_dir: ./UP000000535/,
+                NERVE_dir: ../../, iFeature_dir: /iFeature,  DeepFri_dir: /DeepFri
+DEBUG:root:UP000000535 is not a file, download from Uniprot.
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): rest.uniprot.org:443
+DEBUG:urllib3.connectionpool:https://rest.uniprot.org:443 "GET /uniprotkb/stream?compressed=false&format=fasta&query=%28proteome%3AUP000000535%29 HTTP/1.1" 200 None
+DEBUG:root:UP000000535 successfully downloaded
+DEBUG:root:Start quality control of proteome1 (./UP000000535/proteome1.fasta)
+DEBUG:root:Finish quality control of proteome1. Updated path: (/workdir/NERVE/docker/workdir/UP000000535/cleaned_proteome1.fasta)
+DEBUG:root:Extract protein sequences and IDs from proteome1
+DEBUG:root:2106 proteins loaded in 0.11133599281311035 seconds
+DEBUG:root:Subcelloc start with psortb...
+DEBUG:root:Sending request to psortb
+DEBUG:root:Psortb stdout:
+Saving results to /result.txt
+
+- Running PSORTb: /usr/local/psortb/bin/psortb3.pl -n -v /usr/local/nodeapi/src/temp_wd/5/input.fasta > /usr/local/nodeapi/src/temp_wd/5/result.txt
+
+Psortb stderr:
+* Using /usr/local/psortb as PSort root directory
+* Reading sequences from file "/usr/local/nodeapi/src/temp_wd/5/input.fasta"
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+
+DEBUG:root:Parsing psortb output
+DEBUG:root:Done run in: 652.4819 seconds
+DEBUG:root:Adhesin start...
+DEBUG:root:Done run in: 104.4812 seconds
+DEBUG:root:Tmhelices start...
+DEBUG:root:Done run in: 54.8399 seconds
+DEBUG:root:Loop-razor start...
+DEBUG:root:Substituting sp|Q5F4X8|MSBA_NEIG1 ATP-dependent lipid A-core flippase OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=msbA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F6L7|Q5F6L7_NEIG1 Probable peptidoglycan glycosyltransferase FtsW OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=ftsW PE=3 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F6X9|Q5F6X9_NEIG1 Na(+)-translocating NADH-quinone reductase subunit B OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=nqrB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F823|Q5F823_NEIG1 Thiol:disulfide interchange protein DsbD OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=dsbD PE=3 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q5F4W6|YIDC_NEIG1 Membrane protein insertase YidC OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=yidC PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F5Q0|Q5F5Q0_NEIG1 histidine kinase OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1867 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F5X1|Q5F5X1_NEIG1 Phosphatidate cytidylyltransferase OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1798 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q5F6V6|MACB_NEIG1 Macrolide export ATP-binding/permease protein MacB OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=macB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q5F6X7|NQRD_NEIG1 Na(+)-translocating NADH-quinone reductase subunit D OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=nqrD PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F725|Q5F725_NEIG1 Efflux pump membrane transporter OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1364 PE=1 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q5F791|DSBB_NEIG1 Disulfide bond formation protein B OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=dsbB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q5F8D6|LGT_NEIG1 Phosphatidylglycerol--prolipoprotein diacylglyceryl transferase OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=lgt PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F916|Q5F916_NEIG1 Cell division protein FtsK OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_0590 PE=3 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F920|Q5F920_NEIG1 CDP-diacylglycerol--serine O-phosphatidyltransferase OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_0586 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F9Q0|Q5F9Q0_NEIG1 Signal peptidase I OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_0343 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F9V0|Q5F9V0_NEIG1 Apolipoprotein N-acyltransferase OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=lnt PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5FA42|Q5FA42_NEIG1 Protein-export membrane protein SecF OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=secF PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5FA43|Q5FA43_NEIG1 Protein translocase subunit SecD OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=secD PE=3 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0H4IVF3|A0A0H4IVF3_NEIG1 4Fe-4S ferredoxin-type domain-containing protein OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_07415 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0H4IW93|A0A0H4IW93_NEIG1 Sulfatase OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_06735 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F511|Q5F511_NEIG1 Membrane protein OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_2128 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F559|Q5F559_NEIG1 Permease OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_2077 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F565|Q5F565_NEIG1 Membrane protein OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_2071 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F5L3|Q5F5L3_NEIG1 Membrane protein OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1910 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F5X5|Q5F5X5_NEIG1 Membrane protein OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1793 PE=4 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F614|Q5F614_NEIG1 Membrane protein OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1752 PE=4 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F634|Q5F634_NEIG1 Multidrug ABC transporter ATP-binding protein OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1732 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F656|Q5F656_NEIG1 Acyltransferase OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1710 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F6L1|Q5F6L1_NEIG1 Cytochrome C biogenesis protein CcmE OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1540 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F6R4|Q5F6R4_NEIG1 C4-dicarboxylate ABC transporter OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1485 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F6S6|Q5F6S6_NEIG1 Membrane protein OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1471 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F6Z1|Q5F6Z1_NEIG1 Membrane protein OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1398 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F719|Q5F719_NEIG1 Membrane protein OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1370 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F795|Q5F795_NEIG1 Membrane protein OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1288 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F7A5|Q5F7A5_NEIG1 Nitric oxide reductase large subunit OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1275 PE=4 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F7B8|Q5F7B8_NEIG1 ATPase AAA OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1260 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F7D3|Q5F7D3_NEIG1 Membrane protein OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1245 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F7E9|Q5F7E9_NEIG1 Permease OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1229 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F7H9|Q5F7H9_NEIG1 Protein DcaA OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1198 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F7V3|Q5F7V3_NEIG1 Carbon starvation protein A OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1064 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F7Y5|Q5F7Y5_NEIG1 Ferredoxin OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_1026 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F833|Q5F833_NEIG1 Amino acid ABC transporter permease OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_0968 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F8I4|Q5F8I4_NEIG1 Membrane protein OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_0789 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F8K3|Q5F8K3_NEIG1 Permease OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_0769 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F965|Q5F965_NEIG1 Alginate O-acetyltransferase OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_0534 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F977|Q5F977_NEIG1 Tail protein OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_0522 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F9T3|Q5F9T3_NEIG1 Exclusion suppressor FxsA OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_0307 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5F9W1|Q5F9W1_NEIG1 Competence protein ComA OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_0276 PE=4 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5FA39|Q5FA39_NEIG1 Putrescine/spermidine ABC transporter permease OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_0195 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5FA54|Q5FA54_NEIG1 Polymerase OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_0178 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5FA86|Q5FA86_NEIG1 Sodium:proton antiporter OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_0143 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5FAC4|Q5FAC4_NEIG1 Cytochrome C biogenesis protein OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_0102 PE=4 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5FAE3|Q5FAE3_NEIG1 Protein-PII uridylyltransferase OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_0083 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q5FAF8|Q5FAF8_NEIG1 Acetyltransferase OS=Neisseria gonorrhoeae (strain ATCC 700825 / FA 1090) OX=242231 GN=NGO_0065 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Done run in: 0.0173 seconds
+DEBUG:root:Autoimmunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 529.8256 seconds
+DEBUG:root:Mouse immunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 270.7693 seconds
+DEBUG:root:Virulence start...
+DEBUG:root:Done run in: 91.2252 seconds
+DEBUG:root:Annotation start...
+DEBUG:root:Done run in: 185.9066 seconds
+DEBUG:root:Done: NERVE has finished its analysis in: 1890.4225 seconds

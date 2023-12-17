@@ -1,0 +1,104 @@
+DEBUG:root:Running NERVE with the following parameters:
+annotation: True, e_value: 1e-10, gram: n,
+                minlength: 9, mismatch: 1, mouse: True,
+                mouse_peptides_sum_limit: 0.15, proteome1: UP000000806,
+                proteome2: None, p_ad_extracellular_filter: 0.38,
+                padlimit: 0.85, razor: True, razlen: 50, select: False,
+                substitution: 3, transmemb_doms_limit: 3,
+                virlimit: 0.5, virulent: True, working_dir: ./UP000000806/,
+                NERVE_dir: ../../, iFeature_dir: /iFeature,  DeepFri_dir: /DeepFri
+DEBUG:root:UP000000806 is not a file, download from Uniprot.
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): rest.uniprot.org:443
+DEBUG:urllib3.connectionpool:https://rest.uniprot.org:443 "GET /uniprotkb/stream?compressed=false&format=fasta&query=%28proteome%3AUP000000806%29 HTTP/1.1" 200 None
+DEBUG:root:UP000000806 successfully downloaded
+DEBUG:root:Start quality control of proteome1 (./UP000000806/proteome1.fasta)
+DEBUG:root:Finish quality control of proteome1. Updated path: (/workdir/NERVE/docker/workdir/UP000000806/cleaned_proteome1.fasta)
+DEBUG:root:Extract protein sequences and IDs from proteome1
+DEBUG:root:1603 proteins loaded in 0.09927082061767578 seconds
+DEBUG:root:Subcelloc start with psortb...
+DEBUG:root:Sending request to psortb
+DEBUG:root:Psortb stdout:
+Saving results to /result.txt
+
+- Running PSORTb: /usr/local/psortb/bin/psortb3.pl -n -v /usr/local/nodeapi/src/temp_wd/8/input.fasta > /usr/local/nodeapi/src/temp_wd/8/result.txt
+
+Psortb stderr:
+* Using /usr/local/psortb as PSort root directory
+* Reading sequences from file "/usr/local/nodeapi/src/temp_wd/8/input.fasta"
+
+DEBUG:root:Parsing psortb output
+DEBUG:root:Done run in: 574.9549 seconds
+DEBUG:root:Adhesin start...
+DEBUG:root:Done run in: 87.6408 seconds
+DEBUG:root:Tmhelices start...
+DEBUG:root:Done run in: 50.0245 seconds
+DEBUG:root:Loop-razor start...
+DEBUG:root:Substituting sp|Q9CC23|LYSX_MYCLE Lysylphosphatidylglycerol biosynthesis bifunctional protein LysX OS=Mycobacterium leprae (strain TN) OX=272631 GN=lysX PE=3 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting sp|O05560|FTSK_MYCLE DNA translocase FtsK OS=Mycobacterium leprae (strain TN) OX=272631 GN=ftsK PE=3 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting sp|O06081|MMPL3_MYCLE Probable trehalose monomycolate exporter MmpL3 OS=Mycobacterium leprae (strain TN) OX=272631 GN=mmpL3 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|P38386|SECF_MYCLE Protein translocase subunit SecF OS=Mycobacterium leprae (strain TN) OX=272631 GN=secF PE=3 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting sp|P38387|SECD_MYCLE Protein translocase subunit SecD OS=Mycobacterium leprae (strain TN) OX=272631 GN=secD PE=3 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting sp|P46839|CTPA_MYCLE Copper-exporting P-type ATPase OS=Mycobacterium leprae (strain TN) OX=272631 GN=ctpA PE=3 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9CBU4|RIP1_MYCLE Zinc metalloprotease Rip1 OS=Mycobacterium leprae (strain TN) OX=272631 GN=rip1 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9CCF1|COX2_MYCLE Probable cytochrome c oxidase subunit 2 OS=Mycobacterium leprae (strain TN) OX=272631 GN=ctaC PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9CDA6|AFTA_MYCLE Galactan 5-O-arabinofuranosyltransferase OS=Mycobacterium leprae (strain TN) OX=272631 GN=aftA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|O06079|MMPLB_MYCLE Probable transport protein MmpL11 OS=Mycobacterium leprae (strain TN) OX=272631 GN=mmpL11 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|O33006|SECY_MYCLE Protein translocase subunit SecY OS=Mycobacterium leprae (strain TN) OX=272631 GN=secY PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|O33057|Y2143_MYCLE Uncharacterized protein ML2143 OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML2143 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|P46838|AG45_MYCLE 46 kDa membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ag45 PE=3 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q49619|MMPLA_MYCLE Probable transport protein MmpL10 OS=Mycobacterium leprae (strain TN) OX=272631 GN=mmpL10 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q50103|MNTH_MYCLE Divalent metal cation transporter MntH OS=Mycobacterium leprae (strain TN) OX=272631 GN=mntH PE=3 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q50173|PIT_MYCLE Probable low-affinity inorganic phosphate transporter OS=Mycobacterium leprae (strain TN) OX=272631 GN=pit PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q50205|YIDC_MYCLE Membrane protein insertase YidC OS=Mycobacterium leprae (strain TN) OX=272631 GN=yidC PE=3 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q7AQ49|Q7AQ49_MYCLE Apolipoprotein N-acyltransferase OS=Mycobacterium leprae (strain TN) OX=272631 GN=lnt PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q7AQC4|Q7AQC4_MYCLE peptidoglycan glycosyltransferase OS=Mycobacterium leprae (strain TN) OX=272631 GN=ftsW PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9CC52|LGT_MYCLE Phosphatidylglycerol--prolipoprotein diacylglyceryl transferase OS=Mycobacterium leprae (strain TN) OX=272631 GN=lgt PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CCE7|Q9CCE7_MYCLE Cytochrome bc1 complex Rieske iron-sulfur subunit OS=Mycobacterium leprae (strain TN) OX=272631 GN=qcrA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CCZ8|Q9CCZ8_MYCLE NAD(P) transhydrogenase subunit beta OS=Mycobacterium leprae (strain TN) OX=272631 GN=pntB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CD61|Q9CD61_MYCLE Dolichyl-phosphate-mannose--protein mannosyltransferase OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML0192 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9CDA7|EMBC_MYCLE Probable arabinosyltransferase C OS=Mycobacterium leprae (strain TN) OX=272631 GN=embC PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9CDA8|EMBA_MYCLE Probable arabinosyltransferase A OS=Mycobacterium leprae (strain TN) OX=272631 GN=embA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9CDA9|EMBB_MYCLE Probable arabinosyltransferase B OS=Mycobacterium leprae (strain TN) OX=272631 GN=embB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9ZBM2|PSS_MYCLE CDP-diacylglycerol--serine O-phosphatidyltransferase OS=Mycobacterium leprae (strain TN) OX=272631 GN=pssA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|P54881|MMPL4_MYCLE Probable transport protein MmpL4 OS=Mycobacterium leprae (strain TN) OX=272631 GN=mmpL4 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q7APR9|Q7APR9_MYCLE Conserved membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML2687 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q7APT1|Q7APT1_MYCLE Probable membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML2615 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q7APZ0|Q7APZ0_MYCLE Probable multidrug resistance pump OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML2084 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q7AQ23|Q7AQ23_MYCLE PPE-family protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=PPE PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q7AQ64|Q7AQ64_MYCLE Possible conserved integral membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML1338 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q7AQI1|Q7AQI1_MYCLE Putative membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML0587 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q7AQL4|Q7AQL4_MYCLE Putative membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML0227 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q7AQM1|Q7AQM1_MYCLE Putative membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML0203 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q7AQN7|Q7AQN7_MYCLE Putative membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=mmpL7 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q7AQP0|Q7AQP0_MYCLE Putative membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML0053 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CB20|Q9CB20_MYCLE Probable iron-sulphur-binding reductase OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML2501 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CB62|Q9CB62_MYCLE Conserved membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML2410 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CB95|Q9CB95_MYCLE Putative membrane-associated serine protease OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML2298 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CBX0|Q9CBX0_MYCLE Probable conserved membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML1504 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CC68|Q9CC68_MYCLE Conserved membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML1213 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CC79|Q9CC79_MYCLE Probable binding-protein dependent transport protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML1124 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CC89|Q9CC89_MYCLE Probable ABC transporter, ATP-binding component OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML1113 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CCF9|Q9CCF9_MYCLE ABC transporter OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML0848 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9CCM6|Y644_MYCLE UPF0182 protein ML0644 OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML0644 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CCU4|Q9CCU4_MYCLE Putative membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML0430 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CCX9|Q9CCX9_MYCLE Possible conserved membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML2700 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CCY5|Q9CCY5_MYCLE Conserved integral membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML2670 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CCY6|Q9CCY6_MYCLE Possible membrane transport protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML2667 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CD04|Q9CD04_MYCLE Probable conserved membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML2600 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CD07|Q9CD07_MYCLE Conserved membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML2596 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CD17|Q9CD17_MYCLE Conserved membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML2582 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CD19|Q9CD19_MYCLE Possible integral membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML2570 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CD98|Q9CD98_MYCLE Putative membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML0116 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9CDB4|Q9CDB4_MYCLE Putative membrane protein OS=Mycobacterium leprae (strain TN) OX=272631 GN=ML0096 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Done run in: 0.0161 seconds
+DEBUG:root:Autoimmunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 545.0131 seconds
+DEBUG:root:Mouse immunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 281.0176 seconds
+DEBUG:root:Virulence start...
+DEBUG:root:Done run in: 76.4151 seconds
+DEBUG:root:Annotation start...
+DEBUG:root:Done run in: 130.7442 seconds
+DEBUG:root:Done: NERVE has finished its analysis in: 1747.1158 seconds

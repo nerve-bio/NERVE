@@ -1,0 +1,125 @@
+DEBUG:root:Running NERVE with the following parameters:
+annotation: True, e_value: 1e-10, gram: p,
+                minlength: 9, mismatch: 1, mouse: True,
+                mouse_peptides_sum_limit: 0.15, proteome1: UP000000821,
+                proteome2: None, p_ad_extracellular_filter: 0.38,
+                padlimit: 0.85, razor: True, razlen: 50, select: False,
+                substitution: 3, transmemb_doms_limit: 3,
+                virlimit: 0.5, virulent: True, working_dir: ./UP000000821/,
+                NERVE_dir: ../NERVE, iFeature_dir: /iFeature,  DeepFri_dir: /DeepFri
+DEBUG:root:UP000000821 is not a file, download from Uniprot.
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): rest.uniprot.org:443
+DEBUG:urllib3.connectionpool:https://rest.uniprot.org:443 "GET /uniprotkb/stream?compressed=false&format=fasta&query=%28proteome%3AUP000000821%29 HTTP/1.1" 200 None
+DEBUG:root:UP000000821 successfully downloaded
+DEBUG:root:Start quality control of proteome1 (./UP000000821/proteome1.fasta)
+DEBUG:root:Finish quality control of proteome1. Updated path: (/workdir/UP000000821/cleaned_proteome1.fasta)
+DEBUG:root:Extract protein sequences and IDs from proteome1
+DEBUG:root:2105 proteins loaded in 0.1270914077758789 seconds
+DEBUG:root:Subcelloc start with psortb...
+DEBUG:root:Sending request to psortb
+DEBUG:root:Psortb stdout:
+Saving results to /result.txt
+
+- Running PSORTb: /usr/local/psortb/bin/psortb3.pl -p -v /usr/local/nodeapi/src/temp_wd/1/input.fasta > /usr/local/nodeapi/src/temp_wd/1/result.txt
+
+Psortb stderr:
+* Using /usr/local/psortb as PSort root directory
+* Reading sequences from file "/usr/local/nodeapi/src/temp_wd/1/input.fasta"
+
+DEBUG:root:Parsing psortb output
+DEBUG:root:Done run in: 596.9493 seconds
+DEBUG:root:Adhesin start...
+DEBUG:root:Done run in: 105.0159 seconds
+DEBUG:root:Tmhelices start...
+DEBUG:root:Done run in: 57.4465 seconds
+DEBUG:root:Loop-razor start...
+DEBUG:root:Substituting sp|Q8CX05|FTSK_STRA5 DNA translocase FtsK OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=ftsK PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q8DY84|YIDC2_STRA5 Membrane protein insertase YidC 2 OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=yidC2 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q8CX16|YIDC1_STRA5 Membrane protein insertase YidC 1 OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=yidC1 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DXD7|Q8DXD7_STRA5 Zinc metalloprotease OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1914 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DXV4|Q8DXV4_STRA5 Cytochrome d oxidase, subunit I OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=cydA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DYL4|Q8DYL4_STRA5 Glutamine ABC transporter, glutamine-binding protein/permease protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=glnP PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DYU2|Q8DYU2_STRA5 Sulfatase OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1381 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DZT0|Q8DZT0_STRA5 histidine kinase OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1017 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DZV6|Q8DZV6_STRA5 Phosphate transport system permease protein PstA OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0990 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q8E0J4|LGT_STRA5 Phosphatidylglycerol--prolipoprotein diacylglyceryl transferase OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=lgt PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E143|Q8E143_STRA5 Cell division protein FtsX OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=ftsX PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q8E218|LYTS_STRA5 Sensor protein LytS OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=lytS PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E262|Q8E262_STRA5 Amino acid ABC transporter, amino acid-binding protein/permease protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0136 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9AFI0|CPSE_STRA5 Galactosyl transferase CpsE OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=cpsE PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8CX14|Q8CX14_STRA5 Cell division protein, FtsW/RodA/SpoVE family OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=ftsW PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DWP3|Q8DWP3_STRA5 ABC transporter, permease protein, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG2172 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DWP5|Q8DWP5_STRA5 DUF2179 domain-containing protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG2170 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DWP9|Q8DWP9_STRA5 Arginine/ornithine antiporter OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=arcD PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DWS9|Q8DWS9_STRA5 Membrane protein, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG2134 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DWT3|Q8DWT3_STRA5 Amino acid ABC transporter, amino acid-binding protein/permease protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG2130 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DWT6|Q8DWT6_STRA5 Sensor histidine kinase OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG2127 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DWT9|Q8DWT9_STRA5 Membrane protein, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG2124 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DWV6|Q8DWV6_STRA5 DUF2179 domain-containing protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG2106 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DWV7|Q8DWV7_STRA5 DUF2179 domain-containing protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG2105 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DWX4|Q8DWX4_STRA5 Membrane protein, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG2087 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DWY9|Q8DWY9_STRA5 Na+ dependent nucleoside transporter OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG2071 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DX94|Q8DX94_STRA5 PTS system, IIABC components OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1959 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DX98|Q8DX98_STRA5 Membrane protein, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1954 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DXG4|Q8DXG4_STRA5 Na+/H+ exchanger family protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1887 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DXQ4|Q8DXQ4_STRA5 Amino acid ABC transporter, permease protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1796 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DXQ5|Q8DXQ5_STRA5 Membrane protein, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1794 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DXV6|Q8DXV6_STRA5 ABC transporter, ATP-binding protein CydD OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1740 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DXX5|Q8DXX5_STRA5 Colicin V production protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1720 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DY04|Q8DY04_STRA5 PTS system, IIABC components OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1690 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DYC8|Q8DYC8_STRA5 Membrane protein, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1559 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DYD3|Q8DYD3_STRA5 DUF4956 domain-containing protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1554 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DYG4|Q8DYG4_STRA5 Peptide ABC transporter, permease protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1517 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DYG5|Q8DYG5_STRA5 Peptide ABC transporter, permease protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1516 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DYJ4|Q8DYJ4_STRA5 Membrane protein, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1486 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DYR1|Q8DYR1_STRA5 Membrane protein, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1413 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DYS4|Q8DYS4_STRA5 CBS domain protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1399 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DYW4|Q8DYW4_STRA5 Permease, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1359 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DYX6|Q8DYX6_STRA5 PTS system, fructose specific IIABC components OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1346 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DYY5|Q8DYY5_STRA5 ABC transporter, ATP-binding/permease protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1337 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DZB5|Q8DZB5_STRA5 Membrane protein, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1194 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DZD3|Q8DZD3_STRA5 Capsular polysaccharide biosynthesis protein CpsA OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=cpsA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DZF5|Q8DZF5_STRA5 Cation efflux family protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1146 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DZJ9|Q8DZJ9_STRA5 Membrane protein, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1102 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DZN1|Q8DZN1_STRA5 ABC transporter, ATP-binding/permease protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1070 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DZP6|Q8DZP6_STRA5 Cardiolipin synthetase OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=cls PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DZR1|Q8DZR1_STRA5 Phage infection protein, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1038 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DZU4|Q8DZU4_STRA5 Permease, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1003 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DZU5|Q8DZU5_STRA5 Protease, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG1002 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8DZX0|Q8DZX0_STRA5 ABC transporter, permease protein, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0975 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E043|Q8E043_STRA5 TIGR01906 family membrane protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0893 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E0E0|Q8E0E0_STRA5 Permease, GntP family OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0794 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E0E4|Q8E0E4_STRA5 PTS system, beta-glucosides-specific IIABC components OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0790 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E0F1|Q8E0F1_STRA5 DNA internalization-related competence protein ComEC/Rec2 OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0782 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E0K2|Q8E0K2_STRA5 ABC transporter, permease protein, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0729 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E0P5|Q8E0P5_STRA5 Permease, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0682 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E0Q8|Q8E0Q8_STRA5 CylB protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=cylB PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E0R5|Q8E0R5_STRA5 Multidrug ABC transporter permease OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0661 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E0U9|Q8E0U9_STRA5 Rod shape-determining protein RodA, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=rodA PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E0V4|Q8E0V4_STRA5 Transmembrane protein Vexp3 OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=vex3 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E0V6|Q8E0V6_STRA5 Transmembrane protein Vexp1 OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=vex1 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E171|Q8E171_STRA5 Amino acid ABC transporter, permease protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0491 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E1A0|Q8E1A0_STRA5 ABC transporter, ATP-binding/permease protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0461 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E1J5|Q8E1J5_STRA5 PTS system, mannose-specific IID component OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0359 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E1N4|Q8E1N4_STRA5 DUF2154 domain-containing protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0320 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E1P3|Q8E1P3_STRA5 HisKA_3 domain-containing protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0310 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E1S1|Q8E1S1_STRA5 PTS system, IIBC components OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0282 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E1T6|Q8E1T6_STRA5 Isoprenylcysteine carboxyl methyltransferase OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0267 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E1U2|Q8E1U2_STRA5 ABC transporter efflux protein, DrrB family, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0259 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E212|Q8E212_STRA5 Oligopeptide ABC transporter, permease protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0188 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E235|Q8E235_STRA5 Competence protein CglB OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=cglB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E249|Q8E249_STRA5 Oligopeptide ABC transporter, permease protein OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0149 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E2D6|Q8E2D6_STRA5 Membrane protein, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0052 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q8E2G7|Q8E2G7_STRA5 Protease, putative OS=Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R) OX=208435 GN=SAG0021 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Done run in: 0.0242 seconds
+DEBUG:root:Autoimmunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 717.6171 seconds
+DEBUG:root:Mouse immunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 340.4984 seconds
+DEBUG:root:Virulence start...
+DEBUG:root:Done run in: 89.4807 seconds
+DEBUG:root:Annotation start...
+DEBUG:root:Done run in: 194.9143 seconds
+DEBUG:root:Done: NERVE has finished its analysis in: 2103.2234 seconds

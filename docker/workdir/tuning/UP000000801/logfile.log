@@ -1,0 +1,90 @@
+DEBUG:root:Running NERVE with the following parameters:
+annotation: True, e_value: 1e-10, gram: n,
+                minlength: 9, mismatch: 1, mouse: True,
+                mouse_peptides_sum_limit: 0.15, proteome1: UP000000801,
+                proteome2: None, p_ad_extracellular_filter: 0.38,
+                padlimit: 0.85, razor: True, razlen: 50, select: False,
+                substitution: 3, transmemb_doms_limit: 3,
+                virlimit: 0.5, virulent: True, working_dir: ./UP000000801/,
+                NERVE_dir: ../NERVE, iFeature_dir: /iFeature,  DeepFri_dir: /DeepFri
+DEBUG:root:UP000000801 is not a file, download from Uniprot.
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): rest.uniprot.org:443
+DEBUG:urllib3.connectionpool:https://rest.uniprot.org:443 "GET /uniprotkb/stream?compressed=false&format=fasta&query=%28proteome%3AUP000000801%29 HTTP/1.1" 200 None
+DEBUG:root:UP000000801 successfully downloaded
+DEBUG:root:Start quality control of proteome1 (./UP000000801/proteome1.fasta)
+DEBUG:root:Finish quality control of proteome1. Updated path: (/workdir/UP000000801/cleaned_proteome1.fasta)
+DEBUG:root:Extract protein sequences and IDs from proteome1
+DEBUG:root:1052 proteins loaded in 0.06084275245666504 seconds
+DEBUG:root:Subcelloc start with psortb...
+DEBUG:root:Sending request to psortb
+DEBUG:root:Psortb stdout:
+Saving results to /result.txt
+
+- Running PSORTb: /usr/local/psortb/bin/psortb3.pl -n -v /usr/local/nodeapi/src/temp_wd/2/input.fasta > /usr/local/nodeapi/src/temp_wd/2/result.txt
+
+Psortb stderr:
+* Using /usr/local/psortb as PSort root directory
+* Reading sequences from file "/usr/local/nodeapi/src/temp_wd/2/input.fasta"
+
+DEBUG:root:Parsing psortb output
+DEBUG:root:Done run in: 373.7485 seconds
+DEBUG:root:Adhesin start...
+DEBUG:root:Done run in: 52.7618 seconds
+DEBUG:root:Tmhelices start...
+DEBUG:root:Done run in: 33.4928 seconds
+DEBUG:root:Loop-razor start...
+DEBUG:root:Substituting sp|Q7VQ46|YIDC_CHLPN Membrane protein insertase YidC OS=Chlamydia pneumoniae OX=83558 GN=yidC PE=3 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9Z726|FTSK_CHLPN DNA translocase FtsK OS=Chlamydia pneumoniae OX=83558 GN=ftsK PE=2 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9Z7Q1|LNT_CHLPN Apolipoprotein N-acyltransferase OS=Chlamydia pneumoniae OX=83558 GN=lnt PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9Z8B6|NQRB_CHLPN Na(+)-translocating NADH-quinone reductase subunit B OS=Chlamydia pneumoniae OX=83558 GN=nqrB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9K275|Y344_CHLPN Putative zinc metalloprotease CPn_0344/CP_0416/CPj0344/CpB0350 OS=Chlamydia pneumoniae OX=83558 GN=CPn_0344 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9Z6U3|LPXB_CHLPN Lipid-A-disaccharide synthase OS=Chlamydia pneumoniae OX=83558 GN=lpxB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9Z7N9|UHPT_CHLPN Probable hexose phosphate transport protein OS=Chlamydia pneumoniae OX=83558 GN=uhpC PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9Z8A0|Y443_CHLPN Uncharacterized protein CPn_0443/CP_0310/CPj0443/CpB0459 OS=Chlamydia pneumoniae OX=83558 GN=CPn_0443 PE=3 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9Z8J6|Y347_CHLPN Probable metal transport system membrane protein CPn_0347/CP_0413/CPj0347/CpB0354 OS=Chlamydia pneumoniae OX=83558 GN=CPn_0347 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z8Z2|Q9Z8Z2_CHLPN ABC Amino Acid Transporter Permease OS=Chlamydia pneumoniae OX=83558 GN=yecS PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z979|Q9Z979_CHLPN Cytochrome D ubiquinol oxidase, subunit I OS=Chlamydia pneumoniae OX=83558 GN=cydA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q9Z990|VATI_CHLPN V-type ATP synthase subunit I OS=Chlamydia pneumoniae OX=83558 GN=atpI PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0F7WKL0|A0A0F7WKL0_CHLPN G_PROTEIN_RECEP_F1_2 domain-containing protein OS=Chlamydia pneumoniae OX=83558 GN=CPn_0882 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0F7WKW0|A0A0F7WKW0_CHLPN Dicarboxylase Translocator OS=Chlamydia pneumoniae OX=83558 GN=yflS PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0F7WNJ2|A0A0F7WNJ2_CHLPN Amino acid transporter OS=Chlamydia pneumoniae OX=83558 GN=CPn_0293 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0F7WNJ4|A0A0F7WNJ4_CHLPN Transmembrane protein OS=Chlamydia pneumoniae OX=83558 GN=CPn_0069 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0F7X0I2|A0A0F7X0I2_CHLPN Lipid A export ATP-binding/permease protein MsbA OS=Chlamydia pneumoniae OX=83558 GN=msbA PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0F7X8R8|A0A0F7X8R8_CHLPN CT326 similarity OS=Chlamydia pneumoniae OX=83558 GN=CPn_0381 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0F7XC16|A0A0F7XC16_CHLPN Competence locus E-like protein OS=Chlamydia pneumoniae OX=83558 GN=CPn_0035 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0F7XHQ7|A0A0F7XHQ7_CHLPN Transmembrane protein OS=Chlamydia pneumoniae OX=83558 GN=CPn_0072 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0F7XJI2|A0A0F7XJI2_CHLPN Rod Shape Protein OS=Chlamydia pneumoniae OX=83558 GN=rodA PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0H2UMA0|A0A0H2UMA0_CHLPN Thio:disulfide Interchange Protein OS=Chlamydia pneumoniae OX=83558 GN=dsbD PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0H2UMB6|A0A0H2UMB6_CHLPN Secretion system effector C (SseC) like family protein OS=Chlamydia pneumoniae OX=83558 GN=CPn_0809 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|A0A0H2UMN1|A0A0H2UMN1_CHLPN Myosin heavy chain OS=Chlamydia pneumoniae OX=83558 GN=CPn_1008 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z3C8|Q9Z3C8_CHLPN HB1 protein OS=Chlamydia pneumoniae OX=83558 GN=hb1 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z6P5|Q9Z6P5_CHLPN Putative sulfate transporter YvdB OS=Chlamydia pneumoniae OX=83558 GN=yvdB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z6P7|Q9Z6P7_CHLPN ABC transporter permease OS=Chlamydia pneumoniae OX=83558 GN=yzeB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z6R3|Q9Z6R3_CHLPN YjgP/YjgQ family permease OS=Chlamydia pneumoniae OX=83558 GN=CP_0859 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z6R4|Q9Z6R4_CHLPN Putative permease, YjgP/YjgQ family OS=Chlamydia pneumoniae OX=83558 GN=CP_0860 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z784|Q9Z784_CHLPN Uncharacterized protein CPn0822 homolog OS=Chlamydia pneumoniae OX=83558 GN=CPn0822 homolog PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z7B8|Q9Z7B8_CHLPN Succinate Dehydrogenase OS=Chlamydia pneumoniae OX=83558 GN=sdhC PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z7V7|Q9Z7V7_CHLPN Oligopeptide ABC transporter permease protein OS=Chlamydia pneumoniae OX=83558 GN=oppC_2 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z7Y9|Q9Z7Y9_CHLPN Protein export OS=Chlamydia pneumoniae OX=83558 GN=secD PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z842|Q9Z842_CHLPN CBS/transporter associated domain protein OS=Chlamydia pneumoniae OX=83558 GN=tlyC_2 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z8E8|Q9Z8E8_CHLPN Hemolysin OS=Chlamydia pneumoniae OX=83558 GN=CP_0360 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z8I0|Q9Z8I0_CHLPN Flagellar Secretion Protein OS=Chlamydia pneumoniae OX=83558 GN=flhA PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z8L5|Q9Z8L5_CHLPN Low calcium response D OS=Chlamydia pneumoniae OX=83558 GN=lcrD PE=1 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z8T5|Q9Z8T5_CHLPN ABC transporter, permease protein OS=Chlamydia pneumoniae OX=83558 GN=CP_0512 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z8V8|Q9Z8V8_CHLPN Anoctamin OS=Chlamydia pneumoniae OX=83558 GN=CP_0538 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z8Y5|Q9Z8Y5_CHLPN Oligopeptide Permease OS=Chlamydia pneumoniae OX=83558 GN=oppB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z9B5|Q9Z9B5_CHLPN RING-type domain-containing protein OS=Chlamydia pneumoniae OX=83558 GN=CP_0708 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z9D2|Q9Z9D2_CHLPN DUF4870 domain-containing protein OS=Chlamydia pneumoniae OX=83558 GN=CP_0725 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q9Z9D3|Q9Z9D3_CHLPN Conserved hypothetical inner membrane protein OS=Chlamydia pneumoniae OX=83558 GN=yqfF PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Done run in: 0.0109 seconds
+DEBUG:root:Autoimmunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 5312.4156 seconds
+DEBUG:root:Mouse immunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 183.5675 seconds
+DEBUG:root:Virulence start...
+DEBUG:root:Done run in: 45.9289 seconds
+DEBUG:root:Annotation start...
+DEBUG:root:Done run in: 72.5099 seconds
+DEBUG:root:Done: NERVE has finished its analysis in: 6136.7169 seconds

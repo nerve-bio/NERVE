@@ -1,0 +1,169 @@
+DEBUG:root:Running NERVE with the following parameters:
+annotation: True, e_value: 1e-10, gram: n,
+                minlength: 9, mismatch: 1, mouse: True,
+                mouse_peptides_sum_limit: 0.15, proteome1: UP000000540,
+                proteome2: None, p_ad_extracellular_filter: 0.38,
+                padlimit: 0.85, razor: True, razlen: 50, select: False,
+                substitution: 3, transmemb_doms_limit: 3,
+                virlimit: 0.5, virulent: True, working_dir: ./UP000000540/,
+                NERVE_dir: ../../, iFeature_dir: /iFeature,  DeepFri_dir: /DeepFri
+DEBUG:root:UP000000540 is not a file, download from Uniprot.
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): rest.uniprot.org:443
+DEBUG:urllib3.connectionpool:https://rest.uniprot.org:443 "GET /uniprotkb/stream?compressed=false&format=fasta&query=%28proteome%3AUP000000540%29 HTTP/1.1" 200 None
+DEBUG:root:UP000000540 successfully downloaded
+DEBUG:root:Start quality control of proteome1 (./UP000000540/proteome1.fasta)
+DEBUG:root:Found non-canonical character ">" in sequence name:
+sp|P0C529|NDVA_BRUAB Beta-(1-->2)glucan export ATP-binding/permease protein NdvA OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=ndvA PE=3 SV=1
+Substituting with "*"
+DEBUG:root:Finish quality control of proteome1. Updated path: (/workdir/NERVE/docker/workdir/UP000000540/cleaned_proteome1.fasta)
+DEBUG:root:Extract protein sequences and IDs from proteome1
+DEBUG:root:3077 proteins loaded in 0.1569221019744873 seconds
+DEBUG:root:Subcelloc start with psortb...
+DEBUG:root:Sending request to psortb
+DEBUG:root:Psortb stdout:
+Saving results to /result.txt
+
+- Running PSORTb: /usr/local/psortb/bin/psortb3.pl -n -v /usr/local/nodeapi/src/temp_wd/6/input.fasta > /usr/local/nodeapi/src/temp_wd/6/result.txt
+
+Psortb stderr:
+* Using /usr/local/psortb as PSort root directory
+* Reading sequences from file "/usr/local/nodeapi/src/temp_wd/6/input.fasta"
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+Selenocysteine (U) at position 140 replaced by X
+Selenocysteine (U) at position 196 replaced by X
+
+DEBUG:root:Parsing psortb output
+DEBUG:root:Done run in: 1026.6829 seconds
+DEBUG:root:Adhesin start...
+DEBUG:root:Done run in: 155.4343 seconds
+DEBUG:root:Tmhelices start...
+DEBUG:root:Done run in: 83.1398 seconds
+DEBUG:root:Loop-razor start...
+DEBUG:root:Substituting sp|P0C102|CDSA_BRUAB Phosphatidate cytidylyltransferase OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=cdsA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|P0C529|NDVA_BRUAB Beta-(1--*2)glucan export ATP-binding/permease protein NdvA OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=ndvA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q578A0|PLSY_BRUAB Glycerol-3-phosphate acyltransferase OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=plsY PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57CH6|Q57CH6_BRUAB Multifunctional fusion protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=secF PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q57DW5|CTAA_BRUAB Heme A synthase OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=ctaA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57DX9|Q57DX9_BRUAB K(+)-insensitive pyrophosphate-energized proton pump OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=hppA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|P0C117|SECDF_BRUAB Protein translocase subunit SecDF OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=secDF PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|P0C527|VIRB6_BRUAB Type IV secretion system protein VirB6 OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=virB6 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q576U0|Q576U0_BRUAB Membrane protein insertase YidC OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=yidC PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q577J7|Y3094_BRUAB Putative peptide permease protein BruAb2_0794 OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0794 PE=3 SV=2 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q577R6|Q577R6_BRUAB CydA, cytochrome d ubiquinol oxidase, subunit I OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=cydA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q577X1|Q577X1_BRUAB Phosphatidylcholine synthase OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=pcs PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q577Y4|Q577Y4_BRUAB Phosphatidylglycerol lysyltransferase OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0639 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q578E8|UGPE_BRUAB sn-glycerol-3-phosphate transport system permease protein UgpE OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=ugpE PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q579I7|Q579I7_BRUAB NAD(P) transhydrogenase subunit beta OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=pntB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q57A43|MGTC_BRUAB Protein MgtC OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=mgtC PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57AA7|Q57AA7_BRUAB Apolipoprotein N-acyltransferase OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=cutE PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57AC3|Q57AC3_BRUAB Phosphate transport system permease protein PstA OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_2115 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57AC4|Q57AC4_BRUAB Phosphate transport system permease protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=pstC PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57AN9|Q57AN9_BRUAB CadA-1, cadmium-translocating P-type ATPase OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=cadA-1 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57B00|Q57B00_BRUAB DNA translocase FtsK OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1872 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57BL1|Q57BL1_BRUAB Biopolymer transport protein ExbB OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=exbB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57C77|Q57C77_BRUAB Cell wall polymerase OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=ftsW PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q57CC4|KUP_BRUAB Probable potassium transport system protein Kup OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=kup PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57CH8|Q57CH8_BRUAB Membrane protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1322 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57CK4|Q57CK4_BRUAB Cobalamin biosynthesis protein CobD OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=cobD PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57CY3|Q57CY3_BRUAB Zinc metalloprotease OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1162 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57D22|Q57D22_BRUAB Cell-division control histidine kinase PdhS OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=ntrY PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57EC4|Q57EC4_BRUAB histidine kinase OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0635 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57EF8|Q57EF8_BRUAB histidine kinase OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0598 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57F42|Q57F42_BRUAB histidine kinase OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0342 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57F66|Q57F66_BRUAB Efflux pump membrane transporter OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0318 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57FX2|Q57FX2_BRUAB Ubiquinol oxidase subunit 2 OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=cyoA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting sp|Q8VQK4|Y1031_BRUAB Putative peptide transport system permease protein BruAb2_1031 OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_1031 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|F8WJS3|F8WJS3_BRUAB Peptide ABC transporter, permease protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_1037 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|F8WJS9|F8WJS9_BRUAB Peptide ABC transporter, permease protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_1021 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q576R5|Q576R5_BRUAB ABC transporter, ATP-binding/permease protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0990 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q576U4|Q576U4_BRUAB DUF4105 domain-containing protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0958 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q576V1|Q576V1_BRUAB Peptide ABC transporter, permease protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0951 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q576Y9|Q576Y9_BRUAB ABC transporter, ATP-binding Protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0908 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q576Z1|Q576Z1_BRUAB Hypothetical transcriptional regulator NosR OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0906 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q577E0|Q577E0_BRUAB Spermidine/putrescine ABC transporter, permease protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0853 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q577G0|Q577G0_BRUAB Voltage gated chloride channel family protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0831 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q577H4|Q577H4_BRUAB Polyferredoxin OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0817 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q577I4|Q577I4_BRUAB Branched-chain amino acid ABC transporter, ATP-binding protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0807 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q577L6|Q577L6_BRUAB Hypothetical membrane protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0767 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q577M1|Q577M1_BRUAB Hypothetical membrane protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0762 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q577M5|Q577M5_BRUAB ABC transporter, permease protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0757 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q577N1|Q577N1_BRUAB Hypothetical transporter OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0751 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q577P2|Q577P2_BRUAB Amino acid carrier family protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0740 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q577R4|Q577R4_BRUAB CydD, ABC transporter ATP-binding protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=cydD PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q577U1|Q577U1_BRUAB Oligopeptide ABC transporter, permease protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0686 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q577U9|Q577U9_BRUAB Glycosyl transferase, group 2 family protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0678 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q578F0|Q578F0_BRUAB Transporter, TrkA family OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0567 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q578M2|Q578M2_BRUAB Glycine betaine/L-proline ABC transporter, permease protein, hypothetical OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0493 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q578N5|Q578N5_BRUAB Iron compound ABC transporter, permease protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0477 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q578P0|Q578P0_BRUAB Hypothetical membrane protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0472 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q578R3|Q578R3_BRUAB Peptide ABC transporter, permease protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0447 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q578T0|Q578T0_BRUAB NikB, nickel ABC transporter, permease protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=nikB PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q579A9|Q579A9_BRUAB Major facilitator family transporter OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0344 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q579V3|Q579V3_BRUAB Dolichyl-phosphate-mannose-protein mannosyltransferase family protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0135 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q579X8|Q579X8_BRUAB Exopolysaccharide production protein, hypothetical OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0106 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57A42|Q57A42_BRUAB histidine kinase OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0041 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57A63|Q57A63_BRUAB HupC/HyaC/HydC family protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb2_0019 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57AI5|Q57AI5_BRUAB BfxsA protein, hypothetical OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_2048 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57AN0|Q57AN0_BRUAB CBS domain protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_2002 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57AQ9|Q57AQ9_BRUAB Hypothetical membrane protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1971 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57AS0|Q57AS0_BRUAB TIGR02302 family protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1960 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57AX7|Q57AX7_BRUAB MAPEG family protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1897 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57B11|Q57B11_BRUAB HemY_N domain-containing protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1861 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57B13|Q57B13_BRUAB MFS domain-containing protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1858 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57BG5|Q57BG5_BRUAB ABC transporter, ATP binding/permease protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1700 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57BK1|Q57BK1_BRUAB Hypothetical membrane protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1664 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57C22|Q57C22_BRUAB Hypothetical transporter OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1484 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57C30|Q57C30_BRUAB Na/Pi-cotransporter family protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1476 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57CF5|Q57CF5_BRUAB Hypothetical ABC transporter, permease protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1347 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57CG9|Q57CG9_BRUAB CBS domain protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1332 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57CH5|Q57CH5_BRUAB Potassium efflux system family protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1325 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57CI9|Q57CI9_BRUAB Cobalt transporter OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1310 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57CT7|Q57CT7_BRUAB OmpA family protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1209 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57CW2|Q57CW2_BRUAB Hypothetical membrane protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1184 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57CZ4|Q57CZ4_BRUAB ComEC/Rec2 family protein, hypothetical OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1151 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57D49|Q57D49_BRUAB AcrB/AcrD/AcrF multidrug efflux protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1094 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57DB0|Q57DB0_BRUAB Hypothetical toulene ABC transporter, permease protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_1024 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57DP2|Q57DP2_BRUAB TIGR02281 family clan AA aspartic protease OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0876 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57DT0|Q57DT0_BRUAB ABC transporter, permease protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0837 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57DX0|Q57DX0_BRUAB Bacterial sugar transferase OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0796 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57E42|Q57E42_BRUAB PgsA, CDP-diacylglycerol--glycerol-3-phosphate 3-phosphatidyltransferase OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=pgsA PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57E53|Q57E53_BRUAB Lipopolysaccharide export system permease protein LptF OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0706 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57E54|Q57E54_BRUAB LPS export ABC transporter permease LptG OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0705 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57E86|Q57E86_BRUAB Fsr, fosmidomycin resistance protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=fsr PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57EB8|Q57EB8_BRUAB AP endonuclease family 1 domain protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0641 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57EC5|Q57EC5_BRUAB Hypothetical membrane protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0634 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57ED1|Q57ED1_BRUAB CcmF, cytochrome c-type biogenesis protein CcmF OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=ccmF PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57EL3|Q57EL3_BRUAB Hypothetical epimerase/dehydratase OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0532 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57EL9|Q57EL9_BRUAB DUF1499 domain-containing protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0526 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57EP0|Q57EP0_BRUAB Sensory box/GGDEF domain/EAL domain protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0503 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57ER9|Q57ER9_BRUAB Colicin V production protein, hypothetical OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0470 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57EZ1|Q57EZ1_BRUAB Conserved domain protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0396 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57F01|Q57F01_BRUAB Iron-sulfur cluster-binding protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0385 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57F07|Q57F07_BRUAB Cytochrome c domain-containing protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0379 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57F62|Q57F62_BRUAB Glycosyl transferase, group 2 family protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0322 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57F78|Q57F78_BRUAB AcrB/AcrD/AcrF multidrug efflux protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0303 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57FR0|Q57FR0_BRUAB Cyclic beta 1-2 glucan synthetase OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0108 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57FT2|Q57FT2_BRUAB ABC transporter, permease protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0085 PE=4 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57G03|Q57G03_BRUAB ABC transporter, permease protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0008 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Substituting tr|Q57G04|Q57G04_BRUAB ABC transporter, permease protein OS=Brucella abortus biovar 1 (strain 9-941) OX=262698 GN=BruAb1_0007 PE=3 SV=1 sequence with its longest loop.
+DEBUG:root:Done run in: 0.0315 seconds
+DEBUG:root:Autoimmunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 1055.0567 seconds
+DEBUG:root:Mouse immunity start...
+DEBUG:root:Run sum of peptides
+DEBUG:root:Done run in: 516.0618 seconds
+DEBUG:root:Virulence start...
+DEBUG:root:Done run in: 142.5382 seconds
+DEBUG:root:Annotation start...
+DEBUG:root:Done run in: 377.8047 seconds
+DEBUG:root:Done: NERVE has finished its analysis in: 3358.0439 seconds
