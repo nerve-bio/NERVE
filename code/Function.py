@@ -40,7 +40,7 @@ def deep_fri(path_to_fasta, DeepFri_dir, working_dir):
     DeepFri_df = DeepFriParser(os.path.join(working_dir, '_MF_predictions.csv'))
     return DeepFri_df
 
-def DeepFriParser(path_to_infile: open, treshold=0.3) -> pd.DataFrame:
+def DeepFriParser(path_to_infile: open, treshold=0.5) -> pd.DataFrame:
     '''Parses DeepFri input file
     param: path_to_infile: path to .csv output file produced by DeepFri program
     output: output_df: dataframe with Protein and Function fields where protein is the input protein fasta 
