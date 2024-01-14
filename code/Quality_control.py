@@ -77,7 +77,7 @@ def proteome_uploader(infile:str) -> list:
         # use .strip() to remove initial spaces
         if infile[i].strip().startswith('>'):
             # upload protein name
-            name=infile[i].strip()[1:]
+            name=infile[i].strip()[1:].replace("/", "").replace("*", "")
             proteome_data[name] = ''
         # upload sequence
         if infile[i].strip().startswith('>') == False and infile[i].strip() != '':

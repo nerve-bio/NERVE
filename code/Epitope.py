@@ -44,7 +44,8 @@ def epitope(final_proteins, working_dir,
         for p, score in zip(final_proteins, protein_scores):
             if score >= percentile:
                 # create a dir for every protein
-                new_dir_path = os.path.join(working_dir, 'epitope', p.accession)
+                prot_name = p.accession if p.accession != None else p.id
+                new_dir_path = os.path.join(working_dir, 'epitope', prot_name)
                 os.makedirs(new_dir_path, exist_ok=True)
                 # run predictions for MHC I and II epitopes
                 # use 'threads=0' to use all available cores
@@ -102,18 +103,26 @@ def epitope(final_proteins, working_dir,
                     p.MHC2_binders = tmp_dic
 
                 if not pb1.empty:
-                    p.MHC1_pb_binders = pb1[['peptide', 'pos',  'alleles', 'core', 'score']].reset_index(drop=True).to_csv(sep='\t')
+                    p.MHC1_pb_binders = pb1[['peptide', 'pos',  'alleles', 'core', 'score']]\
+                        .reset_index(drop=True).to_csv(sep='\t')
 
                 if not pb2.empty:
-                    p.MHC2_pb_binders = pb2[['peptide', 'pos',  'alleles', 'core', 'score']].reset_index(drop=True).to_csv(sep='\t')
+                    p.MHC2_pb_binders = pb2[['peptide', 'pos',  'alleles', 'core', 'score']]\
+                        .reset_index(drop=True).to_csv(sep='\t')
 
                 # save files
-                mhci_epitopes.to_csv(os.path.join(new_dir_path, 'mhci_epitopes_{}.csv'.format(p.accession)), index=False)
-                mhcii_epitopes.to_csv(os.path.join(new_dir_path, 'mhcii_epitopes_{}.csv'.format(p.accession)), index=False)
-                filtered_binders1.to_csv(os.path.join(new_dir_path, 'MHC1_epitopes_FILTERED_{}.csv'.format(p.accession)), index=False)
-                filtered_binders2.to_csv(os.path.join(new_dir_path, 'MHC2_epitopes_FILTERED_{}.csv'.format(p.accession)), index=False)
-                pb1.to_csv(os.path.join(new_dir_path, 'Promiscuous_binders_MHC1_{}.csv'.format(p.accession)), index=False)
-                pb2.to_csv(os.path.join(new_dir_path, 'Promiscuous_binders_MHC2_{}.csv'.format(p.accession)), index=False)
+                mhci_epitopes.to_csv(os.path.join(new_dir_path, 'mhci_epitopes_{}.csv'.format(prot_name)), 
+                                     index=False)
+                mhcii_epitopes.to_csv(os.path.join(new_dir_path, 'mhcii_epitopes_{}.csv'.format(prot_name)), 
+                                      index=False)
+                filtered_binders1.to_csv(
+                    os.path.join(new_dir_path, 'MHC1_epitopes_FILTERED_{}.csv'.format(prot_name)), index=False)
+                filtered_binders2.to_csv(
+                    os.path.join(new_dir_path, 'MHC2_epitopes_FILTERED_{}.csv'.format(prot_name)), index=False)
+                pb1.to_csv(os.path.join(new_dir_path, 'Promiscuous_binders_MHC1_{}.csv'.format(prot_name)), 
+                           index=False)
+                pb2.to_csv(os.path.join(new_dir_path, 'Promiscuous_binders_MHC2_{}.csv'.format(prot_name)), 
+                           index=False)
                 
                 # plot binders in a sequence
                 if ep_plots=="True":
@@ -123,7 +132,8 @@ def epitope(final_proteins, working_dir,
                   
                        ax = plotting.plot_tracks([mhci_predictor], name=name)
                        if ax != None:
-                          ax.figure.savefig(fname=os.path.join(new_dir_path, 'tracks_plot_pbs_MHC1_{}.png'.format(p.accession)))
+                          ax.figure.savefig(fname=os.path.join(new_dir_path, 
+                                                               'tracks_plot_pbs_MHC1_{}.png'.format(prot_name)))
                   
                    
                     names_ii = mhcii_predictor.get_names()
@@ -131,7 +141,8 @@ def epitope(final_proteins, working_dir,
                    
                        ax = plotting.plot_tracks([mhcii_predictor], name=name)
                        if ax != None:
-                          ax.figure.savefig(fname=os.path.join(new_dir_path, 'tracks_plot_pbs_MHC2_{}.png'.format(p.accession)))
+                          ax.figure.savefig(
+                              fname=os.path.join(new_dir_path, 'tracks_plot_pbs_MHC2_{}.png'.format(prot_name)))
                    
                 
                 # plot heatmap colored by ranks
@@ -139,14 +150,16 @@ def epitope(final_proteins, working_dir,
                    
                        ax = plotting.plot_binder_map(mhci_predictor, name=name)
                        if ax != None:
-                          ax.figure.savefig(fname=os.path.join(new_dir_path, 'heatmap_pbs_MHC1_{}.png'.format(p.accession)))
+                          ax.figure.savefig(fname=os.path.join(new_dir_path,
+                                                                'heatmap_pbs_MHC1_{}.png'.format(prot_name)))
                   
                 
                     for name in names_ii:
                    
                        ax = plotting.plot_binder_map(mhcii_predictor, name=name)
                        if ax != None:
-                          ax.figure.savefig(fname=os.path.join(new_dir_path, 'heatmap_pbs_MHC2_{}.png'.format(p.accession)))
+                          ax.figure.savefig(
+                              fname=os.path.join(new_dir_path, 'heatmap_pbs_MHC2_{}.png'.format(prot_name)))
                          
                 
     return final_proteins
