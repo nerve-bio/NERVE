@@ -33,19 +33,19 @@ def scorer(protein:Protein, mouse_peptides_sum_limit:float, mouse:str) -> float:
     """Provides a score for protein candidates"""
     
     if mouse == "True":
-        score = (protein.p_ad + (protein.p_vir if protein.p_vir != None else 0 ) +\
+        score = (protein.p_ad + (protein.p_vir if protein.p_vir != None else 1 ) +\
              ((protein.localization[0].reliability / 10) if protein.localization[0].reliability > 7.49 else 0) +\
              (1 - len(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens)) +\
              (1 - (protein.sapiens_peptides_sum / .15)) + (1 - len(protein.list_of_peptides_from_comparison_with_mhcpep_mouse)) +\
              (1 - (protein.mouse_peptides_sum / mouse_peptides_sum_limit))) / 7
     if mouse != "True":
-        score = (protein.p_ad + (protein.p_vir if protein.p_vir != None else 0 ) +\
+        score = (protein.p_ad + (protein.p_vir if protein.p_vir != None else 1 ) +\
              ((protein.localization[0].reliability / 10) if protein.localization[0].reliability > 7.49 else 0) +\
              (1 - len(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens)) +\
-             (1 - (protein.sapiens_peptides_sum / .15))) / 7
+             (1 - (protein.sapiens_peptides_sum / .15))) / 5
     return score
 
-def output(list_of_proteins:list, outfile, mouse_peptides_sum_limit:float, mouse:str):
+def output(list_of_proteins:list, outfile):
     """Produces output .csv table"""
     df = pd.DataFrame([[str(protein.id),
                  str("".join([str(protein.accession) if protein.accession!=None else ""])),
