@@ -4,4 +4,4 @@ test_new.zip
 .gitignore
 Dockerfile_backup_old
 .gitignore
-test_new/
+test_output/
