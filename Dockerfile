@@ -1,6 +1,6 @@
 FROM francecosta/nerve:v0.0.5 AS final
 
-COPY ./ /usr/nerve_python/NERVE
+COPY ./code /usr/nerve_python/NERVE/code
 WORKDIR /workdir
 EXPOSE 8880
 RUN chmod +x /usr/nerve_python/NERVE/code/NERVE.py
