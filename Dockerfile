@@ -1,4 +1,4 @@
-FROM francecosta/nerve:v0.0.5 AS final
+FROM francecosta/nerve:v0.0.6 AS final
 
 COPY ./code /usr/nerve_python/NERVE/code
 WORKDIR /workdir
