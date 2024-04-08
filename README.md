@@ -8,7 +8,7 @@ NERVE can be used as a stand alone verison taking advantage of [Docker](https://
 1) install Docker following [these instructions](https://docs.docker.com/engine/install/) and [the post-installation procedure](https://docs.docker.com/engine/install/linux-postinstall/)
 2) clone the repository:
 ```
-git clone git@github.com:nerve-bio/NERVE.git
+git clone https://github.com/nerve-bio/NERVE.git
 ```
 4) navigate to the correct folder:
 ```
