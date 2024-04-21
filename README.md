@@ -1,15 +1,24 @@
 # NERVE
-<div align="center">
+
+<div align="center"
   
   ![nerve](https://github.com/Andrea0097/NERVE/assets/113541183/cebc9a7c-daf5-4ffb-8575-dc5c06df13af)
+
+</div>
   
-  NERVE (New Enhanced Reverse Vaccinology Environment) is an open-source, reverse vaccinology environment, with which you can analyze bacterial proteomes to get the best protein vaccine candidates (PVCs).
+<div align="left" 
+  
+  NERVE (New Enhanced Reverse Vaccinology Environment) is an open-source, reverse vaccinology environment, with which you can analyze bacterial proteomes in FASTA format to get the best protein vaccine candidates (PVCs) and their epitopes. 
   <p>
   The project was initially developed in Perl in 2006. You can find all the related information on the article at: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1570458
   </p>
   <p>
-  Now, we are carrying on this project independently from the original developer and this is the Github page of the NERVE 2.0-stand-alone version . Web-server app, instead, is available at:
-  https://nerve-bio.org
+  Now, we are carrying on this project independently from the original developer and this is the Github page of the NERVE 2.0-stand-alone version. Users can also leverage a user-friendly web-based 
+  graphical interface (GUI) hosted on our dedicated server: https://nerve-bio.org.
+  </p>
+  <p>
+  This GUI empowers even novice users to operate NERVE with ease, requiring only the proteome FASTA file as input. It further enhances the experience by allowing visualization of analysis results using our 
+  custom-built visualizer. Additionally, this tool facilitates the identification of epitopes (and their constituent parts) predicted to bind to multiple HLA alleles.
   </p>
 </div>
 
@@ -17,12 +26,12 @@
 ### Installation procedure of stand-alone version:
 NERVE can be used as a stand alone verison taking advantage of [Docker](https://www.docker.com/) in Linux systems.
 
-1) install Docker following [these instructions](https://docs.docker.com/engine/install/) and [the post-installation procedure](https://docs.docker.com/engine/install/linux-postinstall/)
-2) clone the repository:
+1) Install Docker following [these instructions](https://docs.docker.com/engine/install/) and [the post-installation procedure](https://docs.docker.com/engine/install/linux-postinstall/)
+2) Clone the repository:
 ```
 git clone https://github.com/nerve-bio/NERVE.git
 ```
-4) navigate to the correct folder:
+4) Navigate to the correct folder:
 ```
 cd NERVE
 ```
