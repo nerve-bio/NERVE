@@ -1,9 +1,16 @@
 # NERVE
 
-Software for Reverse Vaccinology. For web-tool please visit: https://nerve-bio.org
+NERVE (New Enhanced Reverse Vaccinology Environment) is an open-source, reverse vaccinology environment, with which you can analyze bacterial proteomes to get the best protein vaccine candidates (PVCs).
+<p>
+The project was initially developed in Perl in 2006. You can find all the related information on the article at: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1570458
+</p>
+<p>
+Now we are carrying on this project independently from the original developer and this is the Github page of the stand-alone version of NERVE 2.0. Web-server app, instead, is available at:
+https://nerve-bio.org
+</p>
 
-### Stand-alone usage:
-NERVE can be used as a stand alone verison taking advantage of [Docker](https://www.docker.com/) in linux systems.
+### Installation procedure of stand-alone version:
+NERVE can be used as a stand alone verison taking advantage of [Docker](https://www.docker.com/) in Linux systems.
 
 1) install Docker following [these instructions](https://docs.docker.com/engine/install/) and [the post-installation procedure](https://docs.docker.com/engine/install/linux-postinstall/)
 2) clone the repository:
@@ -17,16 +24,18 @@ cd NERVE
 4) Run NERVE (the first time it will take a few minutes)
 ```
 ./NERVE.sh --help
+
 ```
+With help, you can visualize all arguments (parameters and modules of NERVE).
 Expected output:
 ```
 usage: NERVE.py [-h] [-a] [-ev] -g [-ml] [-mm] [-m] [-mpsl] -p1 [-p2] [-paefilter] [-pacfilter] [-pl] [-rz] [-rl] [-s] [-ss] [-tdl] [-vl] [-vir]
                 [-ep] [-m1l] [-m2l] [-m1ovr] [-m2ovr] [-prt] [-wd] [-nd] [-id] [-dfd] [-epp]
 
-Run vaccine candidate prediction
+Run vaccine candidate prediction:
 
 optional arguments:
-  -h, --help            show this help message and exit
+  -h, --help        show this help message and exit
   -a, --annotation  Activation (True) or deactivation (False) of annotation module. Uses DeepFri to retrieve protein functional onthologies (default: True)
   -ev, --e_value    Expect-value used in blastp for immunity modules (default: 1e-10)
   -g, --gram        Negative (n) or positive (p) gram stain of the pathogen of interest (default: None)
@@ -39,13 +48,7 @@ optional arguments:
                         of the i-protein' <= mouse_peptides_sum_limit and with absence of match mhc-I and Mhc-II mouse ligands are selected (default: 0.15)
   -p1, --proteome1  Path to proteome or Uniprot proteome ID (see: https://www.uniprot.org/proteomes/?query=&sort=score) (default: None)
   -p2, --proteome2  Path to proteome or Uniprot proteome ID (see: https://www.uniprot.org/proteomes/?query=&sort=score) (default: None)
-  -paefilter, --p_ad_extracellular_filter 
-                        Parameter of select module. Extracellular proteins with a probability of adhesin (pad) lower than p_ad_extracellular_filter are discarded (0.-1) (default:
-                        0.38)
-  -pacfilter, --p_ad_no_citoplasm_filter 
-                        Parameter of select module. Non-cytoplasmic Proteins with a probability of adhesin (pad) lower than p_ad_no_citoplasm_filter are discarded (0.-1) (default:
-                        0.46)
-  -pl, --padlimit   Set the probability of adhesin (pad) value cut-off for proteins with 'Unknown' localization in the select module. Thus, these proteins with a pad value < cut-
+  -pl, --padlimit   Set the probability of adhesin (pad) value cut-off for all proteins in select module. Thus, these proteins with a pad value < cut-
                         off are discarded (0.-1) (default: 0.5)
   -rz, --razor      Activation (True) or deactivation (False) of the loop-razor module. This module allows the recovery of protein vaccine candidates, with more than 2
                         transmembrane domains, that would otherwise be discarded in the select module. The longest loop with minimum len == 'razlen' aa will replace the original
