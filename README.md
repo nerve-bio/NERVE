@@ -1,13 +1,18 @@
 # NERVE
+<div align="center">
+  
+  ![nerve](https://github.com/Andrea0097/NERVE/assets/113541183/cebc9a7c-daf5-4ffb-8575-dc5c06df13af)
+  
+  NERVE (New Enhanced Reverse Vaccinology Environment) is an open-source, reverse vaccinology environment, with which you can analyze bacterial proteomes to get the best protein vaccine candidates (PVCs).
+  <p>
+  The project was initially developed in Perl in 2006. You can find all the related information on the article at: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1570458
+  </p>
+  <p>
+  Now, we are carrying on this project independently from the original developer and this is the Github page of the NERVE 2.0-stand-alone version . Web-server app, instead, is available at:
+  https://nerve-bio.org
+  </p>
+</div>
 
-NERVE (New Enhanced Reverse Vaccinology Environment) is an open-source, reverse vaccinology environment, with which you can analyze bacterial proteomes to get the best protein vaccine candidates (PVCs).
-<p>
-The project was initially developed in Perl in 2006. You can find all the related information on the article at: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1570458
-</p>
-<p>
-Now we are carrying on this project independently from the original developer and this is the Github page of the stand-alone version of NERVE 2.0. Web-server app, instead, is available at:
-https://nerve-bio.org
-</p>
 
 ### Installation procedure of stand-alone version:
 NERVE can be used as a stand alone verison taking advantage of [Docker](https://www.docker.com/) in Linux systems.
@@ -26,13 +31,13 @@ cd NERVE
 ./NERVE.sh --help
 
 ```
-With help, you can visualize all arguments (parameters and modules of NERVE).
-Expected output:
+
+This is the expected output:
 ```
 usage: NERVE.py [-h] [-a] [-ev] -g [-ml] [-mm] [-m] [-mpsl] -p1 [-p2] [-pl] [-rz] [-rl] [-s] [-ss] [-tdl] [-vl] [-vir]
                 [-ep] [-m1l] [-m2l] [-m1ovr] [-m2ovr] [-prt] [-wd] [-nd] [-id] [-dfd] [-epp]
 
-optional arguments:
+NERVE arguments:
   -h, --help        show this help message and exit
   -a, --annotation  Activation (True) or deactivation (False) of annotation module. Uses DeepFri to retrieve protein functional onthologies (default: True)
   -ev, --e_value    Expect-value used in blastp for immunity modules (default: 1e-10)
@@ -80,5 +85,32 @@ optional arguments:
   -epp, --ep_plots  Epitopes plotting script (default: True)
   ```
 
-### Common usage:
+### Common usage and tips:
+
+With help, you can visualize all possible arguments, which include all user-settable parameters and activation or deactivation of NERVE components.
+Definitions and setting options are shown in detail for each of them.
+
+**Mandatory arguments:** 
+* ```-p1  ```,```--proteome1  ``` 
+* ```-g ```,  ```--gram ``` 
+
+All the other arguments, showed in the help section are optional. So, if they're set by the user, their related default value is used during NERVE computation.
+
+**Here is a list of different examples to show how to correctly set NERVE arguments:**
+
+```
+./NERVE.sh -p1 test.fasta -g n
+```
+1) This is a run example with the minimum number of arguments (the two mandatory ones). Here we're considering a file with Gram negative proteins.
+
+```
+./NERVE.sh -p1 test.fasta -g n -s False -vir True -vl 0.8
+```
+2) The same file with gram negative proteins will be analyzed activating NERVirulent and setting its cut-off to 0.8 (instead of default " 0.5 "). Without activating Select (```-s False```), PVCs are not filtered so in the results file there will be the list of all proteins with their related analyzed info.
+
+```
+./NERVE.sh -p1 test.fasta -g n -p2 test2.fasta
+```
+3) In this case, adding test2.fasta, the component Conservation is automatically activated, allowing the user to infer antigen conservation. 
+For more info about components working visit the FAQ section of https://nerve-bio.org
 
