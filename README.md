@@ -29,10 +29,8 @@ cd NERVE
 With help, you can visualize all arguments (parameters and modules of NERVE).
 Expected output:
 ```
-usage: NERVE.py [-h] [-a] [-ev] -g [-ml] [-mm] [-m] [-mpsl] -p1 [-p2] [-paefilter] [-pacfilter] [-pl] [-rz] [-rl] [-s] [-ss] [-tdl] [-vl] [-vir]
+usage: NERVE.py [-h] [-a] [-ev] -g [-ml] [-mm] [-m] [-mpsl] -p1 [-p2] [-pl] [-rz] [-rl] [-s] [-ss] [-tdl] [-vl] [-vir]
                 [-ep] [-m1l] [-m2l] [-m1ovr] [-m2ovr] [-prt] [-wd] [-nd] [-id] [-dfd] [-epp]
-
-Run vaccine candidate prediction:
 
 optional arguments:
   -h, --help        show this help message and exit
@@ -81,4 +79,6 @@ optional arguments:
                         Path to DeepFri folder (download from: https://github.com/flatironinstitute/DeepFRI) (default: /usr/nerve_python/assets/DeepFri)
   -epp, --ep_plots  Epitopes plotting script (default: True)
   ```
+
+### Common usage:
 
