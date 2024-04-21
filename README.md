@@ -1,4 +1,4 @@
-# NERVE
+ # NERVE
 
 <div align="center"
   
@@ -22,8 +22,30 @@
   </p>
 </div>
 
+## Key features:
 
-### Installation procedure of stand-alone version:
+ * **Machine Learning and Alignment Analysis**, using  ML methods for antigen analysis
+ * **Flexible Usage**, customizing your settings
+ * **Stand-alone Docker Version**, working across Windows, macOS, and Linux.
+ * **Intuitive Web-based GUI**,
+ * **Complete Python Rewrite**, enhancing its performance and maintainability.
+ * **Ongoing Development**, continuously evolving with new features and improvements.
+ * **Comprehensive Output**, including:
+    * A CSV file summarizing all candidate proteins with scores and predicted characteristics (P_adhesin, P_antigen, location, etc.).
+    * A separate CSV file listing discarded proteins.
+    * Dedicated folders containing additional files (CSVs and PNGs) for each selected protein with predicted linear epitopes. 
+
+**Benefits for Vaccine Research:**
+
+* **Accessibility:**: Researchers worldwide can access and utilize NERVE without barriers, accelerating vaccine development efforts globally. 
+* **Transparency:** Allowing researchers to scrutinize the code, identify potential issues, and contribute to its refinement. 
+* **Collaboration:** By enabling researchers to share, modify, and extend the pipeline, leading to innovative advancements. 
+* **Community-Driven Development:** The open-source model encourages community participation, ensuring that NERVE remains aligned with the evolving needs of the vaccine research community. 
+
+We welcome contributions from researchers interested in shaping the future of NERVE! Whether it's reporting bugs, suggesting improvements, or developing new features, your input is valuable.
+
+
+## Installation procedure of stand-alone version:
 NERVE can be used as a stand alone verison taking advantage of [Docker](https://www.docker.com/) in Linux systems.
 
 1) Install Docker following [these instructions](https://docs.docker.com/engine/install/) and [the post-installation procedure](https://docs.docker.com/engine/install/linux-postinstall/)
@@ -94,7 +116,7 @@ NERVE arguments:
   -epp, --ep_plots  Epitopes plotting script (default: True)
   ```
 
-### Common usage and tips:
+## Common usage and tips:
 
 With help, you can visualize all possible arguments, which include all user-settable parameters and activation or deactivation of NERVE components.
 Definitions and setting options are shown in detail for each of them.
