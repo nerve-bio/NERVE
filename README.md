@@ -1,4 +1,4 @@
- # NERVE
+se # NERVE
 
 <div align="center"
   
@@ -134,7 +134,7 @@ Definitions and setting options are shown in detail for each of them here above,
 All the other arguments showed are optional. So, if they're not set by the user, their related default value is used during NERVE computation.
 
 
-**directory and now to use it**
+**directory and how to use it**
 
 
 **Here is a list of different examples to show how to correctly set NERVE arguments:**
