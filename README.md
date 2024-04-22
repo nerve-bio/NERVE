@@ -10,7 +10,7 @@
   
   NERVE (New Enhanced Reverse Vaccinology Environment) is an open-source, reverse vaccinology environment, with which you can analyze bacterial proteomes in FASTA format to get the best protein vaccine candidates (PVCs) and their epitopes. 
   <p>
-  The project was initially developed in Perl in 2006. You can find all the related information on the article at: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1570458
+  The project was initially developed in Perl, in 2006, for Linux users only. You can find all the related information on the article at: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1570458
   </p>
   <p>
   Now, we are carrying on this project independently from the original developer and this is the Github page of the NERVE 2.0-stand-alone version. 
