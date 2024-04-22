@@ -17,7 +17,10 @@
   </p>
   <p>
   Users can also leverage a user-friendly web-based 
-  graphical interface (GUI) hosted on our dedicated server: https://nerve-bio.org.  This GUI empowers even novice users to operate NERVE with ease, requiring only the proteome FASTA file as input. It further enhances the experience by allowing visualization of analysis results using our 
+  graphical interface (GUI) hosted on our dedicated server: https://nerve-bio.org.  This GUI empowers even novice users to operate NERVE with ease, requiring only the proteome FASTA file as input.
+</p>
+<p>
+ It further enhances the experience by allowing visualization of analysis results using our 
   custom-built visualizer. Additionally, this tool facilitates the identification of epitopes (and their constituent parts) predicted to bind to multiple HLA alleles.
   </p>
 </div>
