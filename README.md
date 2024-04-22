@@ -45,7 +45,10 @@
 * **Collaboration:** By enabling researchers to share, modify, and extend the pipeline, leading to innovative advancements. 
 * **Community-Driven Development:** The open-source model encourages community participation, ensuring that NERVE remains aligned with the evolving needs of the vaccine research community. 
 
-We welcome contributions from researchers interested in shaping the future of NERVE! Whether it's reporting bugs, suggesting improvements, or developing new features, your input is valuable.
+
+Whether it's reporting bugs, suggesting improvements, or developing new features, your input is valuable.
+
+We welcome contributions from researchers interested in shaping the future of NERVE! 
 
 
 ## Installation procedure of stand-alone version:
