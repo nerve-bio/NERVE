@@ -26,7 +26,7 @@
 
  * **Machine Learning and Alignment Analysis**, using  ML methods for antigen analysis
  * **Flexible Usage**, customizing your settings
- * **Stand-alone Docker Version**, working across Windows, macOS, and Linux.
+ * **Stand-alone Docker Version**, reducing dependencies for its installation
  * **Intuitive Web-based GUI**,
  * **Complete Python Rewrite**, enhancing its performance and maintainability.
  * **Ongoing Development**, continuously evolving with new features and improvements.
@@ -46,7 +46,7 @@ We welcome contributions from researchers interested in shaping the future of NE
 
 
 ## Installation procedure of stand-alone version:
-NERVE can be used as a stand alone verison taking advantage of [Docker](https://www.docker.com/) in Linux systems.
+NERVE can be used as a stand alone version taking advantage of [Docker](https://www.docker.com/) in Linux systems.
 
 1) Install Docker following [these instructions](https://docs.docker.com/engine/install/) and [the post-installation procedure](https://docs.docker.com/engine/install/linux-postinstall/)
 2) Clone the repository:
@@ -119,25 +119,25 @@ NERVE arguments:
 ## Common usage and tips:
 
 With help, you can visualize all possible arguments, which include all user-settable parameters and activation or deactivation of NERVE components.
-Definitions and setting options are shown in detail for each of them.
+Definitions and setting options are shown in detail for each of them here above, in the ```help``` output.
 
 **Mandatory arguments:** 
 * ```-p1  ```,```--proteome1  ``` 
 * ```-g ```,  ```--gram ``` 
 
-All the other arguments, showed in the help section are optional. So, if they're set by the user, their related default value is used during NERVE computation.
+All the other arguments showed are optional. So, if they're not set by the user, their related default value is used during NERVE computation.
 
 **Here is a list of different examples to show how to correctly set NERVE arguments:**
 
 ```
 ./NERVE.sh -p1 test.fasta -g n
 ```
-1) This is a run example with the minimum number of arguments (the two mandatory ones). Here we're considering a file with Gram negative proteins.
+1) This is a run example with the minimum number of arguments (the two mandatory ones). Here we're considering a FASTA file (test.fasta) with Gram negative proteins.
 
 ```
 ./NERVE.sh -p1 test.fasta -g n -s False -vir True -vl 0.8
 ```
-2) The same file with gram negative proteins will be analyzed activating NERVirulent and setting its cut-off to 0.8 (instead of default " 0.5 "). Without activating Select (```-s False```), PVCs are not filtered so in the results file there will be the list of all proteins with their related analyzed info.
+2) The same file with Gram negative proteins will be analyzed activating NERVirulent and setting its cut-off to 0.8 (instead of default " 0.5 "). Without activating Select (```-s False```), PVCs are not filtered. So, in the results file, there will be the list of all proteins with their related analyzed info.
 
 ```
 ./NERVE.sh -p1 test.fasta -g n -p2 test2.fasta
