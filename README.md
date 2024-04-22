@@ -21,7 +21,7 @@
 </p>
 <p>
  It further enhances the experience by allowing visualization of analysis results using our 
-  custom-built visualizer,also facilitating the identification of epitopes (and their constituent parts) predicted to bind to multiple HLA alleles.
+  custom-built visualizer, also facilitating the identification of epitopes (and their constituent parts) predicted to bind to multiple HLA alleles.
   </p>
 </div>
 
