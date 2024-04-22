@@ -138,7 +138,7 @@ All the other arguments showed are optional. So, if they're not set by the user,
 ```
 ./NERVE.sh -p1 test.fasta -g n
 ```
-1) This is a run example with the minimum number of arguments (the two mandatory ones). Here we're considering a FASTA file (test.fasta) with Gram negative proteins.
+1) This is a run example with the minimum number of arguments (the two mandatory ones). Here we're considering a FASTA file (test.fasta) with Gram negative proteins (```-g n```).
 
 ```
 ./NERVE.sh -p1 test.fasta -g n -s False -vir True -vl 0.8
