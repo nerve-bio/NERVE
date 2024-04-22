@@ -13,11 +13,11 @@
   The project was initially developed in Perl in 2006. You can find all the related information on the article at: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1570458
   </p>
   <p>
-  Now, we are carrying on this project independently from the original developer and this is the Github page of the NERVE 2.0-stand-alone version. Users can also leverage a user-friendly web-based 
-  graphical interface (GUI) hosted on our dedicated server: https://nerve-bio.org.
+  Now, we are carrying on this project independently from the original developer and this is the Github page of the NERVE 2.0-stand-alone version. 
   </p>
   <p>
-  This GUI empowers even novice users to operate NERVE with ease, requiring only the proteome FASTA file as input. It further enhances the experience by allowing visualization of analysis results using our 
+  Users can also leverage a user-friendly web-based 
+  graphical interface (GUI) hosted on our dedicated server: https://nerve-bio.org.  This GUI empowers even novice users to operate NERVE with ease, requiring only the proteome FASTA file as input. It further enhances the experience by allowing visualization of analysis results using our 
   custom-built visualizer. Additionally, this tool facilitates the identification of epitopes (and their constituent parts) predicted to bind to multiple HLA alleles.
   </p>
 </div>
