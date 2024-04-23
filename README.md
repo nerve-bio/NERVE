@@ -176,7 +176,7 @@ To change it, the user has to specify the path to the new chosen folder using th
 ```
 ./NERVE.sh -p1 test.fasta -g n -m True -rz True -rl 75
 ```
-3) Here, two facoltative components are activated (Mouse immunity and Loop-razor).Then, minimum length of  considered loop, with Loop-razor, is set to 75aa instead of 50aa.
+3) Here, two facoltative components are activated (Mouse immunity and Loop-razor).Then, minimum length of  considered loop, with Loop-razor, is set to 75aa (from 50aa).
 
 ```
 ./NERVE.sh -p1 test.fasta -g n -p2 test2.fasta
