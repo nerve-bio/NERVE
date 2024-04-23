@@ -1,4 +1,4 @@
-se # NERVE
+iose # NERVE
 
 <div align="center"
   
@@ -111,7 +111,7 @@ NERVE arguments:
   -m2ovr, --mhcii_overlap 
                         mhcii-epitope overlap (default: 1)
   -prt, --epitope_percentile 
-                        percentile decision threshold on whick to predict epitopes from full length proteins (default: 0.9)
+                        percentile decision threshold on which to predict epitopes from full length proteins (default: 0.9)
   -wd, --working_dir 
                         Path to working directory. If not existing, a working directory with the given path is created (default: ./)
   -nd, --NERVE_dir  Path to NERVE repository folder (download from: https://github.com/nicolagulmini/NERVE) (default: /usr/nerve_python/NERVE)
