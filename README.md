@@ -140,9 +140,9 @@ To start with NERVE, the ```-p1,--proteome1``` file, which contains all bacteria
 ```
 ./NERVE.sh -p1 anthracis.fasta -g p
 ```
-Here, the example file "anthracis.fasta", with Gram positive proteins, needs to be saved in the NERVE folder.
+Here, the example file "anthracis.fasta", with Gram positive proteins, is saved the NERVE folder.
 
-But the user can also retrieve it from Uniprot, writing the correct ID of the chosen proteome:
+But the user can also retrieve a specific proteome from Uniprot, writing its correct ID:
 
 ```
 ./NERVE.sh -p1 UP000000594 -g p
