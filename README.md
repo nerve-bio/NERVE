@@ -34,9 +34,9 @@ se # NERVE
  * **Complete Python Rewrite**, enhancing its performance and maintainability.
  * **Ongoing Development**, continuously evolving with new features and improvements.
  * **Comprehensive Output**, including:
-    * A CSV file summarizing all candidate proteins with scores and predicted characteristics (P_adhesin, P_antigen, location, etc.).
-    * A separate CSV file listing discarded proteins.
-    * Dedicated folders containing additional files (CSVs and PNGs) for each selected protein with predicted linear epitopes. 
+    * a CSV file summarizing all candidate proteins with scores and predicted characteristics (P_adhesin, P_antigen, location, etc.).
+    * a separate CSV file listing discarded proteins.
+    * dedicated folders containing additional files (CSVs and PNGs) for each selected protein with predicted linear epitopes. 
 
 **Benefits for Vaccine Research:**
 
