@@ -145,7 +145,6 @@ But the user can also retrieve it from Uniprot, writing the correct ID of the ch
 
 ```
 ./NERVE.sh -p1 UP000000594 -g p
-
 ```
 Here, the reported Uniprot proteome ID is the *Bacillus anthracis* (strain Ames Ancestor) one.
 
@@ -155,8 +154,8 @@ The default working directory, where all result files produced during NERVE anal
 To change it, the user has to specify the path to the new chosen folder using the command ```-wd,--working_dir```
 
 ```
-./NERVE.sh -p1 UP000000594 -g p -wd ```
-
+./NERVE.sh -p1 UP000000594 -g p -wd 
+```
 
 **Here is a list of different examples to show how to correctly set NERVE arguments:**
 
