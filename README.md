@@ -132,7 +132,7 @@ Definitions and setting options are shown in detail for each of them here above,
 
 All the other showed arguments are optional. So, if they're not set by the user, their related default value is used during NERVE computation.
 
-###Starting the analysis:
+### Starting the analysis:
 
 To start with NERVE, the ```-p1,--proteome1``` file, which contains all bacterial FASTA proteins to be analyzed, has to be put in the NERVE folder.
  
@@ -150,7 +150,7 @@ But the user can also retrieve it from Uniprot, writing the correct ID of the ch
 Here, the reported Uniprot proteome ID is the *Bacillus anthracis* (strain Ames Ancestor) one.
 
 
-###Showing output and results
+### Showing output and results
 
 The default working directory, where all result files produced during NERVE analysis are saved, is always the NERVE folder.
 
@@ -159,7 +159,7 @@ To change it, the user has to specify the path to the new chosen folder using th
 ```
 ./NERVE.sh -p1 UP000000594 -g p -wd 
 ```
-###Run examples
+### Run examples
 
 **Here are some different examples to show how to correctly set NERVE arguments:**
 
