@@ -1,4 +1,4 @@
-iose # NERVE
+# NERVE
 
 <div align="center"
   
@@ -59,7 +59,7 @@ NERVE can be used as a stand alone version taking advantage of [Docker](https://
 ```
 git clone https://github.com/nerve-bio/NERVE.git
 ```
-4) Navigate to the correct folder:
+4) Navigate to the correct folder (your default working directory):
 ```
 cd NERVE
 ```
@@ -131,10 +131,32 @@ Definitions and setting options are shown in detail for each of them here above,
 * ```-p1  ```,```--proteome1  ``` 
 * ```-g ```,  ```--gram ``` 
 
-All the other arguments showed are optional. So, if they're not set by the user, their related default value is used during NERVE computation.
+All the other showed arguments are optional. So, if they're not set by the user, their related default value is used during NERVE computation.
 
 
-**directory and how to use it**
+To start with NERVE, the ```-p1,--proteome1``` file, which contains all bacterial FASTA proteins to be analyzed, has to be put in the NERVE folder.
+ 
+
+```
+./NERVE.sh -p1 anthracis.fasta -g p
+```
+Here, the example file "anthracis.fasta", with Gram positive proteins, needs to be saved in the NERVE folder.
+
+But the user can also retrieve it from Uniprot, writing the correct ID of the chosen proteome:
+
+```
+./NERVE.sh -p1 UP000000594 -g p
+
+```
+Here, the reported Uniprot proteome ID is the *Bacillus anthracis* (strain Ames Ancestor) one.
+
+
+The default working directory, where all result files produced during NERVE analysis are saved, is always the NERVE folder.
+
+To change it, the user has to specify the path to the new chosen folder using the command ```-wd,--working_dir```
+
+```
+./NERVE.sh -p1 UP000000594 -g p -wd ```
 
 
 **Here is a list of different examples to show how to correctly set NERVE arguments:**
@@ -153,5 +175,5 @@ All the other arguments showed are optional. So, if they're not set by the user,
 ./NERVE.sh -p1 test.fasta -g n -p2 test2.fasta
 ```
 3) In this case, adding test2.fasta, the component Conservation is automatically activated, allowing the user to infer antigen conservation. 
-For more info about components working visit the FAQ section of https://nerve-bio.org
 
+For more info about components working visit the FAQ section of https://nerve-bio.org
