@@ -66,7 +66,6 @@ cd NERVE
 4) Run NERVE (the first time it will take a few minutes)
 ```
 ./NERVE.sh --help
-
 ```
 
 This is the expected output:
