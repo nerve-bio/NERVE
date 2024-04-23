@@ -174,8 +174,13 @@ To change it, the user has to specify the path to the new chosen folder using th
 2) The same file with Gram negative proteins will be analyzed activating NERVirulent and setting its cut-off to 0.8 (instead of default " 0.5 "). Without activating Select (```-s False```), PVCs are not filtered. So, in the results file, there will be the list of all proteins with their related analyzed info.
 
 ```
+./NERVE.sh -p1 test.fasta -g n -m True -rz True -rl 75
+```
+3) Here, two facoltative components are activated (Mouse immunity and Loop-razor).Then, minimum length of  considered loop, with Loop-razor, is set to 75aa instead of 50aa.
+
+```
 ./NERVE.sh -p1 test.fasta -g n -p2 test2.fasta
 ```
-3) In this case, adding test2.fasta, the component Conservation is automatically activated, allowing the user to infer antigen conservation.
+4) In this case, adding test2.fasta, the component Conservation is automatically activated, allowing the user to infer antigen conservation.
 
 For more info about components working visit the FAQ section of https://nerve-bio.org
