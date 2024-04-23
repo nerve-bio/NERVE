@@ -40,10 +40,10 @@
 
 **Benefits for Vaccine Research:**
 
-* **Accessibility:** Researchers worldwide can access and use NERVE without barriers, accelerating vaccine development efforts globally. 
-* **Transparency:** Allowing researchers to scrutinize the code, identify potential issues, and contribute to its refinement. 
-* **Collaboration:** By enabling researchers to share, modify, and extend the pipeline, leading to innovative advancements. 
-* **Community-Driven Development:** The open-source model encourages community participation, ensuring that NERVE remains aligned with the evolving needs of the vaccine research community. 
+* **Accessibility:** researchers worldwide can access and use NERVE without barriers, accelerating vaccine development efforts globally. 
+* **Transparency:** allowing researchers to scrutinize the code, identify potential issues, and contribute to its refinement. 
+* **Collaboration:** by enabling researchers to share, modify, and extend the pipeline, leading to innovative advancements. 
+* **Community-Driven Development:** the open-source model encourages community participation, ensuring that NERVE remains aligned with the evolving needs of the vaccine research community. 
 
 
 Whether it's reporting bugs, suggesting improvements, or developing new features, your input is valuable.
