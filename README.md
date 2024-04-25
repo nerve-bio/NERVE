@@ -53,13 +53,13 @@
 
 Whether it's reporting bugs, suggesting improvements, or developing new features, your input is valuable.
 
-We welcome contributions from researchers interested in shaping the future of NERVE! 
+**We welcome contributions from researchers interested in shaping the future of NERVE!** 
 
 
 ## Installation procedure of stand-alone version:
 NERVE can be used as a stand alone version taking advantage of [Docker](https://www.docker.com/) in Linux systems.
 
-**1) Install Docker following [these instructions](https://docs.docker.com/engine/install/) and [the post-installation procedure](https://docs.docker.com/engine/install/linux-postinstall/):**
+**1) Install Docker following [these instructions](https://docs.docker.com/engine/install/) and [the post-installation procedure](https://docs.docker.com/engine/install/linux-postinstall/).**
 
 **2) Clone the repository:**
 ```
@@ -106,7 +106,7 @@ NERVE arguments:
                         Parameter of select module. Proteins with trasmembrane domains >= transmemb_doms_limit are discarded (default: 3)
   -vl, --virlimit   Cut-off value for NERVirulent in the select module (0.-1) (default: 0.5)
   -vir, --virulent  Activation (True) or deactivation (False) of NERVirulent module, predictor of the probability of being a virulence factor (default: False)
-  -ep, --epitopes   Activate or deactivate epitopes module (default: True)
+  -ep, --epitopes   Activate or deactivate epitope prediction module (default: True)
   -m1l, --mhci_length 
                         mhci binders length (9, 10, 11 are available) (default: 9)
   -m2l, --mhcii_length 
