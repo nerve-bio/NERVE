@@ -161,11 +161,11 @@ The next step is the activation/deactivation of facultative components and their
 Facultative components, deactivated by default, are: Annotation, Loop-Razor, Mouse, NERVirulent and Conservation.
 
 </p>
-See next section for setting examples.
+See last section for setting examples.
 
 
 ### Showing output and results
-This an output example, showing the percentage of analysis completion:
+This is an output example, showing the percentage of analysis completion:
 ```
  ./NERVE.sh -p1 test.fasta -g n
 wrote config file /root/.config/epitopepredict/default.conf
@@ -185,7 +185,7 @@ End NERVE computation successfully.
 
 The default working directory, where all result files produced during NERVE analysis are saved, is the NERVE folder.
 
-To change it, use ``-wd,--working_dir``` as showed:
+To change it, use ```-wd,--working_dir``` as showed:
 
 ```
 ./NERVE.sh -p1 UP000000594 -g p -wd ./chosen_path
@@ -207,11 +207,11 @@ To change it, use ``-wd,--working_dir``` as showed:
 ```
 ./NERVE.sh -p1 test.fasta -g n -m True -rz True -rl 75
 ```
-3) Here, two facoltative components are activated (Mouse immunity and Loop-razor).Then, minimum length of  considered loop, with Loop-razor, is set to 75aa (from 50aa).
+3) Here, two facultative components are activated (Mouse immunity and Loop-razor).Then, minimum length of  considered loop, with Loop-razor, is set to 75aa (from 50aa).
 
 ```
 ./NERVE.sh -p1 test.fasta -g n -p2 test2.fasta
 ```
 4) In this case, adding test2.fasta, the component Conservation is automatically activated, allowing the user to infer antigen conservation.
 
-For more info about components working visit the FAQ section of https://nerve-bio.org
+**For more info about components working visit the FAQ section of https://nerve-bio.org**
