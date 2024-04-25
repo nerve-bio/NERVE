@@ -154,10 +154,10 @@ But the user can also retrieve a specific proteome from Uniprot, writing its cor
 ```
 Here, the reported Uniprot proteome ID is the one of *Bacillus anthracis* (strain Ames Ancestor).
 
-**The next step is the activation/deactivation of facultative components and their parameters settings.**
+The next step is the activation/deactivation of facultative components and their parameters settings.
 <p>
   
-**Facultative components, deactivated by default, are: Annotation, Loop-Razor, Mouse, NERVirulent and Conservation**.
+Facultative components, deactivated by default, are: Annotation, Loop-Razor, Mouse, NERVirulent and Conservation.
 
 </p>
 See next section for setting examples.
@@ -165,8 +165,22 @@ See next section for setting examples.
 
 ### Showing output and results
 This an output example, showing the percentage of analysis completion:
-
-
+```
+ ./NERVE.sh -p1 test.fasta -g n
+wrote config file /root/.config/epitopepredict/default.conf
+Start NERVE 2.0
+10% done
+20% done
+30% done
+40% done
+50% done
+60% done
+70% done
+80% done
+90% done
+100% done
+End NERVE computation successfully.
+```
 
 The default working directory, where all result files produced during NERVE analysis are saved, is the NERVE folder.
 
