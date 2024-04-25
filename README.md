@@ -158,7 +158,8 @@ Here, the reported Uniprot proteome ID is the one of *Bacillus anthracis* (strai
 The next step is the activation/deactivation of facultative components and their parameters settings.
 <p>
   
-Facultative components, deactivated by default, are: Annotation, Loop-Razor, Mouse, NERVirulent and Conservation.
+Facultative components are: Annotation, Loop-Razor, Mouse immunity, NERVirulent, Conservation, Select and Epitope prediction.
+Only the last two ones are acttivated by default.
 
 </p>
 See last section for setting examples.
