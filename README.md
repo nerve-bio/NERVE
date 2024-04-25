@@ -8,20 +8,25 @@
   
 <div align="left" 
   
-  **NERVE** (**New Enhanced Reverse Vaccinology Environment**) is an **open-source**, **reverse vaccinology** environment, with which you can analyze bacterial proteomes in FASTA format to get the best protein vaccine candidates (PVCs) and their epitopes. 
+  **NERVE** (**New Enhanced Reverse Vaccinology Environment**) is an **open-source**, **reverse vaccinology** environment, with which you can analyze bacterial proteomes in **FASTA format** to get the best **protein vaccine candidates (PVCs)** and their epitopes. 
   <p>
   The project was initially developed in Perl, in 2006, for Linux-users only. You can find more info about it in the related article, clicking on this link: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1570458
   </p>
   <p>
+    
   Now, we are carrying on this project independently from the original developer and this is the Github page of the **NERVE 2.0-stand-alone version**. 
+  
   </p>
   <p>
-  Users can also leverage a user-friendly web-based 
-  graphical interface (GUI) hosted on our dedicated server: https://nerve-bio.org.  This GUI empowers even novice users to operate NERVE with ease, requiring only the proteome FASTA file as input.
+    
+  Users can also leverage a **user-friendly web-based graphical interface (GUI)** hosted on our dedicated server: **https://nerve-bio.org**.  This GUI empowers even novice users to operate NERVE with ease, requiring only the proteome FASTA file as input.
+  
 </p>
 <p>
+  
  It further enhances the experience by allowing visualization of analysis results using our 
-  custom-built visualizer, also facilitating the identification of epitopes (and their constituent parts) predicted to bind to multiple HLA alleles.
+  custom-built visualizer, also facilitating the **identification of epitopes** (and their constituent parts) predicted to bind to multiple HLA alleles.
+  
   </p>
 </div>
 
