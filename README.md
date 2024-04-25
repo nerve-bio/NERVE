@@ -154,9 +154,13 @@ But the user can also retrieve a specific proteome from Uniprot, writing its cor
 ```
 Here, the reported Uniprot proteome ID is the one of *Bacillus anthracis* (strain Ames Ancestor).
 
-The next step is the activation/deactivation of facultative components and their parameters settings.
-Facultative components, deactivated by default, are: Annotation, Loop-Razor, Mouse, NERVirulent and Conservation.
-See next section to see some setting examples.
+**The next step is the activation/deactivation of facultative components and their parameters settings.**
+<p>
+  
+**Facultative components, deactivated by default, are: Annotation, Loop-Razor, Mouse, NERVirulent and Conservation**.
+
+</p>
+See next section for setting examples.
 
 
 ### Showing output and results
