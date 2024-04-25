@@ -132,7 +132,7 @@ Definitions and setting options are shown in detail for each of them here above,
 
 All the other showed arguments are optional. So, if they're not set by the user, their related default value is used during NERVE computation.
 
-### Starting the analysis:
+### Starting the analysis
 
 To start with NERVE, the ```-p1,--proteome1``` file, which contains all bacterial FASTA proteins to be analyzed, has to be put in the NERVE folder.
  
