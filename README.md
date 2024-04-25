@@ -124,7 +124,7 @@ NERVE arguments:
 ## Common usage and tips:
 
 With help, you can visualize all possible arguments, which include all user-settable parameters and activation or deactivation of NERVE components.
-Definitions and setting options are shown in detail for each of them here above, in the ```help``` output.
+Definitions and setting options are shown in detail for each of them here above.
 
 **Mandatory arguments:** 
 * ```-p1  ```,```--proteome1  ``` 
@@ -140,7 +140,7 @@ To start with NERVE, the ```-p1,--proteome1``` file, which contains all bacteria
 ```
 ./NERVE.sh -p1 anthracis.fasta -g p
 ```
-Here, the example file "anthracis.fasta", with Gram positive proteins, is saved the NERVE folder.
+Here, the example file "anthracis.fasta", with Gram positive proteins, is saved in the NERVE folder.
 
 But the user can also retrieve a specific proteome from Uniprot, writing its correct ID:
 
