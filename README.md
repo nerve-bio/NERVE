@@ -123,7 +123,7 @@ NERVE arguments:
 
 ## Common usage and tips:
 
-With help, you can visualize all possible arguments, which include all user-settable parameters and activation or deactivation of NERVE components.
+With help, you can visualize all possible arguments, which include all user-settable parameters and activation or deactivation of some NERVE components.
 Definitions and setting options are shown in detail for each of them here above.
 
 **Mandatory arguments:** 
@@ -136,28 +136,32 @@ All the other showed arguments are optional. So, if they're not set by the user,
 
 To start with NERVE, the ```-p1,--proteome1``` file, which contains all bacterial FASTA proteins to be analyzed, has to be put in the NERVE folder.
  
-
 ```
 ./NERVE.sh -p1 anthracis.fasta -g p
 ```
 Here, the example file "anthracis.fasta", with Gram positive proteins, is saved in the NERVE folder.
+
 
 But the user can also retrieve a specific proteome from Uniprot, writing its correct ID:
 
 ```
 ./NERVE.sh -p1 UP000000594 -g p
 ```
-Here, the reported Uniprot proteome ID is the *Bacillus anthracis* (strain Ames Ancestor) one.
+Here, the reported Uniprot proteome ID is the one of *Bacillus anthracis* (strain Ames Ancestor).
+
+The next step is the activation/deactivation of facultative components and their parameters settings.
+Facultative components, deactivated by default, are: Annotation, Loop-Razor, Mouse, NERVirulent and Conservation 
 
 
 ### Showing output and results
+This an output example, showing the percentage of 
 
 The default working directory, where all result files produced during NERVE analysis are saved, is always the NERVE folder.
 
-To change it, the user has to specify the path to the new chosen folder using the command ```-wd,--working_dir```
+To change it, use ``-wd,--working_dir``` as showed:
 
 ```
-./NERVE.sh -p1 UP000000594 -g p -wd 
+./NERVE.sh -p1 UP000000594 -g p -wd ./chosen_path
 ```
 ### Run examples
 
