@@ -59,16 +59,16 @@ We welcome contributions from researchers interested in shaping the future of NE
 ## Installation procedure of stand-alone version:
 NERVE can be used as a stand alone version taking advantage of [Docker](https://www.docker.com/) in Linux systems.
 
-1) Install Docker following [these instructions](https://docs.docker.com/engine/install/) and [the post-installation procedure](https://docs.docker.com/engine/install/linux-postinstall/)
-2) Clone the repository:
+**1) Install Docker following [these instructions](https://docs.docker.com/engine/install/) and [the post-installation procedure](https://docs.docker.com/engine/install/linux-postinstall/):**
+**2) Clone the repository:**
 ```
 git clone https://github.com/nerve-bio/NERVE.git
 ```
-4) Navigate to the correct folder (your default working directory):
+**3) Navigate to the correct folder:**
 ```
 cd NERVE
 ```
-4) Run NERVE (the first time it will take a few minutes)
+**4) Run NERVE (the first time it will take a few minutes)**
 ```
 ./NERVE.sh --help
 ```
