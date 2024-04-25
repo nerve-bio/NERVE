@@ -60,6 +60,7 @@ We welcome contributions from researchers interested in shaping the future of NE
 NERVE can be used as a stand alone version taking advantage of [Docker](https://www.docker.com/) in Linux systems.
 
 **1) Install Docker following [these instructions](https://docs.docker.com/engine/install/) and [the post-installation procedure](https://docs.docker.com/engine/install/linux-postinstall/):**
+
 **2) Clone the repository:**
 ```
 git clone https://github.com/nerve-bio/NERVE.git
