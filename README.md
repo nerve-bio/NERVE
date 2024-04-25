@@ -150,13 +150,16 @@ But the user can also retrieve a specific proteome from Uniprot, writing its cor
 Here, the reported Uniprot proteome ID is the one of *Bacillus anthracis* (strain Ames Ancestor).
 
 The next step is the activation/deactivation of facultative components and their parameters settings.
-Facultative components, deactivated by default, are: Annotation, Loop-Razor, Mouse, NERVirulent and Conservation 
+Facultative components, deactivated by default, are: Annotation, Loop-Razor, Mouse, NERVirulent and Conservation.
+See next section to see some setting examples.
 
 
 ### Showing output and results
-This an output example, showing the percentage of 
+This an output example, showing the percentage of analysis completion:
 
-The default working directory, where all result files produced during NERVE analysis are saved, is always the NERVE folder.
+
+
+The default working directory, where all result files produced during NERVE analysis are saved, is the NERVE folder.
 
 To change it, use ``-wd,--working_dir``` as showed:
 
