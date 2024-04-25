@@ -165,7 +165,7 @@ Only the last two ones are acttivated by default.
 See last section for setting examples.
 
 
-### Showing output and results
+### Showing computation
 This is an output example, showing the percentage of analysis completion:
 ```
  ./NERVE.sh -p1 test.fasta -g n
