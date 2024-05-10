@@ -30,8 +30,6 @@ class Args(NamedTuple):
     mouse_peptides_sum_limit:float
     proteome1:str
     proteome2:str
-    p_ad_extracellular_filter:float
-    p_ad_no_citoplasm_filter:float
     padlimit:float
     razor:bool
     razlen:int
@@ -56,8 +54,7 @@ class Args(NamedTuple):
         return (f'''annotation: {self.annotation}, e_value: {self.e_value}, gram: {self.gram},
                 minlength: {self.minlength}, mismatch: {self.mismatch}, mouse: {self.mouse},
                 mouse_peptides_sum_limit: {self.mouse_peptides_sum_limit}, proteome1: {self.proteome1},
-                proteome2: {self.proteome2}, p_ad_extracellular_filter: {self.p_ad_extracellular_filter},
-                padlimit: {self.padlimit}, razor: {self.razor}, razlen: {self.razlen}, select: {self.select},
+                proteome2: {self.proteome2}, padlimit: {self.padlimit}, razor: {self.razor}, razlen: {self.razlen}, select: {self.select},
                 substitution: {self.substitution}, transmemb_doms_limit: {self.transmemb_doms_limit},
                 virlimit: {self.virlimit}, virulent: {self.virulent},epitopes: {self.epitopes}, mhci_length: {self.mhci_length},
                 mhcii_length: {self.mhcii_length}, mhci_overlap: {self.mhci_overlap}, mhcii_overlap: {self.mhcii_overlap},
@@ -130,23 +127,10 @@ def get_args() -> Args:
                         type=str,
                         required=False,
                         )
-    parser.add_argument('-paefilter','--p_ad_extracellular_filter',
-                        metavar='\b', 
-                        help="Parameter of select module. Extracellular proteins with a probability of adhesin (pad) lower than p_ad_extracellular_filter are discarded (0.-1)",
-                        type=float,
-                        default=0.38,
-                        required=False,
-                        )
-    parser.add_argument('-pacfilter','--p_ad_no_citoplasm_filter',
-                        metavar='\b', 
-                        help="Parameter of select module. Non-cytoplasmic Proteins with a probability of adhesin (pad) lower than p_ad_no_citoplasm_filter are discarded (0.-1)",
-                        type=float,
-                        default=0.46,
-                        required=False,
-                        )    
     parser.add_argument('-pl','--padlimit',
                         metavar='\b',
-                        help="Set the probability of adhesin (pad) value cut-off for proteins with 'Unknown' localization in the select module. Thus, these proteins with a pad value < cut-off are discarded (0.-1)",
+                        help="Set the probability of adhesin (pad) value cut-off for all proteins in select module. Thus, these proteins with a pad value < cut-
+                        off are discarded (0.-1) (default: 0.5)",
                         type=float,
                         default=0.5,
                         required=False,
@@ -287,8 +271,7 @@ def get_args() -> Args:
     args = parser.parse_args()
 
     return Args(args.annotation, args.e_value, args.gram, args.minlength, args.mismatch,
-                args.mouse, args.mouse_peptides_sum_limit, args.proteome1, args.proteome2, 
-                args.p_ad_extracellular_filter, args.p_ad_no_citoplasm_filter, args.padlimit, args.razor, 
+                args.mouse, args.mouse_peptides_sum_limit, args.proteome1, args.proteome2, args.padlimit, args.razor, 
                 args.razlen, args.select, args.substitution, args.transmemb_doms_limit, args.virlimit, 
                 args.virulent, args.epitopes,
                 args.mhci_length, args.mhcii_length, args.mhci_overlap, args.mhcii_overlap,
