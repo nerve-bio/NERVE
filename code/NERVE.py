@@ -126,7 +126,7 @@ def get_args() -> Args:
                         help='Path to proteome or Uniprot proteome ID (see: https://www.uniprot.org/proteomes/?query=&sort=score)',
                         type=str,
                         required=False,
-                        )
+
     parser.add_argument('-pl','--padlimit',
                         metavar='\b',
                         help="Set the probability of adhesin (pad) value cut-off for all proteins in select module. Thus, these proteins with a pad value < cut-
@@ -187,7 +187,7 @@ def get_args() -> Args:
     parser.add_argument('-ep', '--epitopes',
                         metavar='\b',
                         type=str,
-                        help='Activate or deactivate epitopes module',
+                        help='Activate or deactivate epitope prediction module',
                         required=False,
                         default="True"
                         )
@@ -226,7 +226,7 @@ def get_args() -> Args:
     parser.add_argument('-prt', '--epitope_percentile',
                         metavar='\b',
                         type=float,
-                        help='percentile decision threshold on whick to predict epitopes from full length proteins',
+                        help='percentile decision threshold on which to predict epitopes from full length proteins',
                         required=False,
                         default=0.9
                         )
