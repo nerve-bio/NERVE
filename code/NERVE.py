@@ -129,8 +129,7 @@ def get_args() -> Args:
 
     parser.add_argument('-pl','--padlimit',
                         metavar='\b',
-                        help='Set the probability of adhesin (pad) value cut-off for all proteins in select module. Thus, these proteins with a pad value < cut-
-                        off are discarded (0.-1) (default: 0.5)',
+                        help="Set the probability of adhesin (pad) value cut-off for all proteins in select module. Thus, these proteins with a pad value < cut-off are discarded (0.-1) (default: 0.5)",
                         type=float,
                         default=0.5,
                         required=False,
