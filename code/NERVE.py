@@ -126,7 +126,7 @@ def get_args() -> Args:
                         help='Path to proteome or Uniprot proteome ID (see: https://www.uniprot.org/proteomes/?query=&sort=score)',
                         type=str,
                         required=False,
-
+                        )
     parser.add_argument('-pl','--padlimit',
                         metavar='\b',
                         help="Set the probability of adhesin (pad) value cut-off for all proteins in select module. Thus, these proteins with a pad value < cut-off are discarded (0.-1) (default: 0.5)",
