@@ -126,10 +126,10 @@ def get_args() -> Args:
                         help='Path to proteome or Uniprot proteome ID (see: https://www.uniprot.org/proteomes/?query=&sort=score)',
                         type=str,
                         required=False,
-                        )   
+                        )
     parser.add_argument('-pl','--padlimit',
                         metavar='\b',
-                        help="Set the probability of adhesin (pad) value cut-off for proteins with 'Unknown' localization in the select module. Thus, these proteins with a pad value < cut-off are discarded (0.-1)",
+                        help="Set the probability of adhesin (pad) value cut-off for all proteins in select module. Thus, these proteins with a pad value < cut-off are discarded (0.-1) (default: 0.5)",
                         type=float,
                         default=0.5,
                         required=False,
@@ -270,8 +270,7 @@ def get_args() -> Args:
     args = parser.parse_args()
 
     return Args(args.annotation, args.e_value, args.gram, args.minlength, args.mismatch,
-                args.mouse, args.mouse_peptides_sum_limit, args.proteome1, args.proteome2, 
-                args.padlimit, args.razor, 
+                args.mouse, args.mouse_peptides_sum_limit, args.proteome1, args.proteome2, args.padlimit, args.razor, 
                 args.razlen, args.select, args.substitution, args.transmemb_doms_limit, args.virlimit, 
                 args.virulent, args.epitopes,
                 args.mhci_length, args.mhcii_length, args.mhci_overlap, args.mhcii_overlap,
