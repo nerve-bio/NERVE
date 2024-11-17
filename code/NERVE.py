@@ -358,7 +358,7 @@ def main():
         list_of_proteins.append(Protein(p_id, p_seq))
     end=time.time()
     logging.debug(f'{len(list_of_fasta_proteins)} proteins loaded in {end-start} seconds')
-            
+    
     # subcellular localization prediction
     start = time.time()
     logging.debug("Subcelloc start with psortb...")

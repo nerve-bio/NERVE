@@ -21,15 +21,17 @@ def extract_features(list_of_proteins, NERVE_dir, iFeature_dir, working_dir, pro
         bashCmdMethod(f"python3 {os.path.join(iFeature_dir, 'iFeature.py')} --file {proteome1} --type {feature}\
         --out {os.path.join(working_dir, feature+'.out')}")
     # parse files and update Protein entires
-    datasets = [[] for feature in features]
     for i in range(len(features)):
         with open(os.path.join(working_dir, features[i]+extension)) as f:
             lines = f.readlines()[1:]
             for line in lines:
                 information = line.split('\t')
+                # Append to the correct protein
                 for protein in list_of_proteins:
                     if information[0] in protein.id:
                         protein.model_raw_data.append(np.array([float(el) for el in information[1:]]))
+                        break
+
     # delete files after computation
     for file in features:
         os.remove(os.path.join(working_dir, file+extension))
@@ -52,7 +54,6 @@ def adhesin_predict(list_of_proteins, NERVE_dir)->list:
     means = np.load(os.path.join(model_dir, 'means_adhesin.npy'))
     projection_matrix = np.load(os.path.join(model_dir, 'projection_matrix_adhesin.npy'))
     model = keras.models.load_model(os.path.join(model_dir, 'adhesin_classifier.h5'))
-    
     for protein in list_of_proteins:
         data = protein.standardize(means, std_devs, projection_matrix)
         data = np.array(data)[None, ...]

@@ -29,7 +29,6 @@ class Protein:
 		self.conservation_score = None
 		self.annotations = None
 		self.model_raw_data = []
-		self.model_raw_data1 = []
 		self.MHC1_binders = []
 		self.MHC2_binders = []
 		self.MHC1_pb_binders = []
@@ -56,16 +55,17 @@ class Protein:
 		print('	annotations:', self.annotations)
 		      
 	def standardize(self, means, std_devs, projection_matrix) -> np.array:
-				"""Standadize dataset:
-                param: means: np.array
-                param: std_devs: np.array
-                param: projection_matrix: np.array
-                output: reduced_dataset"""
-				dataset = self.model_raw_data
-				std_dataset = np.zeros(dataset.shape)
-				std_dataset = (dataset - means) / std_devs
-				reduced_dataset = std_dataset.dot(projection_matrix)
-				return reduced_dataset
+		"""Standadize dataset:
+		param: means: np.array
+		param: std_devs: np.array
+		param: projection_matrix: np.array
+		output: reduced_dataset"""
+		dataset = self.model_raw_data
+		std_dataset = np.zeros(dataset.shape)
+		std_dataset = (dataset - means) / std_devs
+		reduced_dataset = std_dataset.dot(projection_matrix)
+		return reduced_dataset
+	
 	def provide_raw_loops(self, transmem_doms_limit):
     
 		if transmem_doms_limit:
@@ -80,10 +80,7 @@ class Protein:
 					new_seq += 'X'
 				elif label in ['i', 'I']:
 					new_seq += ''
-				i_lengths.append(1)
-                
-			avg_i_length = sum(i_lengths) / len(i_lengths) if i_lengths else 0
-      
+				i_lengths.append(1)      
         
 			new_seq = new_seq.replace('X', '')
         
@@ -103,7 +100,6 @@ class Protein:
 
 	
 	def provide_raw_loops_std(self):
-		#print("Warning: this method uses X as a exclusive symbol to split the final protein. Check if X is used inside the protein sequence!")
 		conds = ['o', 'O']
 		if self.localization == "OuterMembrane":
 			conds += ['i', 'I']

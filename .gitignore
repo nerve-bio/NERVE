@@ -5,3 +5,5 @@ test_new.zip
 Dockerfile_backup_old
 .gitignore
 test_output/
+tmp/
+tests.ipynb

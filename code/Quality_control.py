@@ -136,6 +136,7 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False) -> dir_pat
         for aa in str(record.seq):
             if aa not in aa_dic:
                 flag = False
+                new_seq+=aa
                 logging.debug(f'Found non-canonical aminoacid "{aa}" in sequence: {record.name}')
             elif aa == "U":
                 logging.debug(f'Found non-canonical aminoacid "{aa}" (Selenocysteine) in sequence: {record.name}, substituting to Cysteine')
