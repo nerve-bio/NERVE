@@ -7,3 +7,5 @@ Dockerfile_backup_old
 test_output/
 tmp/
 tests.ipynb
+tests/output_data
+*.pyc

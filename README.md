@@ -128,6 +128,10 @@ NERVE arguments:
                         Path to DeepFri folder (download from: https://github.com/flatironinstitute/DeepFRI) (default: /usr/nerve_python/assets/DeepFri)
   -epp, --ep_plots  Epitopes plotting script (default: True)
   ```
+**5) (optional) test correct functioning:**
+```
+pytest tests/tests.py
+```
 
 ## Common usage and tips:
 
