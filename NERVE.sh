@@ -2,7 +2,7 @@
 # script to run NERVE standalone trough docker
 
 PSORT_VERSION="v0.0.1"
-NERVE_VERSION="v0.0.6"
+NERVE_VERSION="v0.0.7"
 
 # create network
 [ ! "$(docker network ls | grep nerve-network)" ] && docker network create nerve-network --attachable
