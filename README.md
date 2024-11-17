@@ -59,7 +59,9 @@ Whether it's reporting bugs, suggesting improvements, or developing new features
 ## Installation procedure of stand-alone version:
 NERVE can be used as a stand alone version taking advantage of [Docker](https://www.docker.com/) in Linux systems.
 
-**1) Install Docker following [these instructions](https://docs.docker.com/engine/install/) and [the post-installation procedure](https://docs.docker.com/engine/install/linux-postinstall/).**
+**1) Install Docker following [these instructions](https://docs.docker.com/engine/install/).**
+
+**2) Follow this [post-installation procedure](https://docs.docker.com/engine/install/linux-postinstall/) even if you already installed Docker.**
 
 **2) Clone the repository:**
 ```
@@ -131,6 +133,7 @@ NERVE arguments:
 
 With help, you can visualize all possible arguments, which include all user-settable parameters and activation or deactivation of some NERVE components.
 Definitions and setting options are shown in detail for each of them here above.
+**Important**: always specify relative paths for input files and working directory.
 
 **Mandatory arguments:** 
 * ```-p1  ```,```--proteome1  ``` 

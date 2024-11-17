@@ -17,4 +17,4 @@ NERVE_VERSION="v0.0.6"
 [ ! "$(docker images -q nerve:$NERVE_VERSION)" ] && docker build -t nerve:$NERVE_VERSION .
 
 # run nerve container
-docker run --network nerve-network -p 8880:8880 -it -v $(pwd)/:/workdir nerve:$NERVE_VERSION "$@"
+docker run --network nerve-network -p 8880:8880 -it -v $(pwd):/workdir nerve:$NERVE_VERSION "$@"

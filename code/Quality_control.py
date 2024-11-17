@@ -62,8 +62,10 @@ def download_from_url_to_file(url:str, output_dir:str, filename:str, assert_erro
     assert downloaded is True, 'Download failed after retries'
 
 def is_fasta(filename:str):
-    """Function that rise an error if the format is not .fasta.
+    """Function that rise an error if the format is not .fast, the file is empty or non existing.
     param: filename: path to fasta file"""
+    if not os.path.isfile(filename):
+        raise ValueError("{filename} not found.")
     with open(filename, "r") as handle:
         fasta = list(SeqIO.parse(handle, "fasta"))
         # biopython silently fails if the format is not fasta returning an empty generator

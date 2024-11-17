@@ -353,7 +353,7 @@ def main():
     logging.debug(f'Extract protein sequences and IDs from proteome1')
     list_of_proteins = []
     for p in list_of_fasta_proteins:
-        p_id = str(p.name)
+        p_id = str(p.description)
         p_seq = str(p.seq)
         list_of_proteins.append(Protein(p_id, p_seq))
     end=time.time()
