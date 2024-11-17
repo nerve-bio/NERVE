@@ -51,7 +51,7 @@ MISSSDWNLNTTATTSGTTSS@GSTSGTTRTDSSSSSGIVSNPNATLDKDAFLKLLLIELQHQDPTDPMDSDKMLTQTSQ
 
 TEST11 = ('proteome7', f'--gram p --proteome1 {INPUTDIR}proteome7.fasta \
             --working_dir {WORKDIR}proteome7 --annotation True --razor True --select \
-            True --mouse True --epitopes False', """>tr|Q0PC84|Q0PC84_CAMJE Basal-body rod modification protein FlgD OS=Campylobacter jejuni subsp. jejuni serotype O:2 (strain ATCC 700819 / NCTC 11168) OX=192222 GN=flgD PE=3 SV=1
+            True --mouse True --epitopes False', """>*tr|Q0PC84|Q0PC84_CAMJE Basal-body rod modification protein FlgD OS=Campylobacter jejuni subsp. jejuni serotype O:2 (strain ATCC 700819 / NCTC 11168) OX=192222 GN=flgD PE=3 SV=1
 MISSSDWNLNTTATTSGTTSSGSTSGTTRTDSSSSSGIVSNPNATLDKDAFLKLLLIELQHQDPTDPMDSDKMLTQTSQLSALEMQQNTNTTMQKMVETMQKLSDSFSTSMSTSALGAIGKMATVSDNKIKLTGADELIALKMYLPEDSDENGVTLEIYDSNNKLVFSEKSDAKSISQGLFTMEWPGRNNDGVYAGDGEYTVKMVYNNKNGEKITANYGTYPIEGVVFKDGVAYAKMAGQEVPFDAIQEITDYKLGSSSSTGGSGSSGDSSGGSSDGDSSGSGSTEDGDKEEKAC
 """)
 
@@ -85,11 +85,11 @@ def test_files():
         print("rv:\n", rv)
         print("out:\n", out)
         for file in expected1:
-            assert os.path.isfile(os.path.join(WORKDIR, proteome1, file))
-        
-def test_exceptions():
+            assert os.path.isfile(os.path.join(WORKDIR, proteome1, file)) == True
+
+def test_exception_1():
     """Test presence of input sequences with wrong format"""
-    for proteome1, arg, expected1 in [TEST10, TEST11]:
+    for proteome1, arg, expected1 in [TEST10]:
         rv, out = getstatusoutput(f'{RUN} {arg}')
         print("rv:\n", rv)
         print("out:\n", out)
@@ -98,3 +98,13 @@ def test_exceptions():
         assert expected1 == open(os.path.join(WORKDIR, proteome1, 
                                               f"discarded_sequences_{proteome1}.fasta"), 'r').read()
     
+def test_exception_2():
+    """Test presence of input sequences with wrong format"""
+    for proteome1, arg, expected1 in [TEST11]:
+        rv, out = getstatusoutput(f'{RUN} {arg}')
+        print("rv:\n", rv)
+        print("out:\n", out)
+        print("expected1:\n", expected1, "\neffective1:\n", open(os.path.join(WORKDIR, proteome1, 
+                                    f"cleaned_{proteome1}.fasta"), 'r').read())
+        assert expected1 == open(os.path.join(WORKDIR, proteome1, 
+                                              f"cleaned_{proteome1}.fasta"), 'r').read()
