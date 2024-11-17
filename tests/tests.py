@@ -32,14 +32,14 @@ TEST8 = ('proteome4', f'--gram p --proteome1 {INPUTDIR}proteome4.fasta \
          --working_dir {WORKDIR}proteome4 --annotation True --razor True --select \
          True --mouse True --epitopes False')
 
-TEST9 = ('proteome4', f'--gram p --proteome1 {INPUTDIR}proteome4.fasta --working_dir\
-          {WORKDIR}proteome4 --annotation True --razor True --select True --mouse True --epitopes True', 
+TEST9 = ('proteome5', f'--gram n --proteome1 {INPUTDIR}proteome5.fasta --working_dir\
+          {WORKDIR}proteome5 --annotation False --razor False --select True --mouse False --epitopes True', 
           [
-              "epitope/P0C277/heatmap_pbs_MHC1_P0C277.png",
-              "epitope/P0C277/MHC1_epitopes_FILTERED_P0C277.csv",
-              "epitope/P0C277/Promiscuous_binders_MHC1_P0C277.csv",
-              "epitope/P0C277/mhci_epitopes_P0C277.csv",
-              "epitope/P0C277/mhcii_epitopes_P0C277.csv"
+              "epitope/Q0PC84/heatmap_pbs_MHC1_Q0PC84.png",
+              "epitope/Q0PC84/MHC1_epitopes_FILTERED_Q0PC84.csv",
+              "epitope/Q0PC84/Promiscuous_binders_MHC1_Q0PC84.csv",
+              "epitope/Q0PC84/mhci_epitopes_Q0PC84.csv",
+              "epitope/Q0PC84/mhcii_epitopes_Q0PC84.csv"
           ]
 )
 
@@ -78,7 +78,7 @@ def test_arg():
         assert os.path.isfile(os.path.join(WORKDIR, proteome1, "vaccine_candidates.csv"))
         assert os.path.isfile(os.path.join(WORKDIR, proteome1, "discarded_proteins.csv"))
 
-def test_files():
+def test_epitope_files():
     """Tests epitope output files"""
     for proteome1, arg, expected1 in [TEST9]:
         rv, out = getstatusoutput(f'{RUN} {arg}')
