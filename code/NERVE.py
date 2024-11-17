@@ -11,7 +11,7 @@ from code.Utils import bashCmdMethod, dir_path
 from code.Function import annotation
 from code.Adhesin import extract_features, adhesin_predict
 from code.Virulent_factor import virulent_factor_predict
-from code.Quality_control import proteome_downloader, proteome_uploader, quality_control
+from code.Quality_control import proteome_downloader, quality_control
 from code.Subcellular import psortb
 from code.Topology import tmhelices
 from code.Razor import razor

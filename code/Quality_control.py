@@ -61,34 +61,6 @@ def download_from_url_to_file(url:str, output_dir:str, filename:str, assert_erro
             continue
     assert downloaded is True, 'Download failed after retries'
 
-def proteome_uploader(infile:str) -> list:
-    """Function to read and parse fasta files. Bio SeqIO is not suitable because it chops sequence names. It 
-    will be used only to validate fasta file format.
-    param: infile: path to fasta file"""
-    class protein_element:
-        """Class to handle fasta file elements similarly to the biopython fasta file parser"""
-        def __init__(self, name, seq):
-            self.name = name
-            self.seq = seq
-    proteome_elements = []
-    proteome_data = {}
-    infile = open(infile, 'r').readlines()
-    for i in range(len(infile)):
-        # use .strip() to remove initial spaces
-        if infile[i].strip().startswith('>'):
-            # upload protein name
-            name=infile[i].strip()[1:].replace("/", "").replace("*", "")
-            proteome_data[name] = ''
-        # upload sequence
-        if infile[i].strip().startswith('>') == False and infile[i].strip() != '':
-            # in case of wrong name input:
-            #if name=="":
-            #    raise ValueError('Encountered a sequence with wrong name formatting. Possible presence of spaces before ">" symbol.')
-            proteome_data[name] += infile[i].strip()
-    for element in proteome_data:
-        proteome_elements.append(protein_element(element, proteome_data[element]))
-    return proteome_elements
-
 def is_fasta(filename:str):
     """Function that rise an error if the format is not .fasta.
     param: filename: path to fasta file"""
@@ -97,10 +69,9 @@ def is_fasta(filename:str):
         # biopython silently fails if the format is not fasta returning an empty generator
         # any() returns False if the list is empty
         if any(fasta) == True:
-            fasta=proteome_uploader(filename)
             return fasta
         else:
-            raise ValueError(f'{filename} is not in fasta format')
+            raise ValueError(f'{filename} is not in fasta format or the input fasta file is empy.')
 
 def quality_control(path_to_fasta:str, working_dir:str, upload=False) -> dir_path:
     """
@@ -137,34 +108,34 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False) -> dir_pat
             if aa not in aa_dic:
                 flag = False
                 new_seq+=aa
-                logging.debug(f'Found non-canonical aminoacid "{aa}" in sequence: {record.name}')
+                logging.debug(f'Found non-canonical aminoacid "{aa}" in sequence: {record.description}')
             elif aa == "U":
-                logging.debug(f'Found non-canonical aminoacid "{aa}" (Selenocysteine) in sequence: {record.name}, substituting to Cysteine')
+                logging.debug(f'Found non-canonical aminoacid "{aa}" (Selenocysteine) in sequence: {record.description}, substituting to Cysteine')
                 new_seq+=aa_dic[aa]
             else:
                 new_seq+=aa_dic[aa]
         # check name
-        if ">" in record.name:
-            logging.debug(f'Found non-canonical character ">" in sequence name:\n{record.name}\nSubstituting with "*"')
-            record.name=record.name.replace(">","*")
+        if ">" in record.description:
+            logging.debug(f'Found non-canonical character ">" in sequence name:\n{record.description}\nSubstituting with "*"')
+            record.description = record.description.replace(">","*")
         record.seq = Seq(new_seq)
         
         if flag == True:
             filtered_sequences.append(record)
         else:    
             discarded_sequences.append(record)
-            logging.debug(f'Sequence {record.name} has been discarded for the presence of non-canonical aminoacids.')     
+            logging.debug(f'Sequence {record.description} has been discarded for the presence of non-canonical aminoacids.')     
     # output filtered overwriting input fasta file
     filename = open(output_file, 'w')
     for sequence in filtered_sequences:
-        filename.write(f'>{str(sequence.name)}\n')
+        filename.write(f'>{str(sequence.description)}\n')
         filename.write(f'{str(sequence.seq)}\n')
     #SeqIO.write(filtered_sequences, filename, "fasta")
     filename.close()
     # output discarded sequences
     filename = open(output_discarded_sequences, 'w')
     for sequence in discarded_sequences:
-        filename.write(f'>{str(sequence.name)}\n')
+        filename.write(f'>{str(sequence.description)}\n')
         filename.write(f'{str(sequence.seq)}\n')
     #SeqIO.write(discarded_sequences, filename, "fasta")
     filename.close()
