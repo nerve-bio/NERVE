@@ -1,13 +1,17 @@
 #!/usr/bin/python3
-"""Tests NERVE"""
+"""
+    
+    Tests NERVE
+    run with: pytest tests/tests.py
+    
+"""
 
-import os, shutil
+import os
 from subprocess import getstatusoutput
 
 # global test variables
 
-PRG = "NERVE.sh"
-NERVE_VERSION="v0.0.6"
+NERVE_VERSION="v0.0.8"
 RUN = f"docker run --network nerve-network -p 8880:8880 -i -v $(pwd):/workdir nerve:{NERVE_VERSION}"
 
 WORKDIR = "./tests/output_data/"
@@ -45,21 +49,17 @@ TEST9 = ('proteome5', f'--gram n --proteome1 {INPUTDIR}proteome5.fasta --working
 
 TEST10 = ('proteome6', f'--gram p --proteome1 {INPUTDIR}proteome6.fasta \
             --working_dir {WORKDIR}proteome6 --annotation True --razor True --select \
-            True --mouse True --epitopes False', """>tr|Q0PC84|Q0PC84_CAMJE Basal-body rod modification protein FlgD OS=Campylobacter jejuni subsp. jejuni serotype O:2 (strain ATCC 700819 / NCTC 11168) OX=192222 GN=flgD PE=3 SV=1
+            True --mouse True --epitopes False', """>tr|Q0PC84|Q0PC84_CAMJE Basal-body rod modification protein FlgD OS=Campylobacter jejuni subsp. jejuni serotype O:2 (strain ATCC 700819 _ NCTC 11168) OX=192222 GN=flgD PE=3 SV=1
 MISSSDWNLNTTATTSGTTSS@GSTSGTTRTDSSSSSGIVSNPNATLDKDAFLKLLLIELQHQDPTDPMDSDKMLTQTSQLSALEMQQNTNTTMQKMVETMQKLSDSFSTSMSTSALGAIGKMATVSDNKIKLTGADELIALKMYLPEDSDENGVTLEIYDSNNKLVFSEKSDAKSISQGLFTMEWPGRNNDGVYAGDGEYTVKMVYNNKNGEKITANYGTYPIEGVVFKDGVAYAKMAGQEVPFDAIQEITDYKLGSSSSTGGSGSSGDSSGGSSDGDSSGSGSTEDGDKEEKA
 """)
 
 TEST11 = ('proteome7', f'--gram p --proteome1 {INPUTDIR}proteome7.fasta \
             --working_dir {WORKDIR}proteome7 --annotation True --razor True --select \
-            True --mouse True --epitopes False', """>*tr|Q0PC84|Q0PC84_CAMJE Basal-body rod modification protein FlgD OS=Campylobacter jejuni subsp. jejuni serotype O:2 (strain ATCC 700819 / NCTC 11168) OX=192222 GN=flgD PE=3 SV=1
+            True --mouse True --epitopes False', """>_tr|Q0PC84|Q0PC84_CAMJE Basal-body rod modification protein FlgD OS=Campylobacter jejuni subsp. jejuni serotype O:2 (strain ATCC 700819 _ NCTC 11168) OX=192222 GN=flgD PE=3 SV=1
 MISSSDWNLNTTATTSGTTSSGSTSGTTRTDSSSSSGIVSNPNATLDKDAFLKLLLIELQHQDPTDPMDSDKMLTQTSQLSALEMQQNTNTTMQKMVETMQKLSDSFSTSMSTSALGAIGKMATVSDNKIKLTGADELIALKMYLPEDSDENGVTLEIYDSNNKLVFSEKSDAKSISQGLFTMEWPGRNNDGVYAGDGEYTVKMVYNNKNGEKITANYGTYPIEGVVFKDGVAYAKMAGQEVPFDAIQEITDYKLGSSSSTGGSGSSGDSSGGSSDGDSSGSGSTEDGDKEEKAC
 """)
 
 # test functions
-
-def test_exists() -> None:
-    """Tests if directory is correct"""
-    assert os.path.exists(PRG)
 
 def test_usage() -> None:
     """Prints usage"""
@@ -84,6 +84,7 @@ def test_epitope_files():
         rv, out = getstatusoutput(f'{RUN} {arg}')
         print("rv:\n", rv)
         print("out:\n", out)
+        assert rv == 0
         for file in expected1:
             assert os.path.isfile(os.path.join(WORKDIR, proteome1, file)) == True
 
@@ -93,6 +94,7 @@ def test_exception_1():
         rv, out = getstatusoutput(f'{RUN} {arg}')
         print("rv:\n", rv)
         print("out:\n", out)
+        assert rv == 0
         print("expected1:\n", expected1, "\neffective1:\n", open(os.path.join(WORKDIR, proteome1, 
                                     f"discarded_sequences_{proteome1}.fasta"), 'r').read())
         assert expected1 == open(os.path.join(WORKDIR, proteome1, 
@@ -104,6 +106,7 @@ def test_exception_2():
         rv, out = getstatusoutput(f'{RUN} {arg}')
         print("rv:\n", rv)
         print("out:\n", out)
+        assert rv == 0
         print("expected1:\n", expected1, "\neffective1:\n", open(os.path.join(WORKDIR, proteome1, 
                                     f"cleaned_{proteome1}.fasta"), 'r').read())
         assert expected1 == open(os.path.join(WORKDIR, proteome1, 

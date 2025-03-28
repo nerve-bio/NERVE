@@ -62,7 +62,7 @@ def download_from_url_to_file(url:str, output_dir:str, filename:str, assert_erro
     assert downloaded is True, 'Download failed after retries'
 
 def is_fasta(filename:str):
-    """Function that rise an error if the format is not .fast, the file is empty or non existing.
+    """Function that rise an error if the format is not .fasta, the file is empty or non existing.
     param: filename: path to fasta file"""
     if not os.path.isfile(filename):
         raise ValueError("{filename} not found.")
@@ -118,8 +118,11 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False) -> dir_pat
                 new_seq+=aa_dic[aa]
         # check name
         if ">" in record.description:
-            logging.debug(f'Found non-canonical character ">" in sequence name:\n{record.description}\nSubstituting with "*"')
-            record.description = record.description.replace(">","*")
+            logging.debug(f'Found non-allowed character ">" in sequence name:\n{record.description}\nSubstituting with "_"')
+            record.description = record.description.replace(">","_")
+        if "/" in record.description:
+            logging.debug(f'Found non-allowed character "/" in sequence name:\n{record.description}\nSubstituting with "_"')
+            record.description = record.description.replace("/","_")
         record.seq = Seq(new_seq)
         
         if flag == True:
