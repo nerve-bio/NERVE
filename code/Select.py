@@ -47,7 +47,7 @@ def scorer(protein:Protein, mouse_peptides_sum_limit:float, mouse:str) -> float:
 
 def output(list_of_proteins:list, outfile):
     """Produces output .csv table"""
-    df = pd.DataFrame([[str(protein.id),
+    df = pd.DataFrame([[str(getattr(protein, 'original_id', protein.id)),
                  str("".join([str(protein.accession) if protein.accession!=None else ""])),
                  (round(protein.score, 4)),
                  str(protein.length),
@@ -64,8 +64,12 @@ def output(list_of_proteins:list, outfile):
                  str("".join([str(round(protein.sapiens_peptides_sum,4)) if protein.sapiens_peptides_sum!=None else "0"])),
                  str("".join([str(round(protein.mouse_peptides_sum,4)) if protein.mouse_peptides_sum!=None else "0"])),
                  str("".join([str(protein.annotations) if protein.annotations!=None else ""])),
-                 str(", ".join(list(set(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens)))), 
-                 str(", ".join(list(set(protein.list_of_peptides_from_comparison_with_mhcpep_mouse)))),  
+                 # dict.fromkeys, not set: both de-duplicate, but set iteration order
+                 # for strings varies with PYTHONHASHSEED, so these two columns
+                 # differed between runs of identical code. dict preserves first-
+                 # occurrence order, making the CSV reproducible.
+                 str(", ".join(dict.fromkeys(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens))),
+                 str(", ".join(dict.fromkeys(protein.list_of_peptides_from_comparison_with_mhcpep_mouse))),
                  str(protein.sequence),
                  str("".join([str(protein.original_sequence_if_razor) if protein.original_sequence_if_razor!=None else ""])),
                  #str("".join([str(protein.tmhmm_seq) if "M" in str(protein.tmhmm_seq) else ""])),
