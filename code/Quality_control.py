@@ -4,7 +4,7 @@
 import os, logging, requests
 from Bio import SeqIO
 from Bio.Seq import Seq
-from code.Utils import dir_path
+from code.Utils import dir_path, normalize_header
 
 class protein_element:
     """Class to handle fasta file elements similarly to the biopython fasta file parser"""
@@ -96,8 +96,10 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False) -> dir_pat
               'G': 'G', 'H': 'H', 'L': 'L', 'R': 'R', 'W': 'W', 'A': 'A', 'V': 'V', 'E': 'E', 'Y': 'Y', 'M': 'M', 
               'U':'C'}
     filtered_sequences, discarded_sequences = [],[]
+    # accessions assigned so far, so canonical headers stay unique
+    seen_accessions = set()
     # control formatting
-    fasta_list = is_fasta(path_to_fasta)    
+    fasta_list = is_fasta(path_to_fasta)
     # filename needed to create the output file
     file_name = os.path.basename(path_to_fasta)
     output_file = os.path.join(working_dir, "_".join(["cleaned",file_name]))
@@ -116,13 +118,22 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False) -> dir_pat
                 new_seq+=aa_dic[aa]
             else:
                 new_seq+=aa_dic[aa]
-        # check name
-        if ">" in record.description:
-            logging.debug(f'Found non-allowed character ">" in sequence name:\n{record.description}\nSubstituting with "_"')
-            record.description = record.description.replace(">","_")
-        if "/" in record.description:
-            logging.debug(f'Found non-allowed character "/" in sequence name:\n{record.description}\nSubstituting with "_"')
-            record.description = record.description.replace("/","_")
+        # check name: a '>' inside a header would split the record when the
+        # cleaned file is parsed again, so it goes before anything else reads it
+        original_description = record.description
+        if ">" in original_description:
+            logging.debug(f'Found non-allowed character ">" in sequence name:\n{original_description}\nSubstituting with "_"')
+            original_description = original_description.replace(">", "_")
+        # rewrite to a canonical, unique, filesystem-safe header so that every
+        # downstream tool echoes back an identifier we can resolve exactly
+        canonical_description, accession = normalize_header(original_description, seen_accessions)
+        if canonical_description != original_description:
+            logging.debug(f'Header normalized:\n{original_description}\n-> {canonical_description}')
+        record.description = canonical_description
+        # keep the user's header for reporting; the pipeline matches on the
+        # canonical one but the output tables should stay readable
+        record.original_description = original_description
+        record.accession = accession
         record.seq = Seq(new_seq)
         
         if flag == True:

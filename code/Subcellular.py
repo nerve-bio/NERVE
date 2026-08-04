@@ -3,6 +3,7 @@
 
 import os, logging, urllib, json
 from operator import attrgetter
+from code.Utils import build_id_index, match_protein
 
 class Localization:
         """class to store and handle protein subcellular localizations"""
@@ -33,6 +34,7 @@ def psortb(list_of_proteins, working_dir, gram, proteome1) -> list:
     data_json = json.loads(response.read())
     logging.debug(f'Psortb stdout:\n{data_json["stdout"]}\nPsortb stderr:\n{data_json["stderr"]}')
     logging.debug('Parsing psortb output')
+    index = build_id_index(list_of_proteins)
     for entry in data_json['result'].split('-------------------------------------------------------------------------------\n\n'):
         split = entry.split('\n')
         id_ = split[0][split[0].find('SeqID: ')+len('SeqID: '):].strip() # protein id
@@ -48,7 +50,7 @@ def psortb(list_of_proteins, working_dir, gram, proteome1) -> list:
             # set unknown prediction
             if localizations[0].reliability <= 3.:
                 localizations = [Localization('Unknown', 0.)]
-            for p in list_of_proteins:
-                if id_ in p.id:
-                    p.localization = localizations
+            p = match_protein(id_, index, list_of_proteins)
+            if p is not None:
+                p.localization = localizations
     return list_of_proteins

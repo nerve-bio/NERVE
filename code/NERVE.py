@@ -1,10 +1,20 @@
 #!/usr/local/bin/python
 """Run NERVE, reverse vaccinology software"""
 
-import argparse, logging, os, time
+import argparse, logging, os, pickle, time
 from typing import NamedTuple
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # disable warnings
+
+# Pin the numeric thread pools before any of them is created. The adhesin and
+# virulence models are float32, so a multi-threaded reduction reorders the sums
+# and moves p_ad / p_vir at around 1e-7 -- enough to reorder candidates of
+# similar score between two runs of identical code. Pinning removes the variation
+# rather than bounding it, which is what makes two runs comparable at all.
+for _thread_var in ('OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'MKL_NUM_THREADS',
+                    'NUMEXPR_NUM_THREADS', 'VECLIB_MAXIMUM_THREADS', 'BLIS_NUM_THREADS',
+                    'TF_NUM_INTRAOP_THREADS', 'TF_NUM_INTEROP_THREADS'):
+    os.environ.setdefault(_thread_var, '1')
 
 from code.Protein import Protein
 from code.Utils import bashCmdMethod, dir_path
@@ -49,6 +59,8 @@ class Args(NamedTuple):
     iFeature_dir:str
     DeepFri_dir:str
     ep_plots:bool
+    threads:int
+    keep_snapshots:str
     
     def print_args(self):
         return (f'''annotation: {self.annotation}, e_value: {self.e_value}, gram: {self.gram},
@@ -129,7 +141,7 @@ def get_args() -> Args:
                         )   
     parser.add_argument('-pl','--padlimit',
                         metavar='\b',
-                        help="Set the probability of adhesin (pad) value cut-off for proteins with 'Unknown' localization in the select module. Thus, these proteins with a pad value < cut-off are discarded (0.-1)",
+                        help="Set the probability of adhesin (pad) value cut-off for all proteins in the select module. Thus, proteins with a pad value < cut-off are discarded (0.-1)",
                         type=float,
                         default=0.5,
                         required=False,
@@ -265,17 +277,77 @@ def get_args() -> Args:
                         required=False,
                         default="True"
                        )
-    
-    
+    parser.add_argument('-t', '--threads',
+                        metavar='\b',
+                        help='Number of threads used by blastp in the immunity modules',
+                        type=int,
+                        required=False,
+                        default=1
+                       )
+    parser.add_argument('-ks', '--keep_snapshots',
+                        metavar='\b',
+                        help="Pickle the protein list after every stage into 'snapshots/' for "
+                             "comparing two runs stage by stage (see harness/)",
+                        type=str,
+                        required=False,
+                        default="False"
+                       )
+
+
     args = parser.parse_args()
 
     return Args(args.annotation, args.e_value, args.gram, args.minlength, args.mismatch,
-                args.mouse, args.mouse_peptides_sum_limit, args.proteome1, args.proteome2, 
-                args.padlimit, args.razor, 
-                args.razlen, args.select, args.substitution, args.transmemb_doms_limit, args.virlimit, 
+                args.mouse, args.mouse_peptides_sum_limit, args.proteome1, args.proteome2,
+                args.padlimit, args.razor,
+                args.razlen, args.select, args.substitution, args.transmemb_doms_limit, args.virlimit,
                 args.virulent, args.epitopes,
                 args.mhci_length, args.mhcii_length, args.mhci_overlap, args.mhcii_overlap,
-                args.epitope_percentile,args.working_dir, args.NERVE_dir, args.iFeature_dir, args.DeepFri_dir, args.ep_plots)
+                args.epitope_percentile,args.working_dir, args.NERVE_dir, args.iFeature_dir, args.DeepFri_dir, args.ep_plots,
+                args.threads, args.keep_snapshots)
+
+
+# stage ordinal -> (name, wall-clock seconds), filled in as the pipeline runs
+_STAGE_TIMINGS = []
+
+
+def record_stage(args, ordinal, name, list_of_proteins, started):
+    """Close out a pipeline stage: record its duration and optionally snapshot it.
+
+    With --keep_snapshots the whole protein list is pickled after every stage, so
+    two runs can be diffed stage by stage to localise where they first diverge
+    (see harness/). Snapshots are only written on request: they are large and
+    only useful when comparing runs.
+    param: args: parsed arguments
+    param: ordinal: 1-based stage number, used to order the report
+    param: name: short stage name, used in the report and the snapshot filename
+    param: list_of_proteins: pipeline state after the stage
+    param: started: time.time() captured before the stage
+    """
+    _STAGE_TIMINGS.append((ordinal, name, time.time() - started))
+    if str(getattr(args, 'keep_snapshots', 'False')) != "True":
+        return
+    directory = os.path.join(args.working_dir, 'snapshots')
+    os.makedirs(directory, exist_ok=True)
+    path = os.path.join(directory, f'{ordinal:02d}_{name}.pkl')
+    # write then rename, so an interrupted run cannot leave a half-written pickle
+    with open(path + '.tmp', 'wb') as handle:
+        pickle.dump(list_of_proteins, handle)
+    os.replace(path + '.tmp', path)
+
+
+def timing_report() -> str:
+    """Format the per-stage timings as a table with totals and percentages."""
+    if not _STAGE_TIMINGS:
+        return ''
+    total = sum(seconds for _, _, seconds in _STAGE_TIMINGS)
+    lines = ['', '=' * 50, '{:^50}'.format('Per-stage timing'), '=' * 50,
+             f'{"#":>2}  {"stage":<20}{"seconds":>10}{"%":>8}']
+    for ordinal, name, seconds in sorted(_STAGE_TIMINGS):
+        share = (100 * seconds / total) if total else 0
+        lines.append(f'{ordinal:>2}  {name:<20}{seconds:>10.1f}{share:>7.1f}%')
+    lines.append('-' * 40)
+    lines.append(f'{"":>2}  {"TOTAL":<20}{total:>10.1f}{100.0:>7.1f}%')
+    return '\n'.join(lines)
 
 
 def main():
@@ -355,9 +427,15 @@ def main():
     for p in list_of_fasta_proteins:
         p_id = str(p.description)
         p_seq = str(p.seq)
-        list_of_proteins.append(Protein(p_id, p_seq))
+        protein = Protein(p_id, p_seq)
+        # quality control canonicalised the header; keep the user's original for
+        # the output tables, and its accession, which is unique by construction
+        protein.original_id = str(getattr(p, 'original_description', p_id))
+        protein.accession = str(getattr(p, 'accession', protein.accession))
+        list_of_proteins.append(protein)
     end=time.time()
     logging.debug(f'{len(list_of_fasta_proteins)} proteins loaded in {end-start} seconds')
+    record_stage(args, 1, 'quality_control', list_of_proteins, start)
     
     # subcellular localization prediction
     start = time.time()
@@ -366,6 +444,7 @@ def main():
     end=time.time()
     logging.debug("Done run in: {:.4f} seconds".format(end - start))
     print("20% done")
+    record_stage(args, 2, 'localization', list_of_proteins, start)
 
     # Adhesin
     logging.debug("Adhesin start...")
@@ -376,6 +455,7 @@ def main():
     end=time.time()
     logging.debug("Done run in: {:.4f} seconds".format(end-start))
     print("30% done")
+    record_stage(args, 3, 'adhesin', list_of_proteins, start)
     
     # Tmhelices
     logging.debug("Tmhelices start...")
@@ -384,6 +464,7 @@ def main():
     end=time.time()
     logging.debug("Done run in: {:.4f} seconds".format(end-start))
     print("40% done")
+    record_stage(args, 4, 'topology', list_of_proteins, start)
     
     # Razor
     if args.razor == "True":
@@ -392,25 +473,28 @@ def main():
         list_of_proteins=razor(list_of_proteins, args.working_dir, args.transmemb_doms_limit, args.razlen)
         end=time.time()
         logging.debug("Done run in: {:.4f} seconds".format(end-start))
+        record_stage(args, 5, 'razor', list_of_proteins, start)
     print("50% done")
     
     # Autoimmunity
     logging.debug("Autoimmunity start...")
     start=time.time()
     list_of_proteins=autoimmunity(list_of_proteins, args.proteome1, args.working_dir, args.NERVE_dir, args.e_value, 
-                                  args.minlength, args.mismatch, args.substitution)
+                                  args.minlength, args.mismatch, args.substitution, threads=args.threads)
     end=time.time()
     logging.debug("Done run in: {:.4f} seconds".format(end-start))
     print("60% done")
+    record_stage(args, 6, 'autoimmunity', list_of_proteins, start)
     
     # Mouse immunity
     if args.mouse == "True":
         start = time.time()
         logging.debug("Mouse immunity start...")
         list_of_proteins = mouse(list_of_proteins, args.working_dir, args.NERVE_dir, args.e_value, args.proteome1,
-                               args.minlength, args.substitution, args.mismatch)
+                               args.minlength, args.substitution, args.mismatch, threads=args.threads)
         end = time.time()
         logging.debug("Done run in: {:.4f} seconds".format(end - start))
+        record_stage(args, 7, 'mouse', list_of_proteins, start)
     
     # Conservation
     #logging.debug(f'list of proteins before conservation:\n{list_of_proteins}')
@@ -419,9 +503,10 @@ def main():
         logging.debug("Conservation start...")
         list_of_proteins = conservation(list_of_proteins, args.working_dir, args.NERVE_dir, args.e_value, 
                                       args.proteome1, args.proteome2,
-                                      args.minlength, args.substitution, args.mismatch)
+                                      args.minlength, args.substitution, args.mismatch, threads=args.threads)
         end = time.time()
         logging.debug("Done run in: {:.4f} seconds".format(end - start))
+        record_stage(args, 8, 'conservation', list_of_proteins, start)
     print("70% done")
         
     # Virulence
@@ -432,6 +517,7 @@ def main():
         list_of_proteins = virulent_factor_predict(list_of_proteins, args.NERVE_dir)
         end=time.time()
         logging.debug("Done run in: {:.4f} seconds".format(end - start))
+        record_stage(args, 9, 'virulence', list_of_proteins, start)
     print("80% done")
         
     # annotation
@@ -441,6 +527,7 @@ def main():
         list_of_proteins = annotation(list_of_proteins, args.proteome1, args.working_dir, args.DeepFri_dir)
         end=time.time()
         logging.debug("Done run in: {:.4f} seconds".format(end - start))
+        record_stage(args, 10, 'annotation', list_of_proteins, start)
     print("90% done")
     
     # score
@@ -456,6 +543,7 @@ def main():
                                 args.padlimit, args.mouse, args.mouse_peptides_sum_limit, args.virlimit, args.virulent, args.razor)
         end = time.time()
         logging.debug("Done run in: {:.4f} seconds".format(end - start))
+        record_stage(args, 11, 'select', final_proteins, start)
 
     #if args.virulent == "True":
     #    final_proteins.sort(key = lambda p: p.p_vir, reverse = True)
@@ -472,6 +560,7 @@ def main():
                                  args.mhci_overlap, args.mhcii_overlap, args.epitope_percentile, args.ep_plots, args.transmemb_doms_limit)
         end = time.time()
         logging.debug(f'Epitope prediction done in {end - start} seconds')
+        record_stage(args, 12, 'epitope', final_proteins, start)
     
     # return .csv outputs
     output(final_proteins, os.path.join(args.working_dir, 'vaccine_candidates.csv'))
@@ -481,6 +570,10 @@ def main():
     output(discarded_proteins, os.path.join(args.working_dir, 'discarded_proteins.csv'))
     
     nerve_end = time.time()
+    report = timing_report()
+    if report:
+        print(report)
+        logging.debug(report)
     logging.debug("Done: NERVE has finished its analysis in: {:.4f} seconds".format(nerve_end-nerve_start))
     print("100% done")
     print("End NERVE computation successfully.")

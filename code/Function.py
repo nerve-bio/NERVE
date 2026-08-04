@@ -6,6 +6,7 @@ import pandas as pd
 from Bio import SeqIO
 from typing import NamedTuple
 from operator import attrgetter
+from code.Utils import build_id_index, match_protein
 
 class Args(NamedTuple):
     '''Command-line arguments'''
@@ -68,10 +69,13 @@ def DeepFriParser(path_to_infile: open, treshold=0.5) -> pd.DataFrame:
 def annotation(list_of_proteins, proteome1, working_dir, DeepFri_dir)->list:
     """Run protein function prediction"""
     deepfri_df = deep_fri(proteome1, DeepFri_dir, working_dir)
-    for p in list_of_proteins:
-        for index, row in deepfri_df.iterrows():
-            if row['Protein'] in p.id:
-                p.annotations = row['Function']
+    # one pass over the predictions with an exact lookup, rather than re-walking
+    # the whole dataframe once per protein
+    id_index = build_id_index(list_of_proteins)
+    for _, row in deepfri_df.iterrows():
+        p = match_protein(row['Protein'], id_index, list_of_proteins)
+        if p is not None:
+            p.annotations = row['Function']
     for file in ['_MF_predictions.csv', '_MF_pred_scores.json']:
         os.remove(os.path.join(working_dir, file))
     return list_of_proteins

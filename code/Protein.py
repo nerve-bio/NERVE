@@ -3,12 +3,21 @@
 
 import numpy as np
 
+from code.Utils import derive_accession
+
 class Protein:
-		
+
 	def __init__(self, identifier, sequence_string):
 		self.id = identifier
-		self.score = None        
-		self.accession = identifier.split('|')[1] if identifier.count("|") == 2 else None
+		self.score = None
+		# Derived rather than pattern-matched on a pipe count: headers carrying
+		# more than three '|'-delimited fields (NCBI style) used to fall through
+		# to None, and accession is used as the per-protein epitope directory
+		# name, so it must always be a usable string.
+		self.accession = derive_accession(identifier)
+		# the header as supplied by the user, before canonicalisation; reported
+		# in the output tables so results stay readable against the input file
+		self.original_id = identifier
 		self.sequence = sequence_string # the sequence used for the analyses
 		self.original_sequence_if_razor = None # put the original sequence if razor is performed
 		self.sequence_out = None

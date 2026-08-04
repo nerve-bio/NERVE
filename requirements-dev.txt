@@ -1,0 +1,15 @@
+biopython==1.87
+certifi==2026.7.22
+charset-normalizer==3.4.9
+idna==3.18
+iniconfig==2.3.0
+numpy==2.5.1
+packaging==26.2
+pandas==3.0.5
+pluggy==1.6.0
+Pygments==2.20.0
+pytest==9.1.1
+python-dateutil==2.9.0.post0
+requests==2.34.2
+six==1.17.0
+urllib3==2.7.0

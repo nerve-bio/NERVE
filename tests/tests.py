@@ -49,13 +49,13 @@ TEST9 = ('proteome5', f'--gram n --proteome1 {INPUTDIR}proteome5.fasta --working
 
 TEST10 = ('proteome6', f'--gram p --proteome1 {INPUTDIR}proteome6.fasta \
             --working_dir {WORKDIR}proteome6 --annotation True --razor True --select \
-            True --mouse True --epitopes False', """>tr|Q0PC84|Q0PC84_CAMJE Basal-body rod modification protein FlgD OS=Campylobacter jejuni subsp. jejuni serotype O:2 (strain ATCC 700819 _ NCTC 11168) OX=192222 GN=flgD PE=3 SV=1
+            True --mouse True --epitopes False', """>sp|Q0PC84|Q0PC84 Basal-body rod modification protein FlgD OS=Campylobacter jejuni subsp. jejuni serotype O:2 (strain ATCC 700819 / NCTC 11168) OX=192222 GN=flgD PE=3 SV=1
 MISSSDWNLNTTATTSGTTSS@GSTSGTTRTDSSSSSGIVSNPNATLDKDAFLKLLLIELQHQDPTDPMDSDKMLTQTSQLSALEMQQNTNTTMQKMVETMQKLSDSFSTSMSTSALGAIGKMATVSDNKIKLTGADELIALKMYLPEDSDENGVTLEIYDSNNKLVFSEKSDAKSISQGLFTMEWPGRNNDGVYAGDGEYTVKMVYNNKNGEKITANYGTYPIEGVVFKDGVAYAKMAGQEVPFDAIQEITDYKLGSSSSTGGSGSSGDSSGGSSDGDSSGSGSTEDGDKEEKA
 """)
 
 TEST11 = ('proteome7', f'--gram p --proteome1 {INPUTDIR}proteome7.fasta \
             --working_dir {WORKDIR}proteome7 --annotation True --razor True --select \
-            True --mouse True --epitopes False', """>_tr|Q0PC84|Q0PC84_CAMJE Basal-body rod modification protein FlgD OS=Campylobacter jejuni subsp. jejuni serotype O:2 (strain ATCC 700819 _ NCTC 11168) OX=192222 GN=flgD PE=3 SV=1
+            True --mouse True --epitopes False', """>sp|Q0PC84|Q0PC84 Basal-body rod modification protein FlgD OS=Campylobacter jejuni subsp. jejuni serotype O:2 (strain ATCC 700819 / NCTC 11168) OX=192222 GN=flgD PE=3 SV=1
 MISSSDWNLNTTATTSGTTSSGSTSGTTRTDSSSSSGIVSNPNATLDKDAFLKLLLIELQHQDPTDPMDSDKMLTQTSQLSALEMQQNTNTTMQKMVETMQKLSDSFSTSMSTSALGAIGKMATVSDNKIKLTGADELIALKMYLPEDSDENGVTLEIYDSNNKLVFSEKSDAKSISQGLFTMEWPGRNNDGVYAGDGEYTVKMVYNNKNGEKITANYGTYPIEGVVFKDGVAYAKMAGQEVPFDAIQEITDYKLGSSSSTGGSGSSGDSSGGSSDGDSSGSGSTEDGDKEEKAC
 """)
 
