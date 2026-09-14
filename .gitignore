@@ -10,3 +10,4 @@ tests.ipynb
 tests/output_data
 *.pyc
 .venv/
+runs/
