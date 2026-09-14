@@ -104,6 +104,12 @@ def values_equal(a, b, tol):
             return magnitude <= tol, magnitude, ('' if magnitude <= tol else f'max|d|={magnitude:.3g}')
     except ImportError:
         pass
+    # Domain value objects such as Subcellular.Localization intentionally have
+    # no __eq__; compare their persisted public state instead of object identity.
+    if hasattr(a, '__dict__') and hasattr(b, '__dict__'):
+        if type(a).__module__ != type(b).__module__ or type(a).__name__ != type(b).__name__:
+            return False, None, f'types differ: {type(a).__name__} vs {type(b).__name__}'
+        return values_equal(attributes(a), attributes(b), tol)
     equal = (a == b)
     return equal, None, ('' if equal else f'{a!r} vs {b!r}')
 
