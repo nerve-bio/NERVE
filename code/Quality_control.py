@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
 """Quality control module"""
 
-import os, logging, requests
+import os, logging, re, requests
 from Bio import SeqIO
 from Bio.Seq import Seq
 from code.Utils import dir_path, normalize_header
@@ -11,6 +11,66 @@ class protein_element:
     def __init__(self, name, seq):
         self.name = name
         self.seq = seq
+
+
+CANONICAL_AA = set('ACDEFGHIKLMNPQRSTVWY')
+AA_SUBSTITUTIONS = {
+    'U': 'C',  # selenocysteine
+    'O': 'K',  # pyrrolysine
+    'B': 'N',  # Asx -> neutral amide
+    'Z': 'Q',  # Glx -> neutral amide
+    'J': 'L',  # Xle
+}
+UNKNOWN_SUBSTITUTE = 'A'
+DEFAULT_MAX_UNKNOWN_FRACTION = 0.05
+
+
+def qc_sequence(sequence, max_unknown_fraction=DEFAULT_MAX_UNKNOWN_FRACTION):
+    """Normalize one sequence and return (cleaned, reason, message, changes)."""
+    if not 0 <= max_unknown_fraction <= 1:
+        raise ValueError('max_unknown_fraction must be between 0 and 1')
+    changes = []
+    source = str(sequence).upper()
+    cleaned = re.sub(r'[\s.\-\d]', '', source)
+    if len(cleaned) != len(source):
+        changes.append((0, f'{len(source) - len(cleaned)} char(s)', '',
+                        'gaps_whitespace_digits_removed'))
+    if not cleaned:
+        return None, 'empty_sequence', 'sequence is empty after normalization', changes
+    if '*' in cleaned:
+        body = cleaned.rstrip('*')
+        trailing = len(cleaned) - len(body)
+        if '*' in body:
+            pos = body.index('*') + 1
+            return None, 'internal_stop', f'internal stop codon at position {pos}/{len(cleaned)}', changes
+        if not body:
+            return None, 'empty_after_stop_removal', 'sequence contained only stop symbols', changes
+        changes.append((len(body) + 1, '*' * trailing, '', 'terminal_stop_removed'))
+        cleaned = body
+    chars = list(cleaned)
+    for index, amino_acid in enumerate(chars):
+        if amino_acid in AA_SUBSTITUTIONS:
+            replacement = AA_SUBSTITUTIONS[amino_acid]
+            chars[index] = replacement
+            changes.append((index + 1, amino_acid, replacement,
+                            f'ambiguity_{amino_acid}_to_{replacement}'))
+    cleaned = ''.join(chars)
+    unknown = [index for index, amino_acid in enumerate(cleaned)
+               if amino_acid not in CANONICAL_AA]
+    if unknown and len(unknown) / len(cleaned) > max_unknown_fraction:
+        fraction = len(unknown) / len(cleaned)
+        return None, 'excessive_unknown_residues', (
+            f'{len(unknown)}/{len(cleaned)} residues ({fraction:.1%}) are unknown, '
+            f'above the {max_unknown_fraction:.1%} limit'), changes
+    if unknown:
+        chars = list(cleaned)
+        for index in unknown:
+            original = chars[index]
+            chars[index] = UNKNOWN_SUBSTITUTE
+            changes.append((index + 1, original, UNKNOWN_SUBSTITUTE,
+                            'sparse_unknown_substituted'))
+        cleaned = ''.join(chars)
+    return cleaned, ('cleaned' if changes else 'ok'), '', changes
 
 def proteome_downloader(working_dir, proteome_id, filename='input_proteome.fasta', output_dir=os.getcwd(), format_ = "fasta") -> None:
     """Downloads proteome from uniprot database into output multifasta file
@@ -75,7 +135,8 @@ def is_fasta(filename:str):
         else:
             raise ValueError(f'{filename} is not in fasta format or the input fasta file is empy.')
 
-def quality_control(path_to_fasta:str, working_dir:str, upload=False) -> dir_path:
+def quality_control(path_to_fasta:str, working_dir:str, upload=False,
+                    max_unknown_fraction=DEFAULT_MAX_UNKNOWN_FRACTION) -> dir_path:
     """
     Remove sequences with non-canonical aminoacid symbols. U (Se-Cys) is substituted with C (Cys). Returns
     {working_dir}/discarded_sequences_{input_fasta_file_name}.fasta containing discarded sequences and\
@@ -92,9 +153,6 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False) -> dir_pat
                         level=logging.DEBUG,
                         force=True)
     
-    aa_dic = {'C': 'C', 'D': 'D', 'S': 'S', 'Q': 'Q', 'K': 'K', 'I': 'I', 'P': 'P', 'T': 'T', 'F': 'F', 'N': 'N', 
-              'G': 'G', 'H': 'H', 'L': 'L', 'R': 'R', 'W': 'W', 'A': 'A', 'V': 'V', 'E': 'E', 'Y': 'Y', 'M': 'M', 
-              'U':'C'}
     filtered_sequences, discarded_sequences = [],[]
     # accessions assigned so far, so canonical headers stay unique
     seen_accessions = set()
@@ -104,20 +162,13 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False) -> dir_pat
     file_name = os.path.basename(path_to_fasta)
     output_file = os.path.join(working_dir, "_".join(["cleaned",file_name]))
     output_discarded_sequences=os.path.join(working_dir, "_".join(["discarded_sequences",file_name]))
+    base_name = os.path.splitext(file_name)[0]
+    discard_log = os.path.join(working_dir, f'qc_discard_log_{base_name}.tsv')
+    modification_log = os.path.join(working_dir, f'qc_modifications_log_{base_name}.tsv')
+    discard_rows, modification_rows = [], []
     for record in fasta_list:
-        flag = True
-        new_seq = ''
-        # check sequence
-        for aa in str(record.seq):
-            if aa not in aa_dic:
-                flag = False
-                new_seq+=aa
-                logging.debug(f'Found non-canonical aminoacid "{aa}" in sequence: {record.description}')
-            elif aa == "U":
-                logging.debug(f'Found non-canonical aminoacid "{aa}" (Selenocysteine) in sequence: {record.description}, substituting to Cysteine')
-                new_seq+=aa_dic[aa]
-            else:
-                new_seq+=aa_dic[aa]
+        new_seq, reason, message, modifications = qc_sequence(
+            str(record.seq), max_unknown_fraction)
         # check name: a '>' inside a header would split the record when the
         # cleaned file is parsed again, so it goes before anything else reads it
         original_description = record.description
@@ -134,13 +185,32 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False) -> dir_pat
         # canonical one but the output tables should stay readable
         record.original_description = original_description
         record.accession = accession
-        record.seq = Seq(new_seq)
+        if new_seq is not None:
+            record.seq = Seq(new_seq)
         
-        if flag == True:
+        if new_seq is not None:
             filtered_sequences.append(record)
-        else:    
+            for position, original, substituted, rule in modifications:
+                modification_rows.append((accession, position, original, substituted, rule))
+        else:
             discarded_sequences.append(record)
-            logging.debug(f'Sequence {record.description} has been discarded for the presence of non-canonical aminoacids.')     
+            discard_rows.append((accession, reason, message))
+            logging.debug(f'DISCARD {record.description} [{reason}] {message}')
+    if discard_rows:
+        with open(discard_log, 'w') as handle:
+            handle.write('accession\treason_code\tmessage\n')
+            for row in discard_rows:
+                handle.write('\t'.join(map(str, row)) + '\n')
+    if modification_rows:
+        with open(modification_log, 'w') as handle:
+            handle.write('accession\tposition\toriginal\tsubstituted\trule\n')
+            for row in modification_rows:
+                handle.write('\t'.join(map(str, row)) + '\n')
+    summary = (f'QC of {file_name}: {len(filtered_sequences)}/{len(fasta_list)} sequences kept, '
+               f'{len(discarded_sequences)} discarded, '
+               f'{len(set(row[0] for row in modification_rows))} modified.')
+    print(summary)
+    logging.info(summary)
     # output filtered overwriting input fasta file
     filename = open(output_file, 'w')
     for sequence in filtered_sequences:

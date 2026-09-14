@@ -35,6 +35,11 @@ def dir_path(path:str) -> str:
 _UNSAFE_ID_CHARS = re.compile(r'[^A-Za-z0-9._-]')
 
 
+def sanitize_identifier(identifier:str) -> str:
+    """Return one non-empty, filesystem-safe identifier component."""
+    return _UNSAFE_ID_CHARS.sub('_', str(identifier).strip()) or 'seq'
+
+
 def derive_accession(header:str) -> str:
     """Extract the accession from a FASTA header (without the leading '>').
 
@@ -65,7 +70,7 @@ def normalize_header(header:str, seen_accessions:set) -> tuple:
     stripped = header.strip()
     parts = stripped.split(None, 1)
     description = parts[1] if len(parts) > 1 else ''
-    accession = _UNSAFE_ID_CHARS.sub('_', derive_accession(stripped)) or 'seq'
+    accession = sanitize_identifier(derive_accession(stripped))
     # disambiguate collisions so the accession identifies exactly one protein
     if accession in seen_accessions:
         base, suffix = accession, 2
@@ -104,8 +109,8 @@ def match_protein(external_id:str, index:dict, list_of_proteins=None):
 
     Tries the leading token, then the accession derived from it. Both are exact
     dictionary lookups. A miss cannot happen for normalized headers, so the
-    substring fallback exists only to keep un-normalized input working and warns
-    when it fires.
+    substring fallback exists only to keep un-normalized input working. It is
+    accepted only when exactly one protein matches; ambiguity fails closed.
     param: external_id: identifier string as emitted by an external tool
     param: index: mapping produced by build_id_index
     param: list_of_proteins: enables the substring fallback when supplied
@@ -119,9 +124,18 @@ def match_protein(external_id:str, index:dict, list_of_proteins=None):
     if protein is not None:
         return protein
     if list_of_proteins is not None:
-        for candidate in list_of_proteins:
-            if token in candidate.id:
-                logging.warning(f'Identifier "{external_id}" resolved to "{candidate.id}" by '
-                                f'substring fallback; exact lookup found no match.')
-                return candidate
+        matches = [candidate for candidate in list_of_proteins if token in candidate.id]
+        if len(matches) == 1:
+            logging.warning(f'Identifier "{external_id}" resolved to "{matches[0].id}" by '
+                            f'unique substring fallback; exact lookup found no match.')
+            return matches[0]
+        if len(matches) > 1:
+            logging.error(f'Identifier "{external_id}" is ambiguous: exact lookup failed and '
+                          f'{len(matches)} proteins contain "{token}"; record skipped.')
     return None
+
+
+def epitope_output_identifier(protein) -> str:
+    """Return the safe path component used for one protein's epitope files."""
+    raw = protein.accession if protein.accession is not None else derive_accession(protein.id)
+    return sanitize_identifier(raw)

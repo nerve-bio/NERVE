@@ -28,6 +28,7 @@ from code.Razor import razor
 from code.Immunity import  autoimmunity, conservation, mouse
 from code.Select import output, select, scorer
 from code.Epitope import epitope
+from code.Checkpoint import Checkpointer, compute_signature
 
 class Args(NamedTuple):
     '''Command-line arguments'''
@@ -61,6 +62,10 @@ class Args(NamedTuple):
     ep_plots:bool
     threads:int
     keep_snapshots:str
+    epitope_workers:int
+    checkpoint:str
+    resume:str
+    max_unknown_fraction:float
     
     def print_args(self):
         return (f'''annotation: {self.annotation}, e_value: {self.e_value}, gram: {self.gram},
@@ -292,6 +297,14 @@ def get_args() -> Args:
                         required=False,
                         default="False"
                        )
+    parser.add_argument('-ew', '--epitope_workers', type=int, default=0,
+                        help='Epitope worker processes; 0 auto-detects CPU/cgroup capacity')
+    parser.add_argument('-ck', '--checkpoint', type=str, default='False',
+                        help='Write an atomic restart checkpoint after every completed stage')
+    parser.add_argument('-rs', '--resume', type=str, default='False',
+                        help='Resume from a compatible checkpoint (also keeps checkpointing enabled)')
+    parser.add_argument('--max_unknown_fraction', type=float, default=0.05,
+                        help='QC discard threshold for residues still unknown after U/O/B/Z/J mapping')
 
 
     args = parser.parse_args()
@@ -303,14 +316,16 @@ def get_args() -> Args:
                 args.virulent, args.epitopes,
                 args.mhci_length, args.mhcii_length, args.mhci_overlap, args.mhcii_overlap,
                 args.epitope_percentile,args.working_dir, args.NERVE_dir, args.iFeature_dir, args.DeepFri_dir, args.ep_plots,
-                args.threads, args.keep_snapshots)
+                args.threads, args.keep_snapshots, args.epitope_workers, args.checkpoint,
+                args.resume, args.max_unknown_fraction)
 
 
 # stage ordinal -> (name, wall-clock seconds), filled in as the pipeline runs
 _STAGE_TIMINGS = []
+_CHECKPOINTER = None
 
 
-def record_stage(args, ordinal, name, list_of_proteins, started):
+def record_stage(args, ordinal, name, proteins, started, all_proteins=None):
     """Close out a pipeline stage: record its duration and optionally snapshot it.
 
     With --keep_snapshots the whole protein list is pickled after every stage, so
@@ -321,9 +336,17 @@ def record_stage(args, ordinal, name, list_of_proteins, started):
     param: ordinal: 1-based stage number, used to order the report
     param: name: short stage name, used in the report and the snapshot filename
     param: list_of_proteins: pipeline state after the stage
-    param: started: time.time() captured before the stage
+    param: started: time.monotonic() captured before the stage
     """
-    _STAGE_TIMINGS.append((ordinal, name, time.time() - started))
+    if _CHECKPOINTER is not None and _CHECKPOINTER.done(ordinal):
+        return
+    _STAGE_TIMINGS.append((ordinal, name, time.monotonic() - started))
+    if _CHECKPOINTER is not None:
+        _CHECKPOINTER.save(ordinal, name, {
+            'args': args,
+            'proteins': proteins,
+            'all_proteins': all_proteins if all_proteins is not None else proteins,
+        })
     if str(getattr(args, 'keep_snapshots', 'False')) != "True":
         return
     directory = os.path.join(args.working_dir, 'snapshots')
@@ -331,7 +354,7 @@ def record_stage(args, ordinal, name, list_of_proteins, started):
     path = os.path.join(directory, f'{ordinal:02d}_{name}.pkl')
     # write then rename, so an interrupted run cannot leave a half-written pickle
     with open(path + '.tmp', 'wb') as handle:
-        pickle.dump(list_of_proteins, handle)
+        pickle.dump(proteins, handle)
     os.replace(path + '.tmp', path)
 
 
@@ -353,7 +376,8 @@ def timing_report() -> str:
 def main():
     """Runs NERVE"""
     # record time:
-    nerve_start = time.time()
+    nerve_start = time.monotonic()
+    global _CHECKPOINTER
     args=get_args()
     print("Start NERVE 2.0")
     
@@ -404,64 +428,83 @@ def main():
                 raise logging.error(f'{args.proteome2} rised the following error:\n{e}')
             logging.debug(f'{args.proteome2} successfully downloaded')
             args = args._replace(proteome2=os.path.join(args.working_dir,'proteome2.fasta'))   
+    signature_fields = args._asdict().copy()
+    for field in ('working_dir', 'proteome1', 'proteome2', 'keep_snapshots',
+                  'checkpoint', 'resume'):
+        signature_fields.pop(field, None)
+    source_identity = {
+        'commit': os.environ.get('NERVE_SOURCE_COMMIT', 'unknown'),
+        'tree': os.environ.get('NERVE_SOURCE_TREE', 'unknown'),
+        'dirty': os.environ.get('NERVE_SOURCE_DIRTY', 'unknown'),
+    }
+    signature = compute_signature(
+        [args.proteome1, args.proteome2], signature_fields, source_identity)
+    _CHECKPOINTER = Checkpointer(
+        args.working_dir, signature,
+        enabled=args.checkpoint == 'True', resume=args.resume == 'True')
+    restored = _CHECKPOINTER.restored_state()
+    completed_stage = _CHECKPOINTER.bundle['ordinal'] if restored else 0
+    if restored:
+        args = restored['args']
+        list_of_proteins = restored['all_proteins']
+        final_proteins = restored['proteins']
+        print(f'Resuming after stage {completed_stage}')
+    logging.info('NERVE source commit=%s tree=%s dirty=%s run_signature=%s',
+                 source_identity['commit'], source_identity['tree'],
+                 source_identity['dirty'], signature)
     print("10% done")
     
     # run quality control
-    start=time.time()
-    logging.debug(f'Start quality control of proteome1 ({args.proteome1})')
-    # during the quality control, upload sequences from proteome1
-    list_of_fasta_proteins, proteome1_new_path = quality_control(args.proteome1, args.working_dir, upload=True)
-    # update input path of proteome1
-    args=args._replace(proteome1=proteome1_new_path)
-    logging.debug(f'Finish quality control of proteome1. Updated path: ({args.proteome1})')
-    if len(list_of_fasta_proteins) == 0:
-        raise ValueError(f'All input protein sequences have been discarded. See {os.path.join(args.working_dir, "logfile.log")} for more information.')
-    if args.proteome2:
-        logging.debug(f'Start quality control of proteome2 ({args.proteome2})')
-        proteome2_new_path=quality_control(args.proteome2, args.working_dir)
-        # update proteome2 new path 
-        args = args._replace(proteome2=proteome2_new_path)
-        logging.debug(f'Finish quality control of proteome2. Updated path: ({args.proteome2})')
-    logging.debug(f'Extract protein sequences and IDs from proteome1')
-    list_of_proteins = []
-    for p in list_of_fasta_proteins:
-        p_id = str(p.description)
-        p_seq = str(p.seq)
-        protein = Protein(p_id, p_seq)
-        # quality control canonicalised the header; keep the user's original for
-        # the output tables, and its accession, which is unique by construction
-        protein.original_id = str(getattr(p, 'original_description', p_id))
-        protein.accession = str(getattr(p, 'accession', protein.accession))
-        list_of_proteins.append(protein)
-    end=time.time()
-    logging.debug(f'{len(list_of_fasta_proteins)} proteins loaded in {end-start} seconds')
-    record_stage(args, 1, 'quality_control', list_of_proteins, start)
+    if completed_stage < 1:
+        start=time.monotonic()
+        logging.debug(f'Start quality control of proteome1 ({args.proteome1})')
+        list_of_fasta_proteins, proteome1_new_path = quality_control(
+            args.proteome1, args.working_dir, upload=True,
+            max_unknown_fraction=args.max_unknown_fraction)
+        args=args._replace(proteome1=proteome1_new_path)
+        if len(list_of_fasta_proteins) == 0:
+            raise ValueError('All input protein sequences have been discarded.')
+        if args.proteome2:
+            proteome2_new_path=quality_control(
+                args.proteome2, args.working_dir,
+                max_unknown_fraction=args.max_unknown_fraction)
+            args = args._replace(proteome2=proteome2_new_path)
+        list_of_proteins = []
+        for p in list_of_fasta_proteins:
+            protein = Protein(str(p.description), str(p.seq))
+            protein.original_id = str(getattr(p, 'original_description', p.description))
+            protein.accession = str(getattr(p, 'accession', protein.accession))
+            list_of_proteins.append(protein)
+        record_stage(args, 1, 'quality_control', list_of_proteins, start)
     
     # subcellular localization prediction
-    start = time.time()
+    start = time.monotonic()
     logging.debug("Subcelloc start with psortb...")
-    list_of_proteins = psortb(list_of_proteins, args.working_dir, args.gram, args.proteome1)
-    end=time.time()
+    if completed_stage < 2:
+        list_of_proteins = psortb(list_of_proteins, args.working_dir, args.gram, args.proteome1)
+    end=time.monotonic()
     logging.debug("Done run in: {:.4f} seconds".format(end - start))
     print("20% done")
     record_stage(args, 2, 'localization', list_of_proteins, start)
 
     # Adhesin
     logging.debug("Adhesin start...")
-    start=time.time()
+    start=time.monotonic()
     # extract features
-    list_of_proteins = extract_features(list_of_proteins, args.NERVE_dir, args.iFeature_dir, args.working_dir, args.proteome1)
-    list_of_proteins = adhesin_predict(list_of_proteins, args.NERVE_dir)
-    end=time.time()
+    if completed_stage < 3:
+        list_of_proteins = extract_features(list_of_proteins, args.NERVE_dir, args.iFeature_dir, args.working_dir, args.proteome1)
+        list_of_proteins = adhesin_predict(list_of_proteins, args.NERVE_dir)
+    end=time.monotonic()
     logging.debug("Done run in: {:.4f} seconds".format(end-start))
     print("30% done")
     record_stage(args, 3, 'adhesin', list_of_proteins, start)
     
     # Tmhelices
     logging.debug("Tmhelices start...")
-    start=time.time()
-    list_of_proteins = tmhelices(list_of_proteins, args.working_dir)
-    end=time.time()
+    start=time.monotonic()
+    if completed_stage < 4:
+        list_of_proteins = tmhelices(list_of_proteins, args.working_dir)
+    end=time.monotonic()
     logging.debug("Done run in: {:.4f} seconds".format(end-start))
     print("40% done")
     record_stage(args, 4, 'topology', list_of_proteins, start)
@@ -469,42 +512,46 @@ def main():
     # Razor
     if args.razor == "True":
         logging.debug("Loop-razor start...")
-        start=time.time()
-        list_of_proteins=razor(list_of_proteins, args.working_dir, args.transmemb_doms_limit, args.razlen)
-        end=time.time()
+        start=time.monotonic()
+        if completed_stage < 5:
+            list_of_proteins=razor(list_of_proteins, args.working_dir, args.transmemb_doms_limit, args.razlen)
+        end=time.monotonic()
         logging.debug("Done run in: {:.4f} seconds".format(end-start))
         record_stage(args, 5, 'razor', list_of_proteins, start)
     print("50% done")
     
     # Autoimmunity
     logging.debug("Autoimmunity start...")
-    start=time.time()
-    list_of_proteins=autoimmunity(list_of_proteins, args.proteome1, args.working_dir, args.NERVE_dir, args.e_value, 
-                                  args.minlength, args.mismatch, args.substitution, threads=args.threads)
-    end=time.time()
+    start=time.monotonic()
+    if completed_stage < 6:
+        list_of_proteins=autoimmunity(list_of_proteins, args.proteome1, args.working_dir, args.NERVE_dir, args.e_value,
+                                      args.minlength, args.mismatch, args.substitution, threads=args.threads)
+    end=time.monotonic()
     logging.debug("Done run in: {:.4f} seconds".format(end-start))
     print("60% done")
     record_stage(args, 6, 'autoimmunity', list_of_proteins, start)
     
     # Mouse immunity
     if args.mouse == "True":
-        start = time.time()
+        start = time.monotonic()
         logging.debug("Mouse immunity start...")
-        list_of_proteins = mouse(list_of_proteins, args.working_dir, args.NERVE_dir, args.e_value, args.proteome1,
-                               args.minlength, args.substitution, args.mismatch, threads=args.threads)
-        end = time.time()
+        if completed_stage < 7:
+            list_of_proteins = mouse(list_of_proteins, args.working_dir, args.NERVE_dir, args.e_value, args.proteome1,
+                                     args.minlength, args.substitution, args.mismatch, threads=args.threads)
+        end = time.monotonic()
         logging.debug("Done run in: {:.4f} seconds".format(end - start))
         record_stage(args, 7, 'mouse', list_of_proteins, start)
     
     # Conservation
     #logging.debug(f'list of proteins before conservation:\n{list_of_proteins}')
     if args.proteome2:
-        start = time.time()
+        start = time.monotonic()
         logging.debug("Conservation start...")
-        list_of_proteins = conservation(list_of_proteins, args.working_dir, args.NERVE_dir, args.e_value, 
-                                      args.proteome1, args.proteome2,
-                                      args.minlength, args.substitution, args.mismatch, threads=args.threads)
-        end = time.time()
+        if completed_stage < 8:
+            list_of_proteins = conservation(list_of_proteins, args.working_dir, args.NERVE_dir, args.e_value,
+                                            args.proteome1, args.proteome2,
+                                            args.minlength, args.substitution, args.mismatch, threads=args.threads)
+        end = time.monotonic()
         logging.debug("Done run in: {:.4f} seconds".format(end - start))
         record_stage(args, 8, 'conservation', list_of_proteins, start)
     print("70% done")
@@ -512,20 +559,22 @@ def main():
     # Virulence
     #logging.debug(f'list of proteins before virulence:\n{list_of_proteins}')
     if args.virulent == "True":
-        start=time.time()
+        start=time.monotonic()
         logging.debug("Virulence start...")
-        list_of_proteins = virulent_factor_predict(list_of_proteins, args.NERVE_dir)
-        end=time.time()
+        if completed_stage < 9:
+            list_of_proteins = virulent_factor_predict(list_of_proteins, args.NERVE_dir)
+        end=time.monotonic()
         logging.debug("Done run in: {:.4f} seconds".format(end - start))
         record_stage(args, 9, 'virulence', list_of_proteins, start)
     print("80% done")
         
     # annotation
     if args.annotation == "True":
-        start = time.time()
+        start = time.monotonic()
         logging.debug("Annotation start...")
-        list_of_proteins = annotation(list_of_proteins, args.proteome1, args.working_dir, args.DeepFri_dir)
-        end=time.time()
+        if completed_stage < 10:
+            list_of_proteins = annotation(list_of_proteins, args.proteome1, args.working_dir, args.DeepFri_dir)
+        end=time.monotonic()
         logging.debug("Done run in: {:.4f} seconds".format(end - start))
         record_stage(args, 10, 'annotation', list_of_proteins, start)
     print("90% done")
@@ -535,15 +584,17 @@ def main():
         protein.score = scorer(protein, args.mouse_peptides_sum_limit, args.mouse)
     
     # select
-    final_proteins=list_of_proteins
+    if completed_stage < 11:
+        final_proteins=list_of_proteins
     if args.select == "True":
         logging.debug("Select start...")
-        start=time.time()
-        final_proteins = select(list_of_proteins, args.transmemb_doms_limit,
-                                args.padlimit, args.mouse, args.mouse_peptides_sum_limit, args.virlimit, args.virulent, args.razor)
-        end = time.time()
+        start=time.monotonic()
+        if completed_stage < 11:
+            final_proteins = select(list_of_proteins, args.transmemb_doms_limit,
+                                    args.padlimit, args.mouse, args.mouse_peptides_sum_limit, args.virlimit, args.virulent, args.razor)
+        end = time.monotonic()
         logging.debug("Done run in: {:.4f} seconds".format(end - start))
-        record_stage(args, 11, 'select', final_proteins, start)
+        record_stage(args, 11, 'select', final_proteins, start, list_of_proteins)
 
     #if args.virulent == "True":
     #    final_proteins.sort(key = lambda p: p.p_vir, reverse = True)
@@ -553,14 +604,16 @@ def main():
         #print("=" * 50)
         #print("{:^50}".format('Epitope prediction of best candidates with epitopepredict starts'))
         #print("=" * 50)
-        start = time.time()
+        start = time.monotonic()
         logging.debug('Epitope prediction starts ...')
-        final_proteins = epitope(final_proteins,
-                                 args.working_dir, args.mhci_length, args.mhcii_length,
-                                 args.mhci_overlap, args.mhcii_overlap, args.epitope_percentile, args.ep_plots, args.transmemb_doms_limit)
-        end = time.time()
+        if completed_stage < 12:
+            final_proteins = epitope(final_proteins,
+                                     args.working_dir, args.mhci_length, args.mhcii_length,
+                                     args.mhci_overlap, args.mhcii_overlap, args.epitope_percentile,
+                                     args.ep_plots, args.transmemb_doms_limit, args.epitope_workers)
+        end = time.monotonic()
         logging.debug(f'Epitope prediction done in {end - start} seconds')
-        record_stage(args, 12, 'epitope', final_proteins, start)
+        record_stage(args, 12, 'epitope', final_proteins, start, list_of_proteins)
     
     # return .csv outputs
     output(final_proteins, os.path.join(args.working_dir, 'vaccine_candidates.csv'))
@@ -569,7 +622,7 @@ def main():
     discarded_proteins = [p for p in list_of_proteins if p.id not in final_proteins_names]
     output(discarded_proteins, os.path.join(args.working_dir, 'discarded_proteins.csv'))
     
-    nerve_end = time.time()
+    nerve_end = time.monotonic()
     report = timing_report()
     if report:
         print(report)
@@ -577,6 +630,7 @@ def main():
     logging.debug("Done: NERVE has finished its analysis in: {:.4f} seconds".format(nerve_end-nerve_start))
     print("100% done")
     print("End NERVE computation successfully.")
+    _CHECKPOINTER.finish()
 
 if __name__ == "__main__":
     main()

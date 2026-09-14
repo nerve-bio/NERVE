@@ -15,6 +15,7 @@
 import os
 import sys
 import random
+from types import SimpleNamespace
 
 import pandas as pd
 
@@ -33,9 +34,11 @@ except ImportError:
     sys.modules['Bio.Blast.Applications'] = _stub
 
 from code.Protein import Protein
-from code.Immunity import build_kmer_index, compare_with_mhcpep
+from code.Immunity import build_kmer_index, compare_with_mhcpep, ordered_hsps
+from code.Quality_control import quality_control, qc_sequence
+from code.Checkpoint import Checkpointer, compute_signature
 from code.Utils import (derive_accession, normalize_header, build_id_index,
-                        match_protein)
+                        match_protein, epitope_output_identifier)
 
 NERVE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MHCPEP_SAPIENS = os.path.join(NERVE_DIR, 'database/mhcpep/mhcpep_sapiens.csv')
@@ -153,3 +156,103 @@ def test_unresolvable_identifier_returns_none():
 def test_accession_is_never_none():
     for header in ('bare_identifier', 'gi|1|ref|NP_1|', 'sp|P0C277|X d', 'a b c'):
         assert Protein(header, 'AAAA').accession
+
+
+def test_ambiguous_substring_fallback_fails_closed():
+    first = Protein('legacy-P1-alpha', 'AAAA')
+    second = Protein('legacy-P1-beta', 'CCCC')
+    proteins = [first, second]
+    assert match_protein('P1', build_id_index(proteins), proteins) is None
+
+
+def test_unique_substring_fallback_remains_compatible():
+    protein = Protein('legacy-P1-alpha', 'AAAA')
+    proteins = [protein]
+    assert match_protein('P1', build_id_index(proteins), proteins) is protein
+
+
+def test_ordered_hsps_is_independent_of_blast_output_order():
+    hsp_a = SimpleNamespace(query_start=20, sbjct_start=2,
+                            query='CCCCCCCCCC', match='||||||||||')
+    hsp_b = SimpleNamespace(query_start=10, sbjct_start=3,
+                            query='AAAAAAAAAA', match='||||||||||')
+    hsp_c = SimpleNamespace(query_start=10, sbjct_start=1,
+                            query='BBBBBBBBBB', match='||||||||||')
+
+    forward = SimpleNamespace(alignments=[
+        SimpleNamespace(hit_id='hit-z', hsps=[hsp_a]),
+        SimpleNamespace(hit_id='hit-a', hsps=[hsp_b, hsp_c]),
+    ])
+    reversed_ = SimpleNamespace(alignments=[
+        SimpleNamespace(hit_id='hit-a', hsps=[hsp_c, hsp_b]),
+        SimpleNamespace(hit_id='hit-z', hsps=[hsp_a]),
+    ])
+
+    def signature(items):
+        return [(h.query_start, h.sbjct_start, h.query, h.match) for h in items]
+
+    assert signature(ordered_hsps(forward)) == signature(ordered_hsps(reversed_))
+    assert signature(ordered_hsps(forward)) == [
+        (10, 1, 'BBBBBBBBBB', '||||||||||'),
+        (10, 3, 'AAAAAAAAAA', '||||||||||'),
+        (20, 2, 'CCCCCCCCCC', '||||||||||'),
+    ]
+
+
+def test_refseq_description_cannot_become_epitope_path(tmp_path):
+    raw_header = ('WP_044285928.1 ZmpA/ZmpB/ZmpC family metallo-endopeptidase '
+                  '[Mesomycoplasma ovipneumoniae]')
+    fasta = tmp_path / 'proteome.fasta'
+    fasta.write_text(f'>{raw_header}\nMAAAAAAAAA\n')
+
+    records, _ = quality_control(str(fasta), str(tmp_path), upload=True)
+    record = records[0]
+    protein = Protein(str(record.description), str(record.seq))
+    protein.accession = record.accession
+    protein.original_id = record.original_description
+
+    prot_name = epitope_output_identifier(protein)
+    directory = tmp_path / 'epitope' / prot_name
+    output_file = directory / f'mhci_epitopes_{prot_name}.csv'
+
+    assert prot_name == 'WP_044285928.1'
+    assert directory.parent == tmp_path / 'epitope'
+    assert output_file.parent == directory
+    assert raw_header == protein.original_id
+
+
+def test_phase4_qc_policy_and_threshold():
+    cleaned, reason, _, changes = qc_sequence('acUOBJZ' + 'A' * 94 + '*')
+    assert cleaned == 'ACCKNLQ' + 'A' * 94
+    assert reason == 'cleaned'
+    assert any(change[3] == 'terminal_stop_removed' for change in changes)
+    assert qc_sequence('AA*AA')[1] == 'internal_stop'
+    assert qc_sequence('X' + 'A' * 19)[0].startswith('A')  # exactly 5% is kept
+    assert qc_sequence('XX' + 'A' * 18)[1] == 'excessive_unknown_residues'
+
+
+def test_checkpoint_is_atomic_and_signature_keyed(tmp_path):
+    source = tmp_path / 'input.fasta'
+    source.write_text('>p\nAAAA\n')
+    signature = compute_signature([str(source)], {'gram': 'p'}, {'tree': 'abc'})
+    checkpointer = Checkpointer(str(tmp_path), signature, enabled=True)
+    state = {'proteins': ['p'], 'all_proteins': ['p'], 'args': 'args'}
+    checkpointer.save(3, 'adhesin', state)
+    assert not (tmp_path / 'checkpoint.pkl.tmp').exists()
+    resumed = Checkpointer(str(tmp_path), signature, resume=True)
+    assert resumed.done(3) and resumed.restored_state() == state
+    source.write_text('>p\nCCCC\n')
+    changed = compute_signature([str(source)], {'gram': 'p'}, {'tree': 'abc'})
+    try:
+        Checkpointer(str(tmp_path), changed, resume=True)
+    except ValueError as error:
+        assert 'does not match' in str(error)
+    else:
+        raise AssertionError('mismatched checkpoint was accepted')
+
+
+def test_epitope_worker_autoscaling_is_bounded():
+    from code.Epitope import available_cpu_count, resolve_epitope_workers
+    assert available_cpu_count() >= 1
+    assert resolve_epitope_workers(0, 3) == min(available_cpu_count(), 3)
+    assert resolve_epitope_workers(99, 2) == 2
