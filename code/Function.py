@@ -69,8 +69,7 @@ def DeepFriParser(path_to_infile: open, treshold=0.5) -> pd.DataFrame:
 def annotation(list_of_proteins, proteome1, working_dir, DeepFri_dir)->list:
     """Run protein function prediction"""
     deepfri_df = deep_fri(proteome1, DeepFri_dir, working_dir)
-    # one pass over the predictions with an exact lookup, rather than re-walking
-    # the whole dataframe once per protein
+    # Match predictions by identifier.
     id_index = build_id_index(list_of_proteins)
     for _, row in deepfri_df.iterrows():
         p = match_protein(row['Protein'], id_index, list_of_proteins)

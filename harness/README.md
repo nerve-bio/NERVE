@@ -14,6 +14,19 @@ asserted to.
   Pearson/Spearman correlation, and top-N overlap.
 
 Both exit `0` when equal and `1` otherwise, so they can gate a regression script.
+Duplicate or missing protein identifiers fail comparison rather than being
+silently collapsed.
+
+## Reduced same-source validation
+
+`harness/validation/run_all.sh` checks image provenance, focused tests, an
+interrupted and resumed small run against a fresh run, and selected *C. jejuni*
+BLAST-thread and epitope-worker variants. It requires a built optimized image
+and a running PSORTb service on `nerve-network`; set `IMAGE` to the verified
+image ID and optionally set `RUN_ROOT` to a fresh directory. Its comparisons
+use exact equality. It does not establish equivalence with the pre-Zeamays
+baseline or measure large-proteome scaling; those are separate validation
+stages.
 
 ## Tolerance
 
@@ -104,13 +117,15 @@ silently ignoring it.
 
 ## Unit-level equivalence
 
-`tests/test_equivalence.py` asserts the parts that can be checked without
-running the pipeline, notably that the k-mer index in `Immunity` reproduces the
-exhaustive epitope scan exactly, in order, against the real mhcpep database.
-It needs no Docker:
+`tests/test_equivalence.py` and `tests/test_harness.py` assert the parts that
+can be checked without running the pipeline, notably that the k-mer index in
+`Immunity` reproduces the exhaustive epitope scan exactly, in order, against
+the real mhcpep database. They need the pipeline's Python dependencies. Run
+them in the built container with the source and harness mounted, or in a local
+environment with those dependencies installed:
 
 ```bash
-pytest tests/test_equivalence.py -p no:debugging
+pytest tests/test_equivalence.py tests/test_harness.py -p no:debugging
 ```
 
 (`-p no:debugging` is needed because the repository's package is named `code`,

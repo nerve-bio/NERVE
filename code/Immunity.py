@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
 """Autoimmunity, mouse and conservation modules"""
 
-import logging, os, subprocess
+import logging, os, subprocess, tempfile
 from Bio.Blast.Applications import NcbiblastpCommandline    
 from Bio.Blast import NCBIXML 
 import pandas as pd
@@ -10,17 +10,32 @@ from code.Utils import build_id_index, match_protein
 import shutil
 
 
-def ordered_hsps(record):
-    """Yield a record's HSPs in a fixed order, independent of blastp's output.
+def parse_blast_records(path):
+    """Yield records from one or more concatenated BLAST XML documents."""
+    document = tempfile.SpooledTemporaryFile(mode='w+t', max_size=8 * 1024 * 1024)
+    document_count = 0
+    try:
+        with open(path) as source:
+            for line in source:
+                if line.lstrip().startswith('<?xml') and document.tell():
+                    document.seek(0)
+                    yield from NCBIXML.parse(document)
+                    document.close()
+                    document = tempfile.SpooledTemporaryFile(mode='w+t', max_size=8 * 1024 * 1024)
+                    document_count += 1
+                document.write(line)
+        if document.tell():
+            document.seek(0)
+            yield from NCBIXML.parse(document)
+            document_count += 1
+        logging.debug('%s contains %s BLAST XML document(s)',
+                      os.path.basename(path), document_count)
+    finally:
+        document.close()
 
-    The peptide sums below fold the shared-peptide list pairwise, comparing each
-    peptide with its predecessor, so the order in which HSPs are collected does
-    not merely reorder the result -- it changes the sum by whole residues. blastp
-    makes no promise about the ordering of equally-scoring alignments, and it can
-    vary with -num_threads, so the order is imposed here instead of inherited.
-    param: record: a Bio.Blast.NCBIXML record
-    output: iterator of HSPs, sorted by a total order on their alignment
-    """
+
+def ordered_hsps(record):
+    """Yield HSPs in a fixed order."""
     hsps = []
     for alignment in record.alignments:
         for hsp in alignment.hsps:
@@ -33,15 +48,10 @@ def ordered_hsps(record):
 
 
 def build_kmer_index(peptides, k:int) -> dict:
-    """Map each k-length substring of `peptides` to the peptides containing it.
-
-    param: peptides: iterable of epitope strings, in file order
-    param: k: substring length to index
-    output: dict mapping k-mer -> list of peptides containing it, in file order
-    """
+    """Index peptides by their k-length substrings."""
     index = {}
     for peptide in peptides:
-        # the epitope column can carry blanks, which pandas reads as NaN
+        # Skip missing peptides.
         if not isinstance(peptide, str) or len(peptide) < k:
             continue
         for kmer in {peptide[i:i + k] for i in range(len(peptide) - k + 1)}:
@@ -50,18 +60,7 @@ def build_kmer_index(peptides, k:int) -> dict:
 
 
 def compare_with_mhcpep(list_of_proteins, mhcpep_peptides, shared_attr:str, out_attr:str) -> None:
-    """Extend each protein's `out_attr` with mhcpep matches of its shared peptides.
-
-    Protein.peptide_comparison returns nothing unless the shared peptide's window
-    occurs verbatim in the epitope, so indexing the epitopes by that window and
-    testing only the peptides that contain it yields exactly the matches the
-    exhaustive scan would, in the same order -- the skipped epitopes are only the
-    ones that provably could not have matched.
-    param: list_of_proteins: proteins carrying `shared_attr`
-    param: mhcpep_peptides: the mhcpep epitope column, in file order
-    param: shared_attr: attribute holding the shared-peptide records
-    param: out_attr: attribute to extend with the matches
-    """
+    """Add matching MHC peptides to each protein."""
     peptides = list(mhcpep_peptides)
     indexes = {}
     for protein in list_of_proteins:
@@ -88,11 +87,9 @@ def autoimmunity(list_of_proteins, proteome1, working_dir, NERVE_dir, e_value, m
     #logging.debug("Warning: you can find a sapiens.xml file on your working directory which is the outputs of the autoimmunity module.\nDo not delete during the computation!\nAfter the computation it will be deleted in order to avoid future collisions.")
     # for each result in the .xml file...
     #outfile = open(os.path.join(working_dir, 'autoimmunity_raw_output.txt'), 'w')
-    for record in NCBIXML.parse(open(os.path.join(working_dir,"sapiens.xml"))):
+    for record in parse_blast_records(os.path.join(working_dir, "sapiens.xml")):
         query_name = record.query.split(' ')[0] # take only the query name
-        # take the right candidate to update. An unresolved query must skip the
-        # record: leaving tmp_protein at its previous value silently credits this
-        # record's peptides to whichever protein the last record matched.
+        # Match the query protein.
         tmp_protein = match_protein(query_name, index, list_of_proteins)
         if tmp_protein is None:
             logging.warning(f'blastp query "{query_name}" matched no input protein; record skipped.')
@@ -148,10 +145,9 @@ def mouse(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, minlengt
     stdout, stderr = blastx_cline()
     index = build_id_index(list_of_proteins)
     #outfile = open(os.path.join(working_dir, 'mouse_immunity_raw_output.txt'), 'w')
-    for record in NCBIXML.parse(open(os.path.join(working_dir, "mouse.xml"))):
+    for record in parse_blast_records(os.path.join(working_dir, "mouse.xml")):
         query_name = record.query.split(' ')[0]
-        # take the right protein; an unresolved query previously defaulted to the
-        # first protein of the proteome, crediting it with another's peptides
+        # Match the query protein.
         tmp_protein = match_protein(query_name, index, list_of_proteins)
         if tmp_protein is None:
             logging.warning(f'blastp query "{query_name}" matched no input protein; record skipped.')
@@ -206,7 +202,7 @@ def conservation(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, p
 
     index = build_id_index(list_of_proteins)
     outfile=open(os.path.join(working_dir, 'conservation_raw_output.txt'), 'w')
-    for record in NCBIXML.parse(open(os.path.join(working_dir,"comparison.xml"))):
+    for record in parse_blast_records(os.path.join(working_dir, "comparison.xml")):
         query_name = record.query.split(' ')[0]
 
         tmp_protein = match_protein(query_name, index, list_of_proteins)
@@ -220,7 +216,7 @@ def conservation(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, p
                                                                                                  parsing_window_size=minlength,
                                                                                                  max_sub=substitution,
                                                                                                  max_mismatch=mismatch)
-        # report this module's peptides, not the human ones from autoimmunity
+        # Store conservation peptide matches.
         if len(tmp_protein.list_of_shared_conserv_proteome_peps) == 0:
             outfile.write("\nNo shared peptides for " + query_name)
         else:

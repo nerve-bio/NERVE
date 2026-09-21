@@ -64,10 +64,7 @@ def output(list_of_proteins:list, outfile):
                  str("".join([str(round(protein.sapiens_peptides_sum,4)) if protein.sapiens_peptides_sum!=None else "0"])),
                  str("".join([str(round(protein.mouse_peptides_sum,4)) if protein.mouse_peptides_sum!=None else "0"])),
                  str("".join([str(protein.annotations) if protein.annotations!=None else ""])),
-                 # dict.fromkeys, not set: both de-duplicate, but set iteration order
-                 # for strings varies with PYTHONHASHSEED, so these two columns
-                 # differed between runs of identical code. dict preserves first-
-                 # occurrence order, making the CSV reproducible.
+                 # Remove duplicates while preserving order.
                  str(", ".join(dict.fromkeys(protein.list_of_peptides_from_comparison_with_mhcpep_sapiens))),
                  str(", ".join(dict.fromkeys(protein.list_of_peptides_from_comparison_with_mhcpep_mouse))),
                  str(protein.sequence),

@@ -21,10 +21,7 @@ import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Biopython dropped the deprecated command-line wrappers in 1.80; the container
-# pins 1.78, where they still exist. Nothing here invokes blastp -- the import is
-# only needed for code.Immunity to load -- so stub it when running against a
-# newer Biopython outside the container.
+# Stub the wrapper removed from newer Biopython versions.
 try:
     from Bio.Blast.Applications import NcbiblastpCommandline  # noqa: F401
 except ImportError:
@@ -34,7 +31,7 @@ except ImportError:
     sys.modules['Bio.Blast.Applications'] = _stub
 
 from code.Protein import Protein
-from code.Immunity import build_kmer_index, compare_with_mhcpep, ordered_hsps
+from code.Immunity import build_kmer_index, compare_with_mhcpep, ordered_hsps, parse_blast_records
 from code.Quality_control import quality_control, qc_sequence
 from code.Checkpoint import Checkpointer, compute_signature
 from code.Utils import (derive_accession, normalize_header, build_id_index,
@@ -69,7 +66,7 @@ def build_case(peptides, seed):
     for _ in range(15):
         source = rng.choice(real)
         start = rng.randrange(0, max(1, len(source) - 9))
-        # embed a real epitope window inside a longer synthetic query
+        # Embed a real epitope window.
         flank_l = ''.join(rng.choice(AMINO_ACIDS) for _ in range(rng.randrange(0, 12)))
         flank_r = ''.join(rng.choice(AMINO_ACIDS) for _ in range(rng.randrange(0, 12)))
         query = flank_l + source[start:start + 9] + flank_r
@@ -100,7 +97,7 @@ def test_mhcpep_index_is_exactly_equivalent():
         expected = reference.list_of_peptides_from_comparison_with_mhcpep_sapiens
         actual = indexed.list_of_peptides_from_comparison_with_mhcpep_sapiens
         assert actual == expected, f'seed {seed}: {len(actual)} matches vs {len(expected)} expected'
-        # a test that matched nothing on either side would pass vacuously
+        # Ensure the test includes matches.
         assert len(expected) > 0, f'seed {seed} produced no matches; the case is not exercising anything'
 
 
@@ -110,16 +107,16 @@ def test_kmer_index_skips_only_non_matching_peptides():
     index = build_kmer_index(peptides, 6)
     assert index['CCCGGG'] == ['AAACCCGGG', 'CCCGGGTTT']
     assert 'YYYYYY' in index
-    # too short to contain a 6-mer, and the non-string entries, are skipped
+    # Skip short and non-string entries.
     assert all('CCC' != p for p in index.get('CCCGGG', []))
 
 
 def test_derive_accession():
     assert derive_accession('sp|P0C277|FOLD_NEIMB Bifunctional protein') == 'P0C277'
     assert derive_accession('tr|Q0P9Y0|Q0P9Y0_CAMJE Putative') == 'Q0P9Y0'
-    # NCBI style with more than three fields used to yield None
+    # NCBI header.
     assert derive_accession('gi|12345|ref|NP_001|') == '12345'
-    # bare in-house identifiers fall back to the first token
+    # Bare identifier.
     assert derive_accession('LBRM2904_000010100 hypothetical protein') == 'LBRM2904_000010100'
     assert derive_accession('single') == 'single'
 
@@ -129,10 +126,10 @@ def test_normalize_header_is_unique_and_safe():
     first, acc1 = normalize_header('sp|P0C277|FOLD_NEIMB Bifunctional protein', seen)
     assert first == 'sp|P0C277|P0C277 Bifunctional protein'
     assert acc1 == 'P0C277'
-    # a colliding accession must be disambiguated, not silently merged
+    # Disambiguate duplicate accessions.
     _, acc2 = normalize_header('sp|P0C277|OTHER Another protein', seen)
     assert acc2 == 'P0C277_2'
-    # path separators cannot survive: the accession names an output directory
+    # Keep output identifiers path-safe.
     _, acc3 = normalize_header('weird/id|with|slashes description', seen)
     assert '/' not in acc3
 
@@ -199,6 +196,19 @@ def test_ordered_hsps_is_independent_of_blast_output_order():
     ]
 
 
+def test_concatenated_blast_documents_are_parsed_separately(tmp_path, monkeypatch):
+    from code import Immunity
+
+    path = tmp_path / 'blast.xml'
+    path.write_text('<?xml version="1.0"?>\n<first/>\n'
+                    '<?xml version="1.0"?>\n<second/>\n')
+    monkeypatch.setattr(Immunity.NCBIXML, 'parse', lambda handle: [handle.read()])
+    records = list(parse_blast_records(path))
+    assert len(records) == 2
+    assert '<first/>' in records[0]
+    assert '<second/>' in records[1]
+
+
 def test_refseq_description_cannot_become_epitope_path(tmp_path):
     raw_header = ('WP_044285928.1 ZmpA/ZmpB/ZmpC family metallo-endopeptidase '
                   '[Mesomycoplasma ovipneumoniae]')
@@ -256,3 +266,19 @@ def test_epitope_worker_autoscaling_is_bounded():
     assert available_cpu_count() >= 1
     assert resolve_epitope_workers(0, 3) == min(available_cpu_count(), 3)
     assert resolve_epitope_workers(99, 2) == 2
+
+
+def test_epitope_binders_are_scoped_to_current_candidate():
+    from code.Epitope import _get_binders
+
+    current = pd.DataFrame({'name': ['current'], 'score': [1.0]})
+
+    class Predictor:
+        data = pd.DataFrame({'name': ['stale'], 'score': [2.0]})
+
+        def get_binders(self):
+            return self.data
+
+    predictor = Predictor()
+    assert _get_binders(predictor, current).equals(current)
+    assert predictor.data is current

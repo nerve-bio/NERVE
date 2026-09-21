@@ -1,7 +1,33 @@
 #!/usr/local/bin/python
 """NERVE useful functions and classes"""
 
-import argparse, logging, os, re, subprocess
+import argparse, logging, os, re, subprocess, time
+
+
+class Progress:
+    def __init__(self, label, total, every=30.0, min_total=1000):
+        self.label = label
+        self.total = total
+        self.every = every
+        self.enabled = total >= min_total
+        self.started = time.monotonic()
+        self.next_update = every
+
+    def update(self, done):
+        if not self.enabled:
+            return
+        elapsed = time.monotonic() - self.started
+        if elapsed < self.next_update and done < self.total:
+            return
+        self.next_update = elapsed + self.every
+        if done >= self.total:
+            print(f'  {self.label}: {done}/{self.total} in {elapsed:.0f}s', flush=True)
+            return
+        rate = done / elapsed if elapsed else 0
+        remaining = (self.total - done) / rate if rate else 0
+        print(f'  {self.label}: {done}/{self.total}  {elapsed:.0f}s elapsed, '
+              f'~{remaining:.0f}s left', flush=True)
+
 
 def bashCmdMethod(bashCmd):
     """Run bash commands
@@ -17,21 +43,9 @@ def dir_path(path:str) -> str:
     return path
 
 
-# --- protein identity -------------------------------------------------------
-# Every external tool in the pipeline (iFeature, psortb, blastp, DeepFRI) echoes
-# back an identifier derived from the FASTA header, and each module has to map
-# that string onto the Protein it came from. Doing that with `if tool_id in
-# protein.id` is wrong twice over: it is a scan of the whole proteome per lookup,
-# and it matches whenever one identifier is a substring of another, so a short id
-# silently binds to the first longer protein that contains it.
-#
-# Instead headers are rewritten to a canonical, unique, filesystem-safe form
-# during quality control (normalize_header), and resolved here by exact lookup.
-# Uniqueness is what makes the exact lookup provably unambiguous rather than
-# merely better than substring matching.
+# Protein identifiers.
 
-# anything outside this set is replaced: the accession is also used as a
-# directory name for the per-protein epitope output
+# Characters allowed in output identifiers.
 _UNSAFE_ID_CHARS = re.compile(r'[^A-Za-z0-9._-]')
 
 
@@ -41,14 +55,7 @@ def sanitize_identifier(identifier:str) -> str:
 
 
 def derive_accession(header:str) -> str:
-    """Extract the accession from a FASTA header (without the leading '>').
-
-    'db|ACC|NAME' style headers (UniProt, and the NCBI variants that carry more
-    than three fields) yield the second '|'-delimited field; anything else -- a
-    bare or in-house identifier -- yields the first whitespace-delimited token.
-    param: header: FASTA header without the leading '>'
-    output: raw, un-sanitized accession string
-    """
+    """Extract the accession from a FASTA header."""
     stripped = header.strip()
     token = stripped.split()[0] if stripped.split() else stripped
     fields = token.split('|')
@@ -58,20 +65,12 @@ def derive_accession(header:str) -> str:
 
 
 def normalize_header(header:str, seen_accessions:set) -> tuple:
-    """Rewrite a FASTA header to canonical 'sp|ACC|ACC description' form.
-
-    ACC is sanitized to be safe as a filename and made unique across the
-    proteome, so that identifier matching and the per-protein epitope output
-    directories both work whatever convention the input database follows.
-    param: header: FASTA header without the leading '>'
-    param: seen_accessions: accessions already assigned; mutated in place
-    output: (canonical_header, accession)
-    """
+    """Return a canonical FASTA header and accession."""
     stripped = header.strip()
     parts = stripped.split(None, 1)
     description = parts[1] if len(parts) > 1 else ''
     accession = sanitize_identifier(derive_accession(stripped))
-    # disambiguate collisions so the accession identifies exactly one protein
+    # Disambiguate duplicate accessions.
     if accession in seen_accessions:
         base, suffix = accession, 2
         while f'{base}_{suffix}' in seen_accessions:
@@ -85,16 +84,7 @@ def normalize_header(header:str, seen_accessions:set) -> tuple:
 
 
 def build_id_index(list_of_proteins) -> dict:
-    """Index proteins by the identifiers external tools can emit for them.
-
-    Two aliases are registered per protein: the leading token of its id (the
-    canonical 'sp|ACC|ACC') and the bare accession, since tools differ in how
-    much of the header they echo back. normalize_header makes both unique, so
-    the mapping is unambiguous; the first protein registered wins if it is not,
-    which keeps the result deterministic on un-normalized input.
-    param: list_of_proteins: list of Protein objects
-    output: dict mapping identifier alias -> Protein
-    """
+    """Index proteins by external identifiers."""
     index = {}
     for protein in list_of_proteins:
         tokens = protein.id.split()
@@ -105,17 +95,7 @@ def build_id_index(list_of_proteins) -> dict:
 
 
 def match_protein(external_id:str, index:dict, list_of_proteins=None):
-    """Resolve an identifier emitted by an external tool to its Protein.
-
-    Tries the leading token, then the accession derived from it. Both are exact
-    dictionary lookups. A miss cannot happen for normalized headers, so the
-    substring fallback exists only to keep un-normalized input working. It is
-    accepted only when exactly one protein matches; ambiguity fails closed.
-    param: external_id: identifier string as emitted by an external tool
-    param: index: mapping produced by build_id_index
-    param: list_of_proteins: enables the substring fallback when supplied
-    output: the matching Protein, or None
-    """
+    """Resolve an external identifier to its protein."""
     tokens = external_id.split()
     token = tokens[0] if tokens else external_id
     protein = index.get(token)

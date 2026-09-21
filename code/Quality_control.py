@@ -154,7 +154,7 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False,
                         force=True)
     
     filtered_sequences, discarded_sequences = [],[]
-    # accessions assigned so far, so canonical headers stay unique
+    # Keep canonical accessions unique.
     seen_accessions = set()
     # control formatting
     fasta_list = is_fasta(path_to_fasta)
@@ -169,20 +169,17 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False,
     for record in fasta_list:
         new_seq, reason, message, modifications = qc_sequence(
             str(record.seq), max_unknown_fraction)
-        # check name: a '>' inside a header would split the record when the
-        # cleaned file is parsed again, so it goes before anything else reads it
+        # Remove embedded FASTA delimiters.
         original_description = record.description
         if ">" in original_description:
             logging.debug(f'Found non-allowed character ">" in sequence name:\n{original_description}\nSubstituting with "_"')
             original_description = original_description.replace(">", "_")
-        # rewrite to a canonical, unique, filesystem-safe header so that every
-        # downstream tool echoes back an identifier we can resolve exactly
+        # Normalize the header for downstream tools.
         canonical_description, accession = normalize_header(original_description, seen_accessions)
         if canonical_description != original_description:
             logging.debug(f'Header normalized:\n{original_description}\n-> {canonical_description}')
         record.description = canonical_description
-        # keep the user's header for reporting; the pipeline matches on the
-        # canonical one but the output tables should stay readable
+        # Keep the original header for reporting.
         record.original_description = original_description
         record.accession = accession
         if new_seq is not None:

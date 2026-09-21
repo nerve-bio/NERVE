@@ -1,0 +1,6 @@
+# Allowlist: the root Dockerfile copies only ./code. Last match wins.
+*
+!code
+code/**/__pycache__
+code/__pycache__
+**/*.pyc

@@ -1,8 +1,8 @@
-"""Parallel epitope prediction with one reusable predictor pair per worker."""
-import math, multiprocessing, os
+"""Run epitope prediction of proteins"""
+import contextlib, io, math, multiprocessing, os
 from concurrent.futures import ProcessPoolExecutor
 for _name in ('OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS','NUMEXPR_NUM_THREADS','BLIS_NUM_THREADS'):
-    os.environ.setdefault(_name, '1')
+    os.environ[_name] = '1'
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -34,11 +34,21 @@ def resolve_epitope_workers(requested, task_count):
     if requested < 0: raise ValueError('epitope_workers must be zero (auto) or positive')
     return max(1, min(requested, max(1, task_count)))
 
+@contextlib.contextmanager
+def _quiet():
+    """Capture predictor output unless explicitly enabled."""
+    if os.environ.get('NERVE_VERBOSE_PREDICTOR'):
+        yield
+        return
+    with contextlib.redirect_stdout(io.StringIO()):
+        yield
+
 def _init_worker():
-    _PREDICTORS['mhcii'] = base.get_predictor('tepitope')
-    _PREDICTORS['mhci'] = base.get_predictor('basicmhc1')
-    _PREDICTORS['m2'] = base.get_preset_alleles('mhc2_supertypes')
-    _PREDICTORS['m1'] = base.get_preset_alleles('mhc1_supertypes')
+    with _quiet():
+        _PREDICTORS['mhcii'] = base.get_predictor('tepitope')
+        _PREDICTORS['mhci'] = base.get_predictor('basicmhc1')
+        _PREDICTORS['m2'] = base.get_preset_alleles('mhc2_supertypes')
+        _PREDICTORS['m1'] = base.get_preset_alleles('mhc1_supertypes')
 
 def _coverage(binders, sequence, length):
     result = {}
@@ -50,8 +60,14 @@ def _coverage(binders, sequence, length):
         result[allele] = ' '.join(map(str, coverage))
     return result
 
-def _save_plots(predictor, output_dir, prot_name, kind):
-    for name in predictor.get_names():
+def _get_binders(predictor, predictions):
+    predictor.data = predictions
+    return predictor.get_binders() if not predictions.empty else predictions.copy()
+
+def _save_plots(predictor, predictions, output_dir, prot_name, kind):
+    names = (list(pd.unique(predictions['name']))
+             if 'name' in predictions.columns else [])
+    for name in names:
         ax = plotting.plot_tracks([predictor], name=name)
         if ax is not None:
             ax.figure.savefig(os.path.join(output_dir, f'tracks_plot_pbs_{kind}_{prot_name}.png'))
@@ -69,18 +85,23 @@ def _predict_candidate(task):
     name = epitope_output_identifier(p)
     output_dir = os.path.join(working_dir, 'epitope', name)
     os.makedirs(output_dir, exist_ok=True)
-    mhci = m1.predict_sequences(sequence, alleles=_PREDICTORS['m1'], length=m1len, verbose=False, overlap=m1overlap)
-    mhcii = m2.predict_sequences(sequence, alleles=_PREDICTORS['m2'], length=m2len, verbose=False, overlap=m2overlap)
+    with _quiet():
+        mhci = m1.predict_sequences(sequence, alleles=_PREDICTORS['m1'], length=m1len, verbose=False, overlap=m1overlap)
+        mhcii = m2.predict_sequences(sequence, alleles=_PREDICTORS['m2'], length=m2len, verbose=False, overlap=m2overlap)
     mhci['protein id'], mhcii['protein id'] = p.id, p.id
-    binders1 = m1.get_binders() if not mhci.empty else mhci.copy()
-    binders2 = m2.get_binders() if not mhcii.empty else mhcii.copy()
+    binders1 = _get_binders(m1, mhci)
+    binders2 = _get_binders(m2, mhcii)
     columns = ['peptide','pos','alleles','core','score']
     pb1, pb2 = pd.DataFrame(columns=columns), pd.DataFrame(columns=columns)
     if not binders1.empty:
-        pb1 = m1.promiscuous_binders(names=binders1); pb1 = pb1[pb1.alleles > 1]
+        with _quiet():
+            pb1 = m1.promiscuous_binders(names=binders1)
+        pb1 = pb1[pb1.alleles > 1]
         p.MHC1_binders = _coverage(binders1, sequence, m1len)
     if not binders2.empty:
-        pb2 = m2.promiscuous_binders(names=binders2); pb2 = pb2[pb2.alleles > 1]
+        with _quiet():
+            pb2 = m2.promiscuous_binders(names=binders2)
+        pb2 = pb2[pb2.alleles > 1]
         p.MHC2_binders = _coverage(binders2, sequence, m2len)
     if not pb1.empty: p.MHC1_pb_binders = pb1[columns].reset_index(drop=True).to_csv(sep='\t')
     if not pb2.empty: p.MHC2_pb_binders = pb2[columns].reset_index(drop=True).to_csv(sep='\t')
@@ -89,7 +110,8 @@ def _predict_candidate(task):
         (pb1,f'Promiscuous_binders_MHC1_{name}.csv'),(pb2,f'Promiscuous_binders_MHC2_{name}.csv')):
         frame.to_csv(os.path.join(output_dir, filename), index=False)
     if ep_plots == 'True':
-        _save_plots(m1, output_dir, name, 'MHC1'); _save_plots(m2, output_dir, name, 'MHC2')
+        _save_plots(m1, mhci, output_dir, name, 'MHC1')
+        _save_plots(m2, mhcii, output_dir, name, 'MHC2')
     return p, os.getpid()
 
 def epitope(final_proteins, working_dir, mhci_length, mhcii_length, mhci_overlap,

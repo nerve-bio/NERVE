@@ -27,7 +27,7 @@ ID_COLUMNS = ('uniprot_accession_code', 'id ', 'id')
 def identifier_column(frame, path):
     """Pick the column identifying a candidate, preferring the accession."""
     for name in ID_COLUMNS:
-        if name in frame.columns and frame[name].notna().any():
+        if name in frame.columns:
             return name
     raise SystemExit(f'{path}: no usable identifier column; found {list(frame.columns)}')
 
@@ -46,10 +46,15 @@ def main():
     label_a, label_b = os.path.basename(os.path.dirname(args.a)) or 'A', \
                        os.path.basename(os.path.dirname(args.b)) or 'B'
 
-    column = identifier_column(a, args.a)
-    a[column] = a[column].astype(str)
-    b[column] = b[column].astype(str)
-    set_a, set_b = set(a[column]), set(b[column])
+    column_a = identifier_column(a, args.a)
+    column_b = identifier_column(b, args.b)
+    for frame, column, path in ((a, column_a, args.a), (b, column_b, args.b)):
+        if frame[column].isna().any() or frame[column].astype(str).str.strip().eq('').any():
+            raise SystemExit(f'{path}: missing candidate identifier')
+        if frame[column].duplicated().any():
+            raise SystemExit(f'{path}: duplicate candidate identifier')
+        frame[column] = frame[column].astype(str)
+    set_a, set_b = set(a[column_a]), set(b[column_b])
     shared = set_a & set_b
     union = set_a | set_b
 
@@ -69,10 +74,14 @@ def main():
                 print(f'    ... and {len(missing) - 20} more')
 
     scores_agree = True
-    if shared and 'score' in a.columns and 'score' in b.columns:
+    if 'score' not in a.columns or 'score' not in b.columns:
+        raise SystemExit('Both candidate files must contain score')
+    if a['score'].isna().any() or b['score'].isna().any():
+        raise SystemExit('Candidate score is missing')
+    if shared:
         ordered = sorted(shared)
-        sa = a.drop_duplicates(column).set_index(column).loc[ordered, 'score']
-        sb = b.drop_duplicates(column).set_index(column).loc[ordered, 'score']
+        sa = a.set_index(column_a).loc[ordered, 'score']
+        sb = b.set_index(column_b).loc[ordered, 'score']
         delta = (sa - sb).abs()
         over = int((delta > args.tol).sum())
         scores_agree = over == 0
@@ -84,8 +93,8 @@ def main():
             print(f'  correlation: pearson={sa.corr(sb):.6f}  spearman={sa.corr(sb, method="spearman"):.6f}')
         for n in (10, 25, 50, 100):
             if n <= min(len(a), len(b)):
-                top_a = set(a.nlargest(n, 'score')[column])
-                top_b = set(b.nlargest(n, 'score')[column])
+                top_a = set(a.nlargest(n, 'score')[column_a])
+                top_b = set(b.nlargest(n, 'score')[column_b])
                 print(f'  top-{n:<4} overlap: {len(top_a & top_b)}/{n}')
 
     identical = (not only_a) and (not only_b) and scores_agree

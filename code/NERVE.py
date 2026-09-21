@@ -1,20 +1,21 @@
 #!/usr/local/bin/python
 """Run NERVE, reverse vaccinology software"""
 
-import argparse, logging, os, pickle, time
+import argparse, logging, os, pickle, sys, time
 from typing import NamedTuple
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # disable warnings
 
-# Pin the numeric thread pools before any of them is created. The adhesin and
-# virulence models are float32, so a multi-threaded reduction reorders the sums
-# and moves p_ad / p_vir at around 1e-7 -- enough to reorder candidates of
-# similar score between two runs of identical code. Pinning removes the variation
-# rather than bounding it, which is what makes two runs comparable at all.
+# Keep numerical predictions reproducible.
 for _thread_var in ('OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'MKL_NUM_THREADS',
                     'NUMEXPR_NUM_THREADS', 'VECLIB_MAXIMUM_THREADS', 'BLIS_NUM_THREADS',
                     'TF_NUM_INTRAOP_THREADS', 'TF_NUM_INTEROP_THREADS'):
-    os.environ.setdefault(_thread_var, '1')
+    os.environ[_thread_var] = '1'
+
+try:
+    sys.stdout.reconfigure(line_buffering=True)
+except AttributeError:
+    pass
 
 from code.Protein import Protein
 from code.Utils import bashCmdMethod, dir_path
@@ -320,24 +321,13 @@ def get_args() -> Args:
                 args.resume, args.max_unknown_fraction)
 
 
-# stage ordinal -> (name, wall-clock seconds), filled in as the pipeline runs
+# Per-stage timings.
 _STAGE_TIMINGS = []
 _CHECKPOINTER = None
 
 
 def record_stage(args, ordinal, name, proteins, started, all_proteins=None):
-    """Close out a pipeline stage: record its duration and optionally snapshot it.
-
-    With --keep_snapshots the whole protein list is pickled after every stage, so
-    two runs can be diffed stage by stage to localise where they first diverge
-    (see harness/). Snapshots are only written on request: they are large and
-    only useful when comparing runs.
-    param: args: parsed arguments
-    param: ordinal: 1-based stage number, used to order the report
-    param: name: short stage name, used in the report and the snapshot filename
-    param: list_of_proteins: pipeline state after the stage
-    param: started: time.monotonic() captured before the stage
-    """
+    """Record a completed pipeline stage."""
     if _CHECKPOINTER is not None and _CHECKPOINTER.done(ordinal):
         return
     _STAGE_TIMINGS.append((ordinal, name, time.monotonic() - started))
@@ -352,7 +342,7 @@ def record_stage(args, ordinal, name, proteins, started, all_proteins=None):
     directory = os.path.join(args.working_dir, 'snapshots')
     os.makedirs(directory, exist_ok=True)
     path = os.path.join(directory, f'{ordinal:02d}_{name}.pkl')
-    # write then rename, so an interrupted run cannot leave a half-written pickle
+    # Replace the snapshot atomically.
     with open(path + '.tmp', 'wb') as handle:
         pickle.dump(proteins, handle)
     os.replace(path + '.tmp', path)
@@ -503,7 +493,8 @@ def main():
     logging.debug("Tmhelices start...")
     start=time.monotonic()
     if completed_stage < 4:
-        list_of_proteins = tmhelices(list_of_proteins, args.working_dir)
+        list_of_proteins = tmhelices(list_of_proteins, args.working_dir,
+                                     threads=args.threads)
     end=time.monotonic()
     logging.debug("Done run in: {:.4f} seconds".format(end-start))
     print("40% done")

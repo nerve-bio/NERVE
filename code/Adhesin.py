@@ -3,7 +3,10 @@
 import os
 import numpy as np
 from tensorflow import keras
-from code.Utils import bashCmdMethod, build_id_index, match_protein
+from code.Utils import Progress, bashCmdMethod, build_id_index, match_protein
+
+_ADHESIN_CHUNK = 2048
+
 
 def extract_features(list_of_proteins, NERVE_dir, iFeature_dir, working_dir, proteome1) -> list:
     """Extract features from protein sequences with iFeature and store them as numpy array in Protein.model_raw_data for subsequent preprocessing and model prediction. These features will be used by adhesin and virulent factor predictos.
@@ -27,10 +30,7 @@ def extract_features(list_of_proteins, NERVE_dir, iFeature_dir, working_dir, pro
             lines = f.readlines()[1:]
             for line in lines:
                 information = line.split('\t')
-                # Append to the correct protein. Resolved by exact lookup: a
-                # substring scan binds a short identifier to the first longer one
-                # containing it, which silently feeds a protein another's
-                # descriptors and so corrupts its adhesin probability.
+                # Append to the correct protein.
                 protein = match_protein(information[0], index, list_of_proteins)
                 if protein is not None:
                     protein.model_raw_data.append(np.array([float(el) for el in information[1:]]))
@@ -57,10 +57,16 @@ def adhesin_predict(list_of_proteins, NERVE_dir)->list:
     means = np.load(os.path.join(model_dir, 'means_adhesin.npy'))
     projection_matrix = np.load(os.path.join(model_dir, 'projection_matrix_adhesin.npy'))
     model = keras.models.load_model(os.path.join(model_dir, 'adhesin_classifier.h5'))
-    for protein in list_of_proteins:
-        data = protein.standardize(means, std_devs, projection_matrix)
-        data = np.array(data)[None, ...]
-        protein.p_ad = float(model.predict(data))
+    total = len(list_of_proteins)
+    progress = Progress('adhesin', total)
+    for start in range(0, total, _ADHESIN_CHUNK):
+        proteins = list_of_proteins[start:start + _ADHESIN_CHUNK]
+        data = np.array([protein.standardize(means, std_devs, projection_matrix)
+                         for protein in proteins])
+        predictions = model.predict(data, batch_size=1, verbose=0)
+        for protein, prediction in zip(proteins, predictions):
+            protein.p_ad = float(prediction)
+        progress.update(start + len(proteins))
         
     return list_of_proteins
         

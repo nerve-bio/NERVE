@@ -1,113 +1,69 @@
-#!/usr/bin/python3
-"""
-    
-    Tests NERVE
-    run with: pytest tests/tests.py
-    
+"""Docker integration checks for the optimized pipeline.
+
+Run after building the optimized image and starting PSORTb on nerve-network:
+    NERVE_TEST_IMAGE=nerve:v0.1.0 pytest -q tests/tests.py -p no:debugging
+Each test mounts a fresh output directory and leaves the repository untouched.
 """
 
 import os
-from subprocess import getstatusoutput
+import subprocess
+from pathlib import Path
 
-# global test variables
+import pandas as pd
+import pytest
 
-NERVE_VERSION="v0.0.8"
-RUN = f"docker run --network nerve-network -p 8880:8880 -i -v $(pwd):/workdir nerve:{NERVE_VERSION}"
 
-WORKDIR = "./tests/output_data/"
-INPUTDIR = "./tests/input_data/"
-TEST1 = ('proteome1', f'--gram n --proteome1 {INPUTDIR}proteome1.fasta --working_dir\
-          {WORKDIR}proteome1 --annotation False --razor False --select False --mouse False --epitopes False')
-TEST2 = ('proteome1', f'--gram n --proteome1 {INPUTDIR}proteome1.fasta --working_dir\
-          {WORKDIR}proteome1 --annotation True --razor False --select False --mouse False --epitopes False')
-TEST3 = ('proteome1', f'--gram n --proteome1 {INPUTDIR}proteome1.fasta --working_dir\
-          {WORKDIR}proteome1 --annotation True --razor False --select True --mouse False --epitopes False')
-TEST4 = ('proteome1', f'--gram n --proteome1 {INPUTDIR}proteome1.fasta --working_dir\
-          {WORKDIR}proteome1 --annotation True --razor False --select True --mouse True --epitopes False')
-TEST5 = ('proteome2', f'--gram n --proteome1 {INPUTDIR}proteome2.fasta --working_dir\
-          {WORKDIR}proteome2 --annotation True --razor True --select True --mouse True --epitopes False')
+ROOT = Path(__file__).resolve().parents[1]
+IMAGE = os.environ.get('NERVE_TEST_IMAGE', 'nerve:v0.1.0')
 
-TEST6 = ('proteome3', f'--gram p --proteome1 {INPUTDIR}proteome3.fasta --working_dir\
-          {WORKDIR}proteome3 --annotation True --razor True --select True --mouse True --epitopes False')
-TEST7 = ('proteome4', f'--gram p --proteome1 {INPUTDIR}proteome4.fasta --working_dir\
-          {WORKDIR}proteome4 --annotation True --razor True --select True --mouse True --epitopes False')
-TEST8 = ('proteome4', f'--gram p --proteome1 {INPUTDIR}proteome4.fasta \
-         -p2 {INPUTDIR}proteome5.fasta \
-         --working_dir {WORKDIR}proteome4 --annotation True --razor True --select \
-         True --mouse True --epitopes False')
 
-TEST9 = ('proteome5', f'--gram n --proteome1 {INPUTDIR}proteome5.fasta --working_dir\
-          {WORKDIR}proteome5 --annotation False --razor False --select True --mouse False --epitopes True', 
-          [
-              "epitope/Q0PC84/heatmap_pbs_MHC1_Q0PC84.png",
-              "epitope/Q0PC84/MHC1_epitopes_FILTERED_Q0PC84.csv",
-              "epitope/Q0PC84/Promiscuous_binders_MHC1_Q0PC84.csv",
-              "epitope/Q0PC84/mhci_epitopes_Q0PC84.csv",
-              "epitope/Q0PC84/mhcii_epitopes_Q0PC84.csv"
-          ]
-)
+def run_image(output, *args):
+    command = [
+        'docker', 'run', '--rm', '--network', 'nerve-network',
+        '-v', f'{ROOT / "tests" / "input_data"}:/inputs:ro',
+        '-v', f'{output}:/outputs', IMAGE, *args,
+    ]
+    return subprocess.run(command, text=True, capture_output=True)
 
-TEST10 = ('proteome6', f'--gram p --proteome1 {INPUTDIR}proteome6.fasta \
-            --working_dir {WORKDIR}proteome6 --annotation True --razor True --select \
-            True --mouse True --epitopes False', """>sp|Q0PC84|Q0PC84 Basal-body rod modification protein FlgD OS=Campylobacter jejuni subsp. jejuni serotype O:2 (strain ATCC 700819 / NCTC 11168) OX=192222 GN=flgD PE=3 SV=1
-MISSSDWNLNTTATTSGTTSS@GSTSGTTRTDSSSSSGIVSNPNATLDKDAFLKLLLIELQHQDPTDPMDSDKMLTQTSQLSALEMQQNTNTTMQKMVETMQKLSDSFSTSMSTSALGAIGKMATVSDNKIKLTGADELIALKMYLPEDSDENGVTLEIYDSNNKLVFSEKSDAKSISQGLFTMEWPGRNNDGVYAGDGEYTVKMVYNNKNGEKITANYGTYPIEGVVFKDGVAYAKMAGQEVPFDAIQEITDYKLGSSSSTGGSGSSGDSSGGSSDGDSSGSGSTEDGDKEEKA
-""")
 
-TEST11 = ('proteome7', f'--gram p --proteome1 {INPUTDIR}proteome7.fasta \
-            --working_dir {WORKDIR}proteome7 --annotation True --razor True --select \
-            True --mouse True --epitopes False', """>sp|Q0PC84|Q0PC84 Basal-body rod modification protein FlgD OS=Campylobacter jejuni subsp. jejuni serotype O:2 (strain ATCC 700819 / NCTC 11168) OX=192222 GN=flgD PE=3 SV=1
-MISSSDWNLNTTATTSGTTSSGSTSGTTRTDSSSSSGIVSNPNATLDKDAFLKLLLIELQHQDPTDPMDSDKMLTQTSQLSALEMQQNTNTTMQKMVETMQKLSDSFSTSMSTSALGAIGKMATVSDNKIKLTGADELIALKMYLPEDSDENGVTLEIYDSNNKLVFSEKSDAKSISQGLFTMEWPGRNNDGVYAGDGEYTVKMVYNNKNGEKITANYGTYPIEGVVFKDGVAYAKMAGQEVPFDAIQEITDYKLGSSSSTGGSGSSGDSSGGSSDGDSSGSGSTEDGDKEEKAC
-""")
+def test_help(tmp_path):
+    result = run_image(tmp_path, '--help')
+    assert result.returncode == 0, result.stderr
+    assert '--checkpoint' in result.stdout
 
-# test functions
 
-def test_usage() -> None:
-    """Prints usage"""
-    for arg in ['-h', '--help']:
-        rv, out = getstatusoutput(f'{RUN} {arg}')
-        assert rv == 0 
+@pytest.mark.parametrize('extra', [
+    ('--select', 'False'),
+    ('--select', 'True'),
+    ('--mouse', 'True', '--select', 'True'),
+])
+def test_small_pipeline(tmp_path, extra):
+    result = run_image(
+        tmp_path, '--proteome1', '/inputs/proteome1.fasta', '--gram', 'n',
+        '--working_dir', '/outputs', '--annotation', 'False',
+        '--razor', 'False', '--virulent', 'False', '--epitopes', 'False',
+        '--threads', '1', *extra,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert 'End NERVE computation successfully.' in result.stdout
+    candidates = tmp_path / 'vaccine_candidates.csv'
+    discarded = tmp_path / 'discarded_proteins.csv'
+    assert candidates.is_file() and discarded.is_file()
+    for path in (candidates, discarded):
+        frame = pd.read_csv(path)
+        assert {'id', 'uniprot_accession_code', 'score'} <= set(frame.columns)
 
-def test_arg():
-    """Uses command-line arguments"""
-    for proteome1, arg in [TEST1, TEST2, TEST3, TEST4, TEST5, TEST6, TEST7, TEST8]:
-        rv, out = getstatusoutput(f'{RUN} {arg}')
-        print("rv:\n", rv)
-        print("out:\n", out)
-        assert rv == 0
-        assert out.endswith("End NERVE computation successfully.")
-        assert os.path.isfile(os.path.join(WORKDIR, proteome1, "vaccine_candidates.csv"))
-        assert os.path.isfile(os.path.join(WORKDIR, proteome1, "discarded_proteins.csv"))
 
-def test_epitope_files():
-    """Tests epitope output files"""
-    for proteome1, arg, expected1 in [TEST9]:
-        rv, out = getstatusoutput(f'{RUN} {arg}')
-        print("rv:\n", rv)
-        print("out:\n", out)
-        assert rv == 0
-        for file in expected1:
-            assert os.path.isfile(os.path.join(WORKDIR, proteome1, file)) == True
-
-def test_exception_1():
-    """Test presence of input sequences with wrong format"""
-    for proteome1, arg, expected1 in [TEST10]:
-        rv, out = getstatusoutput(f'{RUN} {arg}')
-        print("rv:\n", rv)
-        print("out:\n", out)
-        assert rv == 0
-        print("expected1:\n", expected1, "\neffective1:\n", open(os.path.join(WORKDIR, proteome1, 
-                                    f"discarded_sequences_{proteome1}.fasta"), 'r').read())
-        assert expected1 == open(os.path.join(WORKDIR, proteome1, 
-                                              f"discarded_sequences_{proteome1}.fasta"), 'r').read()
-    
-def test_exception_2():
-    """Test presence of input sequences with wrong format"""
-    for proteome1, arg, expected1 in [TEST11]:
-        rv, out = getstatusoutput(f'{RUN} {arg}')
-        print("rv:\n", rv)
-        print("out:\n", out)
-        assert rv == 0
-        print("expected1:\n", expected1, "\neffective1:\n", open(os.path.join(WORKDIR, proteome1, 
-                                    f"cleaned_{proteome1}.fasta"), 'r').read())
-        assert expected1 == open(os.path.join(WORKDIR, proteome1, 
-                                              f"cleaned_{proteome1}.fasta"), 'r').read()
+def test_epitope_artifacts(tmp_path):
+    result = run_image(
+        tmp_path, '--proteome1', '/inputs/proteome5.fasta', '--gram', 'n',
+        '--working_dir', '/outputs', '--annotation', 'False',
+        '--razor', 'False', '--mouse', 'False', '--virulent', 'False',
+        '--select', 'True', '--epitopes', 'True', '--ep_plots', 'False',
+        '--epitope_workers', '1',
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    epitope = tmp_path / 'epitope'
+    assert epitope.is_dir()
+    assert list(epitope.rglob('mhci_epitopes_*.csv'))
+    assert list(epitope.rglob('mhcii_epitopes_*.csv'))

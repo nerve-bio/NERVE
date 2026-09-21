@@ -27,8 +27,7 @@ import os
 import pickle
 import sys
 
-# Snapshots hold pickled Protein objects, so unpickling needs the repository root
-# on the path whatever directory the harness is invoked from.
+# Load repository classes used by snapshots.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 _MISSING = object()
@@ -44,8 +43,18 @@ def load_proteins(path):
 
 
 def protein_key(protein):
-    """Identify a protein across two runs. Accession is unique by construction."""
+    """Identify a protein across two runs."""
     return str(getattr(protein, 'accession', None) or getattr(protein, 'id', ''))
+
+
+def keyed_proteins(path):
+    result = {}
+    for protein in load_proteins(path):
+        key = protein_key(protein)
+        if not key or key == 'None' or key in result:
+            raise ValueError(f'{path}: missing or duplicate protein key: {key!r}')
+        result[key] = attributes(protein)
+    return result
 
 
 def attributes(protein):
@@ -81,7 +90,7 @@ def values_equal(a, b, tol):
                 worst = magnitude if worst is None else max(worst, magnitude)
         return True, worst, ''
     if isinstance(a, (list, tuple)) and isinstance(b, (list, tuple)):
-        # order matters: the peptide sums fold these lists pairwise
+        # Preserve list order.
         if len(a) != len(b):
             return False, None, f'length {len(a)} vs {len(b)}'
         worst = None
@@ -104,8 +113,7 @@ def values_equal(a, b, tol):
             return magnitude <= tol, magnitude, ('' if magnitude <= tol else f'max|d|={magnitude:.3g}')
     except ImportError:
         pass
-    # Domain value objects such as Subcellular.Localization intentionally have
-    # no __eq__; compare their persisted public state instead of object identity.
+    # Compare persisted object state.
     if hasattr(a, '__dict__') and hasattr(b, '__dict__'):
         if type(a).__module__ != type(b).__module__ or type(a).__name__ != type(b).__name__:
             return False, None, f'types differ: {type(a).__name__} vs {type(b).__name__}'
@@ -116,8 +124,8 @@ def values_equal(a, b, tol):
 
 def compare_snapshots(path_a, path_b, tol=0.0, attrs=None):
     """Compare two snapshot files; returns a result dict."""
-    a = {protein_key(p): attributes(p) for p in load_proteins(path_a)}
-    b = {protein_key(p): attributes(p) for p in load_proteins(path_b)}
+    a = keyed_proteins(path_a)
+    b = keyed_proteins(path_b)
     common = sorted(set(a) & set(b))
     per_attr, examples = {}, {}
     for key in common:

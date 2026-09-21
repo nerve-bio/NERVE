@@ -11,3 +11,4 @@ tests/output_data
 *.pyc
 .venv/
 runs/
+validation_runs/

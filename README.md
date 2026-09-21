@@ -127,11 +127,35 @@ NERVE arguments:
   -dfd, --DeepFri_dir 
                         Path to DeepFri folder (download from: https://github.com/flatironinstitute/DeepFRI) (default: /usr/nerve_python/assets/DeepFri)
   -epp, --ep_plots  Epitopes plotting script (default: True)
+  -t, --threads      BLAST and topology worker count (default: 1)
+  -ks, --keep_snapshots
+                       Save protein state after each stage (default: False)
+  -ew, --epitope_workers
+                       Epitope processes; 0 detects available CPUs (default: 0)
+  -ck, --checkpoint  Save a restart checkpoint after each stage (default: False)
+  -rs, --resume      Resume from a compatible checkpoint (default: False)
+  --max_unknown_fraction
+                       Maximum fraction of unresolved amino acids (default: 0.05)
   ```
 **5) (optional) test correct functioning:**
 ```
-pytest tests/tests.py
+pytest -q tests/test_equivalence.py tests/test_harness.py -p no:debugging
 ```
+
+The Docker integration suite is `pytest -q tests/tests.py -p no:debugging` after
+building the image and starting PSORTb on `nerve-network`. It uses fresh output
+directories. The [harness guide](harness/README.md) describes the reduced
+same-source validation run.
+
+Quality control writes a cleaned FASTA and a discarded FASTA. When applicable,
+it also writes TSV logs of sequence modifications and discard reasons. The
+original input header remains in result tables while downstream tools use a
+unique, filesystem-safe identifier. QC may retain a protein that older NERVE
+versions discarded, so compare candidate populations with the QC logs in hand.
+
+Topology prediction uses the Python `tmhmm.py` interface. Its underlying model
+and parameters derive from DTU TMHMM; consult that dependency's terms before
+redistributing those components.
 
 ## Common usage and tips:
 
