@@ -331,6 +331,8 @@ def get_args() -> Args:
             parser.error(f'--{name} must be a finite number between 0 and 1')
     if not math.isfinite(args.mouse_peptides_sum_limit) or args.mouse_peptides_sum_limit < 0:
         parser.error('--mouse_peptides_sum_limit must be a finite nonnegative number')
+    if args.mouse == 'True' and args.mouse_peptides_sum_limit == 0:
+        parser.error('--mouse_peptides_sum_limit must be positive when --mouse True')
     if not math.isfinite(args.e_value) or args.e_value <= 0:
         parser.error('--e_value must be a finite positive number')
 

@@ -26,6 +26,7 @@ import argparse
 import os
 import pickle
 import sys
+import warnings
 
 # Load repository classes used by snapshots.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -36,7 +37,12 @@ _MISSING = object()
 def load_proteins(path):
     """Load a snapshot pickle into a list of Protein objects."""
     with open(path, 'rb') as handle:
-        obj = pickle.load(handle)
+        # Saved NumPy pickles refer to a legacy module path. NumPy 2 warns
+        # while resolving it; the loaded values are compared normally below.
+        with warnings.catch_warnings():
+            warnings.filterwarnings('ignore', category=DeprecationWarning,
+                                    message=r'numpy\.core\.numeric is deprecated.*')
+            obj = pickle.load(handle)
     if isinstance(obj, dict) and 'list_of_proteins' in obj:
         return obj['list_of_proteins']
     return obj
