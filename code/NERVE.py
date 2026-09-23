@@ -294,8 +294,7 @@ def get_args() -> Args:
                        )
     parser.add_argument('-ks', '--keep_snapshots',
                         metavar='\b',
-                        help="Pickle the protein list after every stage into 'snapshots/' for "
-                             "comparing two runs stage by stage (see harness/)",
+                        help="Pickle the protein list after every stage into 'snapshots/'",
                         type=str,
                         required=False,
                         default="False"

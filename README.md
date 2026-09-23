@@ -155,13 +155,13 @@ NERVE arguments:
   ```
 **5) (optional) test correct functioning:**
 ```
-pytest -q tests/test_equivalence.py tests/test_harness.py -p no:debugging
+pytest -q tests/test_equivalence.py -p no:debugging
 ```
 
 The Docker integration suite is `pytest -q tests/tests.py -p no:debugging` after
 building the image and starting PSORTb on `nerve-network`. It uses fresh output
-directories. The [harness guide](harness/README.md) describes the reduced
-same-source validation run.
+directories. The validation harness and its tests are kept outside this repo
+in the sibling `validation_harness/` directory.
 
 Quality control writes a cleaned FASTA and a discarded FASTA. When applicable,
 it also writes TSV logs of sequence modifications and discard reasons. The
