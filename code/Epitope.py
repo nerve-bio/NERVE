@@ -52,11 +52,25 @@ def _init_worker():
 
 def _coverage(binders, sequence, length):
     result = {}
+    grouped = binders.groupby('allele', sort=False)['pos'].agg(list)
     for allele in binders.allele.unique():
-        coverage = [0 for _ in sequence]
-        for start in binders[binders.allele == allele].pos.to_list():
-            for position in range(start, min(start + length, len(sequence) + 1)):
-                coverage[position - 1] += 1
+        size = len(sequence)
+        changes = [0] * (size + 1)
+        extras = [0] * size
+        starts = [] if pd.isna(allele) else grouped[allele]
+        for start in starts:
+            end = min(start + length, size + 1)
+            if start < 1:
+                for position in range(start, end):
+                    extras[position - 1] += 1
+            elif start <= size and end > start:
+                changes[start - 1] += 1
+                changes[end - 1] -= 1
+        coverage = []
+        count = 0
+        for change, extra in zip(changes, extras):
+            count += change
+            coverage.append(count + extra)
         result[allele] = ' '.join(map(str, coverage))
     return result
 

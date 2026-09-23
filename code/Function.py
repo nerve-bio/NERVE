@@ -51,18 +51,19 @@ def DeepFriParser(path_to_infile: open, treshold=0.5) -> pd.DataFrame:
             '''
     # import the .csv file in a table-like format using pandas module 
     df = pd.read_csv(path_to_infile, comment='#')
-    # rearrange information output
+    groups = {}
+    columns = [df.columns.get_loc(name) for name in
+               ('Protein', 'Score', 'GO_term/EC_number name')]
+    for row in df.itertuples(index=False, name=None):
+        protein, score, go = (row[index] for index in columns)
+        if pd.isna(protein):
+            raise IndexError('DeepFRI returned a missing protein ID')
+        groups.setdefault(protein, []).append(DeepFriEntry(protein, score, go))
     listout = []
-    for protein in df['Protein'].unique():
-        subdf = df[df['Protein'] == protein]
-        # get entries from every row in the form of named tuples
-        row_tuples = [DeepFriEntry(id_=row["Protein"], score=row["Score"], GO=row["GO_term/EC_number name"]) for index, row in subdf.iterrows()]
-        # sort named tuples based on score value in descending order
-        Protein = row_tuples[0].id_
-        sorted_row_tuples = sorted(row_tuples, key=attrgetter('score'), reverse=True)
-        # get only gene ontology values
-        GOs = f'{" | ".join([element.GO for element in sorted_row_tuples if element.score > treshold])}'
-        listout.append([Protein, GOs])
+    for protein, entries in groups.items():
+        entries.sort(key=attrgetter('score'), reverse=True)
+        listout.append([protein, ' | '.join(entry.GO for entry in entries
+                                            if entry.score > treshold)])
     output_df = pd.DataFrame(listout, columns = ['Protein', 'Function'])
     return output_df
     

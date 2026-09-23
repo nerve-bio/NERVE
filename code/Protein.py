@@ -123,17 +123,19 @@ class Protein:
 		if max_sub >= parsing_window_size or max_mismatch >= parsing_window_size:
 			print("Error in the match parser. Max substitutions and max mismatches have to be lower than the parsing window size! Return.")
 			return to_return
-		for i in range(0, len(hsp_match)-(parsing_window_size-1)):
-			tmp = hsp_match[i:i+parsing_window_size]
-			tmp_sub = 0
-			tmp_mismatch = 0
-			for el in tmp:
-				if el == " ":
-					tmp_mismatch += 1
-				elif el == "+":
-					tmp_sub += 1
+		if len(hsp_match) < parsing_window_size:
+			return to_return
+		tmp_sub = hsp_match[:parsing_window_size].count('+')
+		tmp_mismatch = hsp_match[:parsing_window_size].count(' ')
+		for i in range(len(hsp_match) - parsing_window_size + 1):
+			if i:
+				leaving = hsp_match[i - 1]
+				entering = hsp_match[i + parsing_window_size - 1]
+				tmp_sub += (entering == '+') - (leaving == '+')
+				tmp_mismatch += (entering == ' ') - (leaving == ' ')
 			if tmp_sub <= max_sub and tmp_mismatch <= max_mismatch:
-				to_return.append({'match': tmp, 'query': query, 'start_pos': i})
+				to_return.append({'match': hsp_match[i:i+parsing_window_size],
+				                  'query': query, 'start_pos': i})
 		return to_return
 	
 	@staticmethod
@@ -162,4 +164,4 @@ class Protein:
 	def extendRight(peptide, start_pep, real_query, start_q, len_query):
 		while (peptide[start_pep:start_pep+len_query] == real_query[start_q:start_q+len_query]) and (start_pep+len_query<len(peptide)) and (peptide[start_pep:start_pep+len_query+1] == real_query[start_q:start_q+len_query+1]):
 			len_query += 1
-		return len_query	
+		return len_query

@@ -731,7 +731,7 @@ def run_pipeline():
     # return .csv outputs
     output(final_proteins, os.path.join(args.working_dir, 'vaccine_candidates.csv'))
     # collect discarded proteins
-    final_proteins_names = [p.id for p in final_proteins]
+    final_proteins_names = {p.id for p in final_proteins}
     discarded_proteins = [p for p in list_of_proteins if p.id not in final_proteins_names]
     output(discarded_proteins, os.path.join(args.working_dir, 'discarded_proteins.csv'))
     reason_counts = write_selection_reasons(

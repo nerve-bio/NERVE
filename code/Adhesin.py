@@ -32,9 +32,9 @@ def extract_features(list_of_proteins, NERVE_dir, iFeature_dir, working_dir, pro
     index = build_id_index(list_of_proteins)
     for i in range(len(features)):
         with open(os.path.join(working_dir, features[i]+extension)) as f:
-            lines = f.readlines()[1:]
+            next(f, None)
             matched = set()
-            for line in lines:
+            for line in f:
                 information = line.split('\t')
                 # Append to the correct protein.
                 protein = match_protein(information[0], index, list_of_proteins)
