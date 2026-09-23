@@ -23,12 +23,14 @@ test "$(sha256sum "$CONSERVATION_FASTA" | cut -d' ' -f1)" = \
 }
 
 IMAGE_VERSION="$(docker image inspect -f '{{ index .Config.Labels "org.opencontainers.image.version" }}' "$IMAGE")"
+IMAGE_COMMIT="$(docker image inspect -f '{{ index .Config.Labels "org.opencontainers.image.revision" }}' "$IMAGE")"
 IMAGE_TREE="$(docker image inspect -f '{{ index .Config.Labels "org.opencontainers.image.source-tree" }}' "$IMAGE")"
 SOURCE_TREE="$(git ls-files -co --exclude-standard code Dockerfile .dockerignore NERVE.sh | \
     grep -Ev '(^|/)(__pycache__/|.*\.pyc$)' | LC_ALL=C sort | \
     xargs sha256sum | sha256sum | cut -d' ' -f1)"
 
 test "$IMAGE_VERSION" = "v0.1.0"
+test "$IMAGE_COMMIT" = "$(git rev-parse HEAD)"
 test "$IMAGE_TREE" = "$SOURCE_TREE"
 test "$(docker inspect -f '{{.State.Running}}' "$PSORT_CONTAINER" 2>/dev/null)" = "true" || {
     echo "PSORTb container \"${PSORT_CONTAINER}\" must be running." >&2
@@ -44,6 +46,8 @@ docker run --rm \
     -v "${ROOT_DIR}/harness:/usr/nerve_python/NERVE/harness:ro" \
     -w /usr/nerve_python/NERVE \
     --entrypoint python3 "$IMAGE" \
-    -m pytest -q tests/test_equivalence.py tests/test_harness.py -p no:debugging
+    -m pytest -q tests/test_equivalence.py tests/test_harness.py \
+    tests/test_failure_paths.py tests/test_run_record.py tests/test_section_d_gate.py \
+    -p no:debugging
 
 echo "Preflight passed for ${IMAGE}."

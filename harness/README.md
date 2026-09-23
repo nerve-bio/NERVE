@@ -32,6 +32,13 @@ not establish equivalence with the pre-Zeamays
 baseline or measure large-proteome scaling; those are separate validation
 stages.
 
+For the Section D gate, set `SECTION_D_REFERENCE` to the accepted Section C
+`cjejuni/reference-t1-ew1` directory when running `run_all.sh`. The extra check
+requires successful run manifests, consistent selection reasons and output
+hashes, an interrupted first checkpoint attempt, production logs, and
+byte-identical candidate and discarded CSVs against that reference. It writes
+`section_d_gate.json` under `RUN_ROOT` only after every check passes.
+
 ## Tolerance
 
 **The default is `--tol 0`, exact equality, and that is the intended setting.**
