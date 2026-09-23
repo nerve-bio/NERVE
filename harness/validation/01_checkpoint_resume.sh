@@ -26,6 +26,7 @@ python3 "${VALIDATION_DIR}/run_checkpoint_interrupt.py" \
 test -s "${RESUME_DIR}/checkpoint.pkl"
 test ! -e "${RESUME_DIR}/checkpoint.pkl.tmp"
 cp "${RESUME_DIR}/checkpoint.pkl" "${MISMATCH_DIR}/checkpoint.pkl"
+cp "${RESUME_DIR}/run_manifest.json" "${MISMATCH_DIR}/run_manifest.json"
 
 MISMATCH_LOG="${MISMATCH_DIR}/expected-rejection.log"
 set +e

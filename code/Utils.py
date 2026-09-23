@@ -21,12 +21,12 @@ class Progress:
             return
         self.next_update = elapsed + self.every
         if done >= self.total:
-            print(f'  {self.label}: {done}/{self.total} in {elapsed:.0f}s', flush=True)
+            logging.info('%s: %s/%s in %.0fs', self.label, done, self.total, elapsed)
             return
         rate = done / elapsed if elapsed else 0
         remaining = (self.total - done) / rate if rate else 0
-        print(f'  {self.label}: {done}/{self.total}  {elapsed:.0f}s elapsed, '
-              f'~{remaining:.0f}s left', flush=True)
+        logging.info('%s: %s/%s, %.0fs elapsed, ~%.0fs left',
+                     self.label, done, self.total, elapsed, remaining)
 
 
 def run_command(arguments, *, cwd=None):

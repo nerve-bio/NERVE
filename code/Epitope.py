@@ -1,5 +1,5 @@
 """Run epitope prediction of proteins"""
-import contextlib, io, math, multiprocessing, os
+import contextlib, io, logging, math, multiprocessing, os
 from concurrent.futures import ProcessPoolExecutor
 for _name in ('OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS','NUMEXPR_NUM_THREADS','BLIS_NUM_THREADS'):
     os.environ[_name] = '1'
@@ -132,5 +132,6 @@ def epitope(final_proteins, working_dir, mhci_length, mhcii_length, mhci_overlap
             results = list(executor.map(_predict_candidate, tasks))
     for index,(protein,_) in zip(indices,results): final_proteins[index] = protein
     if results:
-        print(f'epitope workers: requested={epitope_workers}, resolved={workers}, processes_used={len(set(pid for _,pid in results))}')
+        logging.info('epitope workers: requested=%s, resolved=%s, processes_used=%s',
+                     epitope_workers, workers, len(set(pid for _, pid in results)))
     return final_proteins

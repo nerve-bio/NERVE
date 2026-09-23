@@ -163,12 +163,6 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False,
     param: upload: if True the function returns a list containing the filtered sequences as protein_element objects
     output: path to the cleaned fasta file named as {working_dir}/cleaned_{input_fasta_file_name}.fasta
     """
-    # define logging file
-    logging.basicConfig(filename=os.path.join(working_dir, 'logfile.log'),
-                        filemode='a',
-                        level=logging.DEBUG,
-                        force=True)
-    
     filtered_sequences, discarded_sequences = [],[]
     # Keep canonical accessions unique.
     seen_accessions = set()
@@ -188,12 +182,14 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False,
         # Remove embedded FASTA delimiters.
         original_description = record.description
         if ">" in original_description:
-            logging.debug(f'Found non-allowed character ">" in sequence name:\n{original_description}\nSubstituting with "_"')
+            logging.debug('Found non-allowed character ">" in sequence name:\n%s\nSubstituting with "_"',
+                          original_description)
             original_description = original_description.replace(">", "_")
         # Normalize the header for downstream tools.
         canonical_description, accession = normalize_header(original_description, seen_accessions)
         if canonical_description != original_description:
-            logging.debug(f'Header normalized:\n{original_description}\n-> {canonical_description}')
+            logging.debug('Header normalized:\n%s\n-> %s',
+                          original_description, canonical_description)
         record.description = canonical_description
         # Keep the original header for reporting.
         record.original_description = original_description
@@ -208,7 +204,7 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False,
         else:
             discarded_sequences.append(record)
             discard_rows.append((accession, reason, message))
-            logging.debug(f'DISCARD {record.description} [{reason}] {message}')
+            logging.debug('DISCARD %s [%s] %s', record.description, reason, message)
     if discard_rows:
         with open(discard_log, 'w') as handle:
             handle.write('accession\treason_code\tmessage\n')
@@ -222,7 +218,6 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False,
     summary = (f'QC of {file_name}: {len(filtered_sequences)}/{len(fasta_list)} sequences kept, '
                f'{len(discarded_sequences)} discarded, '
                f'{len(set(row[0] for row in modification_rows))} modified.')
-    print(summary)
     logging.info(summary)
     # output filtered overwriting input fasta file
     filename = open(output_file, 'w')

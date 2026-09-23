@@ -38,11 +38,6 @@ def _count_helices(annotation):
 
 def tmhelices(list_of_proteins, working_dir, threads=1)->list:
     "Runs Tmhelices"
-    # define logging file
-    logging.basicConfig(filename=os.path.join(working_dir, 'logfile.log'),
-                        filemode='a',
-                        level=logging.DEBUG,
-                        force=True)
     sequences = [protein.sequence for protein in list_of_proteins]
     workers = min(max(1, int(threads)), max(1, len(sequences)))
     progress = Progress('topology', len(sequences))

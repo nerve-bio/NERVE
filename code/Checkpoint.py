@@ -18,12 +18,12 @@ def _file_digest(path):
     return digest.hexdigest()
 
 
-def compute_signature(input_paths, parameters, source_identity=None):
+def compute_signature(input_paths, parameters, source_identity=None, input_info=None):
     """Return a stable SHA-256 key for inputs, effective parameters and source."""
-    inputs = []
-    for path in input_paths:
-        if path:
-            inputs.append({'name': os.path.basename(path), 'sha256': _file_digest(path)})
+    inputs = ([{'name': item['name'], 'sha256': item['sha256']}
+               for item in input_info] if input_info is not None else
+              [{'name': os.path.basename(path), 'sha256': _file_digest(path)}
+               for path in input_paths if path])
     payload = {
         'schema': SCHEMA_VERSION,
         'inputs': inputs,

@@ -5,12 +5,6 @@ import logging, os
 
 def razor(list_of_proteins, working_dir, transmemb_doms_limit, razlen)->list:
     "Runs razor module"
-    # define logging file
-    logging.basicConfig(filename=os.path.join(working_dir, 'logfile.log'),
-                        filemode='a',
-                        level=logging.DEBUG,
-                        force=True)
-                        
     #logging.debug("Warning: razor uses X as an exclusive symbol to split the final protein. Check if X is used inside the protein sequence!")
    
                         

@@ -76,6 +76,22 @@ cd NERVE
 ./NERVE.sh --help
 ```
 
+The wrapper builds the current source by default. For a previously built image,
+use `./NERVE.sh --image sha256:<image-id> -- <NERVE arguments>`; the wrapper
+checks the image's source commit and source-tree label against the checkout.
+`./NERVE.sh --build-only` builds and verifies the image without starting a run.
+Runs work from scripts without a terminal; add `--interactive` before the NERVE
+arguments only when an interactive terminal is needed.
+
+Give every fresh run a new `--working_dir`. NERVE refuses to overwrite a
+directory containing earlier results. Resume an interrupted checkpoint with
+`--resume True` and the same input, scientific arguments, source, and output
+directory. The output contains `run.log`, an atomic `run_manifest.json` with
+attempt status and input/output hashes, and `selection_reasons.csv` with the
+first selection rule for each protein retained by quality control. QC discards
+remain in the QC discard logs. Use `--debug True` to also write detailed
+developer diagnostics to `debug.log`; it is off by default.
+
 This is the expected output:
 ```
 usage: NERVE.py [-h] [-a] [-ev] -g [-ml] [-mm] [-m] [-mpsl] -p1 [-p2] [-pl] [-rz] [-rl] [-s] [-ss] [-tdl] [-vl] [-vir]

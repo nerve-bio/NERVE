@@ -82,12 +82,6 @@ def compare_with_mhcpep(list_of_proteins, mhcpep_peptides, shared_attr:str, out_
 
 def autoimmunity(list_of_proteins, proteome1, working_dir, NERVE_dir, e_value, minlength, mismatch, substitution, threads=1)->list:
     """Performs research of human immunogenig peptides"""
-    # define logging file
-    logging.basicConfig(filename=os.path.join(working_dir, 'logfile.log'),
-                        filemode='a',
-                        level=logging.DEBUG,
-                        force=True)
-    
     run_blast(proteome1, os.path.join(NERVE_dir, 'database/sapiens_database/sapiens'),
               e_value, os.path.join(working_dir, 'sapiens.xml'), threads)
     index = build_id_index(list_of_proteins)
@@ -143,11 +137,6 @@ def autoimmunity(list_of_proteins, proteome1, working_dir, NERVE_dir, e_value, m
             
 def mouse(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, minlength, substitution, mismatch, threads=1)->list:
     """Module to run mouse immunity check"""
-    # define logging file
-    logging.basicConfig(filename=os.path.join(working_dir, 'logfile.log'),
-                        filemode='a',
-                        level=logging.DEBUG,
-                        force=True)
     run_blast(proteome1, os.path.join(NERVE_dir, 'database/mouse_database/mouse'),
               e_value, os.path.join(working_dir, 'mouse.xml'), threads)
     index = build_id_index(list_of_proteins)
@@ -194,12 +183,6 @@ def mouse(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, minlengt
 def conservation(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, proteome2, minlength,
                  substitution, mismatch, threads=1)->list:
     """Runs conservation evaluation between proteome1 and proteome2"""
-    # define logging file
-    logging.basicConfig(filename=os.path.join(working_dir, 'logfile.log'),
-                        filemode='a',
-                        level=logging.DEBUG,
-                        force=True)
-    
     database_dir = os.path.join(working_dir, 'compare_proteome')
     database = os.path.join(database_dir, 'compare_proteome')
     if os.path.exists(database_dir):
