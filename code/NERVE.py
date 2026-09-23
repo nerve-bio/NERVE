@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
 """Run NERVE, reverse vaccinology software"""
 
-import argparse, logging, os, pickle, sys, time
+import argparse, logging, math, os, pickle, sys, time
 from typing import NamedTuple
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # disable warnings
@@ -18,7 +18,7 @@ except AttributeError:
     pass
 
 from code.Protein import Protein
-from code.Utils import bashCmdMethod, dir_path
+from code.Utils import dir_path
 from code.Function import annotation
 from code.Adhesin import extract_features, adhesin_predict
 from code.Virulent_factor import virulent_factor_predict
@@ -219,7 +219,7 @@ def get_args() -> Args:
     parser.add_argument('-m2l', '--mhcii_length',
                         metavar='\b',
                         type=int,
-                        help='mhcii binders length (9, 11, 12, 15 are available)',
+                        help='mhcii binders length (9, 11, 13, 15 are available)',
                         required=False,
                         choices=[9, 11, 13, 15],
                         default=11
@@ -310,6 +310,30 @@ def get_args() -> Args:
 
     args = parser.parse_args()
 
+    for name in ('annotation', 'mouse', 'razor', 'select', 'virulent', 'epitopes',
+                 'ep_plots', 'keep_snapshots', 'checkpoint', 'resume'):
+        if getattr(args, name) not in ('True', 'False'):
+            parser.error(f'--{name} must be True or False')
+    if args.gram not in ('n', 'p'):
+        parser.error('--gram must be n or p')
+    for name in ('threads', 'minlength', 'razlen', 'transmemb_doms_limit'):
+        if getattr(args, name) < 1:
+            parser.error(f'--{name} must be positive')
+    if args.epitope_workers < 0:
+        parser.error('--epitope_workers must be 0 (automatic) or positive')
+    for name in ('mismatch', 'substitution'):
+        if not 0 <= getattr(args, name) <= args.minlength:
+            parser.error(f'--{name} must be between 0 and --minlength')
+    for name in ('padlimit', 'virlimit', 'epitope_percentile',
+                 'max_unknown_fraction'):
+        value = getattr(args, name)
+        if not math.isfinite(value) or not 0 <= value <= 1:
+            parser.error(f'--{name} must be a finite number between 0 and 1')
+    if not math.isfinite(args.mouse_peptides_sum_limit) or args.mouse_peptides_sum_limit < 0:
+        parser.error('--mouse_peptides_sum_limit must be a finite nonnegative number')
+    if not math.isfinite(args.e_value) or args.e_value <= 0:
+        parser.error('--e_value must be a finite positive number')
+
     return Args(args.annotation, args.e_value, args.gram, args.minlength, args.mismatch,
                 args.mouse, args.mouse_peptides_sum_limit, args.proteome1, args.proteome2,
                 args.padlimit, args.razor,
@@ -397,7 +421,7 @@ def main():
             proteome_downloader(args.working_dir, args.proteome1, filename=os.path.join(args.working_dir,\
                                                                                         'proteome1.fasta'))
         except Exception as e:
-            raise ValueError(f'{args.proteome1} rised the following error:\n{e}')
+            raise RuntimeError(f'Unable to download proteome1 {args.proteome1}: {e}') from e
         logging.debug(f'{args.proteome1} successfully downloaded')
         args = args._replace(proteome1=os.path.join(args.working_dir,'proteome1.fasta'))
     
@@ -414,8 +438,8 @@ def main():
             try:
                 proteome_downloader(args.working_dir, args.proteome2, filename=os.path.join(args.working_dir,\
                                                                                             'proteome2.fasta'))
-            except:
-                raise logging.error(f'{args.proteome2} rised the following error:\n{e}')
+            except Exception as e:
+                raise RuntimeError(f'Unable to download proteome2 {args.proteome2}: {e}') from e
             logging.debug(f'{args.proteome2} successfully downloaded')
             args = args._replace(proteome2=os.path.join(args.working_dir,'proteome2.fasta'))   
     signature_fields = args._asdict().copy()

@@ -9,7 +9,10 @@ FRESH_DIR="${CHECK_ROOT}/fresh"
 require_new_dir "$CHECK_ROOT"
 mkdir -p "$RESUME_DIR" "$MISMATCH_DIR" "$FRESH_DIR"
 
-SMALL_FASTA="/workdir/tests/input_data/proteome1.fasta"
+CHECK_INPUT="${CHECK_ROOT}/input_100.fasta"
+awk '/^>/{n++} n>100{exit} {print}' "$INPUT_FASTA" > "$CHECK_INPUT"
+test "$(grep -c '^>' "$CHECK_INPUT")" -eq 100
+SMALL_FASTA="$(container_path "$CHECK_INPUT")"
 CHECK_ARGS=(
     --proteome1 "$SMALL_FASTA" --gram n
     --annotation False --razor False --mouse False --virulent False
@@ -18,7 +21,7 @@ CHECK_ARGS=(
 )
 
 python3 "${VALIDATION_DIR}/run_checkpoint_interrupt.py" \
-    --root "$ROOT_DIR" --image "$IMAGE" --output "$RESUME_DIR"
+    --root "$ROOT_DIR" --image "$IMAGE" --output "$RESUME_DIR" --input "$CHECK_INPUT"
 
 test -s "${RESUME_DIR}/checkpoint.pkl"
 test ! -e "${RESUME_DIR}/checkpoint.pkl.tmp"
@@ -45,7 +48,8 @@ test -f "${RESUME_DIR}/snapshots/11_select.pkl"
 run_nerve "${CHECK_ARGS[@]}" \
     --working_dir "$(container_path "$FRESH_DIR")"
 python3 "${ROOT_DIR}/harness/compare_states.py" --dir \
-    "${FRESH_DIR}/snapshots" "${RESUME_DIR}/snapshots" --tol 0
+    "${FRESH_DIR}/snapshots" "${RESUME_DIR}/snapshots" --tol 0 \
+    --canonical-localization-ties
 python3 "${ROOT_DIR}/harness/compare_candidates.py" \
     "${FRESH_DIR}/vaccine_candidates.csv" \
     "${RESUME_DIR}/vaccine_candidates.csv" --tol 0

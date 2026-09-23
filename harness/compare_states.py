@@ -62,6 +62,26 @@ def attributes(protein):
     return {k: v for k, v in vars(protein).items() if not k.startswith('_')}
 
 
+def canonical_secondary_localization_ties(locations):
+    """Ignore only the order of equally scored secondary PSORTb locations.
+
+    The selected first location is used downstream and remains order-sensitive.
+    Unequal-score ordering remains significant too. PSORTb has returned the
+    same secondary scores in varying tie order across otherwise identical runs.
+    """
+    if not isinstance(locations, list) or len(locations) < 3:
+        return locations
+    if not all(hasattr(loc, 'localization') and hasattr(loc, 'reliability')
+               for loc in locations):
+        return locations
+    tail = locations[1:]
+    if any(left.reliability < right.reliability
+           for left, right in zip(tail, tail[1:])):
+        return locations
+    return [locations[0], *sorted(tail, key=lambda loc: (-loc.reliability,
+                                                          loc.localization))]
+
+
 def values_equal(a, b, tol):
     """Compare two attribute values recursively.
 
@@ -122,7 +142,8 @@ def values_equal(a, b, tol):
     return equal, None, ('' if equal else f'{a!r} vs {b!r}')
 
 
-def compare_snapshots(path_a, path_b, tol=0.0, attrs=None):
+def compare_snapshots(path_a, path_b, tol=0.0, attrs=None,
+                      canonical_localization_ties=False):
     """Compare two snapshot files; returns a result dict."""
     a = keyed_proteins(path_a)
     b = keyed_proteins(path_b)
@@ -131,8 +152,11 @@ def compare_snapshots(path_a, path_b, tol=0.0, attrs=None):
     for key in common:
         names = attrs if attrs else sorted(set(a[key]) | set(b[key]))
         for name in names:
-            equal, magnitude, note = values_equal(a[key].get(name, _MISSING),
-                                                 b[key].get(name, _MISSING), tol)
+            left, right = a[key].get(name, _MISSING), b[key].get(name, _MISSING)
+            if canonical_localization_ties and name == 'localization':
+                left = canonical_secondary_localization_ties(left)
+                right = canonical_secondary_localization_ties(right)
+            equal, magnitude, note = values_equal(left, right, tol)
             if equal:
                 continue
             entry = per_attr.setdefault(name, {'count': 0, 'worst': None})
@@ -178,11 +202,14 @@ def main():
                         help='numeric tolerance (default 0 = exact)')
     parser.add_argument('--attrs', default=None,
                         help='comma-separated attributes to restrict the comparison to')
+    parser.add_argument('--canonical-localization-ties', action='store_true',
+                        help='ignore equal-score order among secondary PSORTb locations')
     args = parser.parse_args()
     attrs = [a.strip() for a in args.attrs.split(',')] if args.attrs else None
 
     if not args.dir:
-        result = compare_snapshots(args.a, args.b, args.tol, attrs)
+        result = compare_snapshots(args.a, args.b, args.tol, attrs,
+                                   args.canonical_localization_ties)
         return 0 if print_result(result, os.path.basename(args.a), args.tol) else 1
 
     in_a = {f for f in os.listdir(args.a) if f.endswith('.pkl')}
@@ -192,7 +219,7 @@ def main():
     agree = not (in_a ^ in_b)
     for name in sorted(in_a & in_b):
         result = compare_snapshots(os.path.join(args.a, name), os.path.join(args.b, name),
-                                   args.tol, attrs)
+                                   args.tol, attrs, args.canonical_localization_ties)
         agree &= print_result(result, name, args.tol)
     print()
     print(f'{"All stages identical" if agree else "Stages differ"} (tol={args.tol:g})')

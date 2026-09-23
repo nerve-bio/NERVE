@@ -29,12 +29,14 @@ class Progress:
               f'~{remaining:.0f}s left', flush=True)
 
 
-def bashCmdMethod(bashCmd):
-    """Run bash commands
-    param: bashCmd: bash command to be run"""
-    process = subprocess.Popen(bashCmd.split(), stdout=subprocess.PIPE)
-    output, error = process.communicate()
-    return output, error
+def run_command(arguments, *, cwd=None):
+    """Run an external tool with intact path arguments and an actionable error."""
+    result = subprocess.run(arguments, cwd=cwd, stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE, text=True)
+    if result.returncode:
+        detail = result.stderr.strip()[-1000:]
+        raise RuntimeError(f'{arguments[0]} exited {result.returncode}: {detail}')
+    return result.stdout, result.stderr
 
 def dir_path(path:str) -> str:
     '''Path validator'''

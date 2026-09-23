@@ -1,13 +1,22 @@
 #!/usr/local/bin/python
 """Autoimmunity, mouse and conservation modules"""
 
-import logging, os, subprocess, tempfile
-from Bio.Blast.Applications import NcbiblastpCommandline    
+import logging, os, tempfile
 from Bio.Blast import NCBIXML 
 import pandas as pd
 from code import Protein
-from code.Utils import build_id_index, match_protein
+from code.Utils import build_id_index, match_protein, run_command
 import shutil
+
+
+def run_blast(query, database, e_value, output, threads):
+    """Run BLAST only against a fresh XML destination."""
+    if os.path.exists(output):
+        os.remove(output)
+    run_command(['blastp', '-query', query, '-db', database, '-evalue', str(e_value),
+                 '-outfmt', '5', '-out', output, '-num_threads', str(threads)])
+    if not os.path.isfile(output) or os.path.getsize(output) == 0:
+        raise RuntimeError(f'blastp did not produce {output}')
 
 
 def parse_blast_records(path):
@@ -79,10 +88,8 @@ def autoimmunity(list_of_proteins, proteome1, working_dir, NERVE_dir, e_value, m
                         level=logging.DEBUG,
                         force=True)
     
-    blastx_cline = NcbiblastpCommandline(query=proteome1, db=os.path.join(NERVE_dir, "database/sapiens_database/sapiens"), \
-                                         evalue=e_value, outfmt=5, out=os.path.join(working_dir,"sapiens.xml"), \
-                                         num_threads=threads) # 5 is for xml
-    stdout, stderr = blastx_cline()
+    run_blast(proteome1, os.path.join(NERVE_dir, 'database/sapiens_database/sapiens'),
+              e_value, os.path.join(working_dir, 'sapiens.xml'), threads)
     index = build_id_index(list_of_proteins)
     #logging.debug("Warning: you can find a sapiens.xml file on your working directory which is the outputs of the autoimmunity module.\nDo not delete during the computation!\nAfter the computation it will be deleted in order to avoid future collisions.")
     # for each result in the .xml file...
@@ -141,8 +148,8 @@ def mouse(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, minlengt
                         filemode='a',
                         level=logging.DEBUG,
                         force=True)
-    blastx_cline = NcbiblastpCommandline(query=proteome1, db=os.path.join(NERVE_dir,"database/mouse_database/mouse"), evalue=e_value, outfmt=5, out=os.path.join(working_dir, "mouse.xml"), num_threads=threads)
-    stdout, stderr = blastx_cline()
+    run_blast(proteome1, os.path.join(NERVE_dir, 'database/mouse_database/mouse'),
+              e_value, os.path.join(working_dir, 'mouse.xml'), threads)
     index = build_id_index(list_of_proteins)
     #outfile = open(os.path.join(working_dir, 'mouse_immunity_raw_output.txt'), 'w')
     for record in parse_blast_records(os.path.join(working_dir, "mouse.xml")):
@@ -193,12 +200,17 @@ def conservation(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, p
                         level=logging.DEBUG,
                         force=True)
     
-    bashCmd = f"makeblastdb -in {proteome2} -dbtype prot -parse_seqids -out {os.path.join(working_dir, 'compare_proteome/compare_proteome')}"
-    process = subprocess.Popen(bashCmd.split(), stdout = subprocess.PIPE)
-    output, error = process.communicate()
-    
-    blastx_cline = NcbiblastpCommandline(query = proteome1, db = os.path.join(working_dir, 'compare_proteome/compare_proteome'), evalue = e_value, outfmt = 5, out=os.path.join(working_dir,"comparison.xml"), num_threads=threads) # 5 is for xml
-    stdout, stderr = blastx_cline()
+    database_dir = os.path.join(working_dir, 'compare_proteome')
+    database = os.path.join(database_dir, 'compare_proteome')
+    if os.path.exists(database_dir):
+        shutil.rmtree(database_dir)
+    os.makedirs(database_dir)
+    run_command(['makeblastdb', '-in', proteome2, '-dbtype', 'prot',
+                 '-parse_seqids', '-out', database])
+    if not any(os.path.isfile(database + suffix) for suffix in ('.pin', '.pdb')):
+        raise RuntimeError(f'makeblastdb did not produce an index at {database}')
+    run_blast(proteome1, database, e_value,
+              os.path.join(working_dir, 'comparison.xml'), threads)
 
     index = build_id_index(list_of_proteins)
     outfile=open(os.path.join(working_dir, 'conservation_raw_output.txt'), 'w')

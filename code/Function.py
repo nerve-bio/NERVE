@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 """Runs protein function prediction with DeepFri"""
 
-import os, urllib, subprocess
+import os
 import pandas as pd
 from Bio import SeqIO
 from typing import NamedTuple
 from operator import attrgetter
 from code.Utils import build_id_index, match_protein
+from code.Utils import run_command
 
 class Args(NamedTuple):
     '''Command-line arguments'''
@@ -26,19 +27,18 @@ def deep_fri(path_to_fasta, DeepFri_dir, working_dir):
        param: DeepFri_dir: path to /DeepFri/ directory
        param: working_dir: path to working directory
        output: pandas DataFrame containing fasta ID associated to protein function"""
-    current_dir = os.getcwd()
-    #working_dir+="/" if working_dir[-1] != "/" else ""
-    if working_dir[0] == ".":
-        working_dir=working_dir[working_dir.find("/")+1:]
-    # launch DeepFri
-    os.chdir(DeepFri_dir)
-    bashCmd = f'python3 predict.py --fasta_fn {path_to_fasta} -ont mf -o {os.path.join(current_dir, working_dir)}'
-    process = subprocess.Popen(bashCmd.split(), stdout=subprocess.PIPE)
-    output, error = process.communicate()
-    os.chdir(current_dir)
-    
-    # parse DeepFri results
-    DeepFri_df = DeepFriParser(os.path.join(working_dir, '_MF_predictions.csv'))
+    output_prefix = os.path.join(os.path.abspath(working_dir), '')
+    predictions = os.path.join(working_dir, '_MF_predictions.csv')
+    scores = os.path.join(working_dir, '_MF_pred_scores.json')
+    for path in (predictions, scores):
+        if os.path.exists(path):
+            os.remove(path)
+    run_command(['python3', 'predict.py', '--fasta_fn', os.path.abspath(path_to_fasta),
+                 '-ont', 'mf', '-o', output_prefix], cwd=DeepFri_dir)
+    for path in (predictions, scores):
+        if not os.path.isfile(path) or os.path.getsize(path) == 0:
+            raise RuntimeError(f'DeepFRI did not produce {path}')
+    DeepFri_df = DeepFriParser(predictions)
     return DeepFri_df
 
 def DeepFriParser(path_to_infile: open, treshold=0.5) -> pd.DataFrame:

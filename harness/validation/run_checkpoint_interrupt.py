@@ -9,6 +9,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--root', required=True)
 parser.add_argument('--image', required=True)
 parser.add_argument('--output', required=True)
+parser.add_argument('--input', required=True)
 args = parser.parse_args()
 
 name = f'nerve-checkpoint-validation-{os.getpid()}'
@@ -17,7 +18,7 @@ container_output = '/workdir/' + os.path.relpath(args.output, args.root)
 command = [
     'docker', 'run', '--rm', '--name', name, '--network', 'nerve-network',
     '-v', f'{args.root}:/workdir', args.image,
-    '--proteome1', '/workdir/tests/input_data/proteome1.fasta', '--gram', 'n',
+    '--proteome1', '/workdir/' + os.path.relpath(args.input, args.root), '--gram', 'n',
     '--annotation', 'False', '--razor', 'False', '--mouse', 'False',
     '--virulent', 'False', '--select', 'True', '--epitopes', 'False',
     '--ep_plots', 'False', '--threads', '1', '--epitope_workers', '1',

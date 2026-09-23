@@ -1,7 +1,8 @@
 #!/usr/local/bin/python
 """Quality control module"""
 
-import os, logging, re, requests
+import os, logging, re, requests, tempfile
+from contextlib import closing
 from Bio import SeqIO
 from Bio.Seq import Seq
 from code.Utils import dir_path, normalize_header
@@ -72,60 +73,75 @@ def qc_sequence(sequence, max_unknown_fraction=DEFAULT_MAX_UNKNOWN_FRACTION):
         cleaned = ''.join(chars)
     return cleaned, ('cleaned' if changes else 'ok'), '', changes
 
-def proteome_downloader(working_dir, proteome_id, filename='input_proteome.fasta', output_dir=os.getcwd(), format_ = "fasta") -> None:
-    """Downloads proteome from uniprot database into output multifasta file
-    param: proteome_id: uniprot unique proteome id, not case-sensitive
-    param: output_dir: output directory (default: current directory)
-    param: format: uniprot API required format (default:fasta)
-    param: filename: output proteome filename (default: input_proteome.fasta)
-    """
-    # define logging file
-    logging.basicConfig(filename = os.path.join(working_dir, 'logfile.log'),
-                        filemode = 'a',
-                        level = logging.DEBUG,
-                        force = True)
-    try: 
-        url = f'https://rest.uniprot.org/uniprotkb/stream?compressed=false&format={format_}&query=%28proteome%3A{proteome_id}%29'
-        download_from_url_to_file(url, output_dir, filename, 'First download attempt failed');
-    except AssertionError: 
-        logging.debug(f'28proteome is not a valid building block')
+def proteome_downloader(working_dir, proteome_id, filename='input_proteome.fasta',
+                       output_dir=None, format_='fasta') -> None:
+    """Download a UniProt proteome, publishing only a complete FASTA."""
+    if format_ != 'fasta':
+        raise ValueError('Only FASTA downloads are supported')
+    target = filename if os.path.isabs(filename) else os.path.join(output_dir or working_dir, filename)
+    urls = (
+        f'https://rest.uniprot.org/uniprotkb/stream?compressed=false&format=fasta&query=%28proteome%3A{proteome_id}%29',
+        f'https://rest.uniprot.org/uniparc/stream?format=fasta&query=%28upid%3A{proteome_id}%29',
+    )
+    last_error = None
+    for url in urls:
         try:
-            url=f'https://rest.uniprot.org/uniprotkb/stream?format={format_}&query=%28proteome%3A{proteome_id}%29'
-            download_from_url_to_file(url, output_dir, filename, 'Second download attempt failed');
-        except AssertionError:
-            logging.debug(f'avoiding compression is not a valid building block')
-            try:
-                url=f'https://rest.uniprot.org/uniparc/stream?format={format_}&query=%28upid%3A{proteome_id}%29'
-                download_from_url_to_file(url, output_dir, filename, 'Third download attempt failed');
-            except AssertionError as e:
-                logging.debug(f'28upid is not a valid building block')
-                print(f'Unable to download proteome {proteome_id} due to invalid proteome ID, Uniprot API failure or wrong path. In case of uniprot API failure provide the proteome as file.')
-                raise SystemExit(e)
-    return None
-
-def download_from_url_to_file(url:str, output_dir:str, filename:str, assert_error_message:str):
-    downloaded = False
-    for _ in range(3):
-        try:
-            response = requests.get(url, stream = True, timeout = 120)
-            text_file = open(os.path.join(output_dir, filename), 'wb')
-            for chunk in response.iter_content(chunk_size=1024):
-                text_file.write(chunk)
-            # raise an AssertionError if the given proteome ID is not valid
-            assert text_file.tell() > 0, assert_error_message
-            text_file.close()
-            downloaded = True
+            download_from_url_to_file(url, target)
+            return
+        except requests.HTTPError as error:
+            last_error = error
+            if error.response is None or error.response.status_code not in (400, 404):
+                break
+        except (requests.RequestException, ValueError) as error:
+            last_error = error
             break
-        except:
-            logging.debug(f'Failed to fetch from {url}')
-            continue
-    assert downloaded is True, 'Download failed after retries'
+    raise RuntimeError(f'Unable to download UniProt proteome {proteome_id}: {last_error}') from last_error
+
+
+def download_from_url_to_file(url, target):
+    """Download atomically; retry only transient transport or server failures."""
+    directory = os.path.dirname(os.path.abspath(target))
+    os.makedirs(directory, exist_ok=True)
+    for attempt in range(3):
+        temporary = None
+        try:
+            with closing(requests.get(url, stream=True, timeout=(15, 120))) as response:
+                response.raise_for_status()
+                with tempfile.NamedTemporaryFile(mode='wb', dir=directory, prefix='.proteome-',
+                                                  delete=False) as output:
+                    temporary = output.name
+                    for chunk in response.iter_content(chunk_size=1024 * 1024):
+                        if chunk:
+                            output.write(chunk)
+            with open(temporary, 'rb') as handle:
+                if handle.read(1) != b'>':
+                    raise ValueError('Downloaded content is not FASTA')
+            records = 0
+            with open(temporary) as handle:
+                for record in SeqIO.parse(handle, 'fasta'):
+                    if not record.id or not record.seq:
+                        raise ValueError('Downloaded FASTA contains an empty record')
+                    records += 1
+            if not records:
+                raise ValueError('Downloaded FASTA contains no records')
+            os.replace(temporary, target)
+            return
+        except requests.HTTPError as error:
+            if error.response is None or error.response.status_code < 500 or attempt == 2:
+                raise
+        except (requests.Timeout, requests.ConnectionError,
+                requests.exceptions.ChunkedEncodingError):
+            if attempt == 2:
+                raise
+        finally:
+            if temporary and os.path.exists(temporary):
+                os.remove(temporary)
 
 def is_fasta(filename:str):
     """Function that rise an error if the format is not .fasta, the file is empty or non existing.
     param: filename: path to fasta file"""
     if not os.path.isfile(filename):
-        raise ValueError("{filename} not found.")
+        raise ValueError(f'{filename} not found.')
     with open(filename, "r") as handle:
         fasta = list(SeqIO.parse(handle, "fasta"))
         # biopython silently fails if the format is not fasta returning an empty generator

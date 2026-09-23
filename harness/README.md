@@ -23,8 +23,12 @@ silently collapsed.
 interrupted and resumed small run against a fresh run, and selected *C. jejuni*
 BLAST-thread and epitope-worker variants. It requires a built optimized image
 and a running PSORTb service on `nerve-network`; set `IMAGE` to the verified
-image ID and optionally set `RUN_ROOT` to a fresh directory. Its comparisons
-use exact equality. It does not establish equivalence with the pre-Zeamays
+image ID and optionally set `RUN_ROOT` to a fresh directory. The checkpoint
+case uses 100 proteins so the process is still running after the first saved
+stage. Its snapshot comparison is exact except for equal-score ordering among
+secondary PSORTb localization entries; the selected first localization and all
+scores remain exact. The preflight pins both *C. jejuni* input hashes. It does
+not establish equivalence with the pre-Zeamays
 baseline or measure large-proteome scaling; those are separate validation
 stages.
 
@@ -39,7 +43,7 @@ moves `p_ad` / `p_vir` by around 1e-7, which is enough to reorder candidates of
 similar score between two runs of *identical* code. Pinning removes that
 variation rather than bounding it, so there is no epsilon to budget for.
 
-Everything else in the pipeline is already exactly reproducible. In particular
+Other compared values are required to match exactly. In particular
 the peptide sums are integer arithmetic (`score += 1` or `score += len(...)`,
 divided once by the protein length at the end), so they carry no float
 accumulation error at all.
