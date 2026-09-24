@@ -148,6 +148,8 @@ NERVE arguments:
                        Save protein state after each stage (default: False)
   -ew, --epitope_workers
                        Epitope processes; 0 detects available CPUs (default: 0)
+  --inference_batch_size
+                       Keras prediction batch size for adhesin and virulence (default: 1)
   -ck, --checkpoint  Save a restart checkpoint after each stage (default: False)
   -rs, --resume      Resume from a compatible checkpoint (default: False)
   --max_unknown_fraction

@@ -7,7 +7,7 @@ from tensorflow import keras
 _VIRULENCE_CHUNK = 2048
 
 
-def virulent_factor_predict(list_of_proteins, NERVE_dir) -> list:
+def virulent_factor_predict(list_of_proteins, NERVE_dir, inference_batch_size=1) -> list:
     """Run Adhesin prediction
     param: list_of_proteins: list
     param: NERVE_dir: str
@@ -24,7 +24,7 @@ def virulent_factor_predict(list_of_proteins, NERVE_dir) -> list:
         proteins = list_of_proteins[start:start + _VIRULENCE_CHUNK]
         data = np.array([protein.standardize(means, std_devs, projection_matrix)
                          for protein in proteins])
-        predictions = model.predict(data, batch_size=1, verbose=0)
+        predictions = model.predict(data, batch_size=inference_batch_size, verbose=0)
         for protein, prediction in zip(proteins, predictions):
             protein.p_vir = float(prediction)
         

@@ -65,6 +65,7 @@ class Args(NamedTuple):
     threads:int
     keep_snapshots:str
     epitope_workers:int
+    inference_batch_size:int
     checkpoint:str
     resume:str
     max_unknown_fraction:float
@@ -301,6 +302,8 @@ def get_args() -> Args:
                        )
     parser.add_argument('-ew', '--epitope_workers', type=int, default=0,
                         help='Epitope worker processes; 0 auto-detects CPU/cgroup capacity')
+    parser.add_argument('--inference_batch_size', type=int, default=1,
+                        help='Keras inference batch size for adhesin and virulence predictors')
     parser.add_argument('-ck', '--checkpoint', type=str, default='False',
                         help='Write an atomic restart checkpoint after every completed stage')
     parser.add_argument('-rs', '--resume', type=str, default='False',
@@ -324,6 +327,8 @@ def get_args() -> Args:
             parser.error(f'--{name} must be positive')
     if args.epitope_workers < 0:
         parser.error('--epitope_workers must be 0 (automatic) or positive')
+    if args.inference_batch_size < 1:
+        parser.error('--inference_batch_size must be positive')
     for name in ('mismatch', 'substitution'):
         if not 0 <= getattr(args, name) <= args.minlength:
             parser.error(f'--{name} must be between 0 and --minlength')
@@ -346,7 +351,8 @@ def get_args() -> Args:
                 args.virulent, args.epitopes,
                 args.mhci_length, args.mhcii_length, args.mhci_overlap, args.mhcii_overlap,
                 args.epitope_percentile,args.working_dir, args.NERVE_dir, args.iFeature_dir, args.DeepFri_dir, args.ep_plots,
-                args.threads, args.keep_snapshots, args.epitope_workers, args.checkpoint,
+                args.threads, args.keep_snapshots, args.epitope_workers,
+                args.inference_batch_size, args.checkpoint,
                 args.resume, args.max_unknown_fraction, args.debug)
 
 
@@ -603,7 +609,8 @@ def run_pipeline():
     # extract features
     if completed_stage < 3:
         list_of_proteins = extract_features(list_of_proteins, args.NERVE_dir, args.iFeature_dir, args.working_dir, args.proteome1)
-        list_of_proteins = adhesin_predict(list_of_proteins, args.NERVE_dir)
+        list_of_proteins = adhesin_predict(list_of_proteins, args.NERVE_dir,
+                                           args.inference_batch_size)
     end=time.monotonic()
     logging.debug("Done run in: {:.4f} seconds".format(end-start))
     record_stage(args, 3, 'adhesin', list_of_proteins, start)
@@ -674,7 +681,8 @@ def run_pipeline():
         start_stage(9, 'virulence', len(list_of_proteins), completed_stage)
         logging.debug("Virulence start...")
         if completed_stage < 9:
-            list_of_proteins = virulent_factor_predict(list_of_proteins, args.NERVE_dir)
+            list_of_proteins = virulent_factor_predict(list_of_proteins, args.NERVE_dir,
+                                                       args.inference_batch_size)
         end=time.monotonic()
         logging.debug("Done run in: {:.4f} seconds".format(end - start))
         record_stage(args, 9, 'virulence', list_of_proteins, start)

@@ -56,7 +56,7 @@ def extract_features(list_of_proteins, NERVE_dir, iFeature_dir, working_dir, pro
     
     return list_of_proteins
     
-def adhesin_predict(list_of_proteins, NERVE_dir)->list:
+def adhesin_predict(list_of_proteins, NERVE_dir, inference_batch_size=1)->list:
     """Run Adhesin prediction: str
     param: list_of_proteins: str
     param: NERVE_dir: str
@@ -74,7 +74,7 @@ def adhesin_predict(list_of_proteins, NERVE_dir)->list:
         proteins = list_of_proteins[start:start + _ADHESIN_CHUNK]
         data = np.array([protein.standardize(means, std_devs, projection_matrix)
                          for protein in proteins])
-        predictions = model.predict(data, batch_size=1, verbose=0)
+        predictions = model.predict(data, batch_size=inference_batch_size, verbose=0)
         for protein, prediction in zip(proteins, predictions):
             protein.p_ad = float(prediction)
         progress.update(start + len(proteins))
