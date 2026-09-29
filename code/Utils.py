@@ -5,6 +5,12 @@ import argparse, os, re, subprocess
 
 _SAFE_IDENTIFIER = re.compile(r'[^A-Za-z0-9._-]+')
 _ACCESSION_TAGS = {'ref', 'gb', 'emb', 'dbj'}
+_HEADER_CONTROL = re.compile(r'[\r\n\x00]+')
+
+
+def sanitize_description(description):
+    """Return a description that cannot break FASTA record boundaries."""
+    return _HEADER_CONTROL.sub('', str(description)).replace('>', '_')
 
 
 def sanitize_identifier(identifier):
@@ -39,7 +45,7 @@ def normalize_header(header, seen_accessions=None):
     original = str(header).lstrip('>').strip()
     header_parts = original.split(None, 1)
     first = header_parts[0] if header_parts else ''
-    description = header_parts[1] if len(header_parts) == 2 else ''
+    description = sanitize_description(header_parts[1]) if len(header_parts) == 2 else ''
     accession = derive_accession(first)
 
     if seen_accessions is not None:
