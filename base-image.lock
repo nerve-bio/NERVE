@@ -28,9 +28,9 @@ prev_archive_file    francecosta-nerve-v0.0.6.tar
 prev_archive_sha256  fef6d3027faa7b82f54ab91649c50433ef9e61ee58cff812ffbbfab78c18a62b
 
 # Published image downstream consumers pin; optional here.
-published_image        ghcr.io/nerve-bio/nerve:f2a51fb
-published_digest       sha256:7d582ebe2be2211c513a2e7d7657e0d723ee2a00fbe723a8d6996ff47b87598e
-published_config       sha256:866647a20aed605363e4c0406dbc77d474d17bd88e45c3fad36f3ef373531dab
-published_code_commit  f2a51fb
-published_archive_file    nerve-bio-f2a51fb.tar
-published_archive_sha256  033f480449f88feeeb416223d445dab9733b9cb70facce90f15058f3cad15caf
+published_image        ghcr.io/nerve-bio/nerve:606d591
+published_digest       sha256:2baeb1f1d3d46169909a2b10535da65cd66f482b6ff59279d802fd9f93de02dc
+published_config       sha256:aa8b595e4d0b2a27ce1b2166c8ed63fea89285935b5b397908497a12bdd1096b
+published_code_commit  606d591
+published_archive_file    nerve-bio-606d591.tar
+published_archive_sha256  3c1400c0c94e0774c9d8dbaea86b684fb77c514555318471f18a560fa0e2f4de
