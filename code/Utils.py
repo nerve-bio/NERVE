@@ -6,6 +6,18 @@ import argparse, os, re, subprocess
 _SAFE_IDENTIFIER = re.compile(r'[^A-Za-z0-9._-]+')
 _ACCESSION_TAGS = {'ref', 'gb', 'emb', 'dbj'}
 _HEADER_CONTROL = re.compile(r'[\r\n\x00]+')
+_VERSIONED_ACCESSION = re.compile(r'^[^.]+(\.[0-9]+)?$')
+_NCBI_CDS_ID = re.compile(r'^(?:lcl\|)?[^|]+_prot_(.+?)_[0-9]+$')
+_MAX_ACCESSION = 30
+
+
+def blast_safe_accession(accession):
+    """Return an accession makeblastdb -parse_seqids can read behind sp|."""
+    # a trailing .<version> must be an integer
+    if not _VERSIONED_ACCESSION.match(accession):
+        accession = accession.replace('.', '_')
+    # 30 characters max
+    return accession[:_MAX_ACCESSION].rstrip('.')
 
 
 def sanitize_description(description):
@@ -24,6 +36,11 @@ def derive_accession(header):
     """Extract a useful accession from common FASTA identifier conventions."""
     token = str(header).lstrip('>').strip().split(None, 1)[0] if str(header).lstrip('>').strip() else ''
     parts = token.split('|')
+
+    # NCBI CDS translations: <nucleotide>_prot_<protein>_<n>
+    cds = _NCBI_CDS_ID.match(token)
+    if cds:
+        return sanitize_identifier(cds.group(1))
 
     if parts and parts[0].lower() == 'gi':
         for index, part in enumerate(parts[:-1]):
@@ -46,13 +63,14 @@ def normalize_header(header, seen_accessions=None):
     header_parts = original.split(None, 1)
     first = header_parts[0] if header_parts else ''
     description = sanitize_description(header_parts[1]) if len(header_parts) == 2 else ''
-    accession = derive_accession(first)
+    accession = blast_safe_accession(derive_accession(first))
 
     if seen_accessions is not None:
         base = accession
         suffix = 2
         while accession in seen_accessions:
-            accession = f'{base}_{suffix}'
+            tail = f'_{suffix}'
+            accession = blast_safe_accession(base[:_MAX_ACCESSION - len(tail)] + tail)
             suffix += 1
         seen_accessions.add(accession)
 

@@ -138,9 +138,14 @@ def conservation(list_of_proteins, working_dir, NERVE_dir, e_value, proteome1, p
                         force=True)
     
     bashCmd = f"makeblastdb -in {proteome2} -dbtype prot -parse_seqids -out {os.path.join(working_dir, 'compare_proteome/compare_proteome')}"
-    process = subprocess.Popen(bashCmd.split(), stdout = subprocess.PIPE)
+    process = subprocess.Popen(bashCmd.split(), stdout = subprocess.PIPE, stderr = subprocess.PIPE)
     output, error = process.communicate()
-    
+    # blastp would report this as a missing database
+    if process.returncode != 0:
+        message = error.decode(errors='replace').strip() or output.decode(errors='replace').strip()
+        logging.error(f'makeblastdb failed on {proteome2}: {message}')
+        raise RuntimeError(f'makeblastdb failed on {proteome2}: {message}')
+
     blastx_cline = NcbiblastpCommandline(query = proteome1, db = os.path.join(working_dir, 'compare_proteome/compare_proteome'), evalue = e_value, outfmt = 5, out=os.path.join(working_dir,"comparison.xml")) # 5 is for xml 
     stdout, stderr = blastx_cline()
     
