@@ -16,13 +16,21 @@ class protein_element:
 
 CANONICAL_AA = set('ACDEFGHIKLMNPQRSTVWY')
 AA_SUBSTITUTIONS = {
-    'U': 'C',  # selenocysteine
-    'O': 'K',  # pyrrolysine
-    'B': 'N',  # Asx -> neutral amide
-    'Z': 'Q',  # Glx -> neutral amide
-    'J': 'L',  # Xle
+    'U': 'C',  # selenocysteine     -> cysteine  (near-universal convention)
+    'O': 'K',  # pyrrolysine        -> lysine    (neutral best guess)
+    # B/Z resolve to the AMIDE form, not the acid form (D/E): B/Z mostly enter sequence records
+    # because Asn/Gln deamidate to Asp/Glu during acid hydrolysis, so the amide is the likelier
+    # original; and D/E would fabricate a negative charge that SignalP / TMHMM / Phobius key on.
+    'B': 'N',  # Asx (Asn/Asp)      -> asparagine (neutral: amide form)
+    'Z': 'Q',  # Glx (Gln/Glu)      -> glutamine  (neutral: amide form)
+    'J': 'L',  # Xle (Leu/Ile)      -> leucine
 }
-UNKNOWN_SUBSTITUTE = 'A'
+# Sparse unknowns become GLYCINE, not alanine (standardised 2026-09-30, adopted from vacceed2).
+# On the Kyte-Doolittle scale alanine is +1.8 -- hydrophobic -- so a run of X filled with 'A' can
+# manufacture a hydrophobic stretch that TMHMM / Phobius / SignalP read as a transmembrane helix
+# or a signal-peptide h-region. Glycine is -0.4, near neutral, and cannot invent that signal.
+# Same principle as the B/Z choice above: never fabricate a property a predictor keys on.
+UNKNOWN_SUBSTITUTE = 'G'
 DEFAULT_MAX_UNKNOWN_FRACTION = 0.05
 
 

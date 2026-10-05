@@ -237,7 +237,11 @@ def test_phase4_qc_policy_and_threshold():
     assert reason == 'cleaned'
     assert any(change[3] == 'terminal_stop_removed' for change in changes)
     assert qc_sequence('AA*AA')[1] == 'internal_stop'
-    assert qc_sequence('X' + 'A' * 19)[0].startswith('A')  # exactly 5% is kept
+    # exactly 5% unknown is KEPT, and the sparse unknown is filled with glycine, not alanine:
+    # alanine is hydrophobic (Kyte-Doolittle +1.8) and a run of it can fake a TM helix or a
+    # signal-peptide h-region for TMHMM / Phobius / SignalP; glycine (-0.4) cannot. Policy is
+    # shared with vacceed2; change this literal only when that policy changes.
+    assert qc_sequence('X' + 'A' * 19)[0] == 'G' + 'A' * 19
     assert qc_sequence('XX' + 'A' * 18)[1] == 'excessive_unknown_residues'
 
 

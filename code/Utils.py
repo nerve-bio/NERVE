@@ -49,6 +49,29 @@ def dir_path(path:str) -> str:
 
 # Characters allowed in output identifiers.
 _UNSAFE_ID_CHARS = re.compile(r'[^A-Za-z0-9._-]')
+# Characters that would break a FASTA record boundary if they reached a header.
+_HEADER_CONTROL = re.compile(r'[\r\n\x00]+')
+# makeblastdb -parse_seqids (Immunity.compare_proteomes) rejects the whole database when any
+# accession exceeds 30 characters, and reads a '.' only as a numeric version suffix.
+_VERSIONED_ACCESSION = re.compile(r'^[^.]+(\.[0-9]+)?$')
+_MAX_ACCESSION = 30
+
+
+def sanitize_description(description:str) -> str:
+    """Return a description that cannot break FASTA record boundaries."""
+    return _HEADER_CONTROL.sub('', str(description)).replace('>', '_')
+
+
+def blast_safe_accession(accession:str) -> str:
+    """Return an accession makeblastdb -parse_seqids can read behind sp|.
+
+    Without this a 53-character identifier aborted the whole conservation step with
+    'BLAST Database creation error: ... the accession is too long' (reproduced 2026-09-30).
+    """
+    # a trailing '.<version>' must be an integer; any other dot is not a version
+    if not _VERSIONED_ACCESSION.match(accession):
+        accession = accession.replace('.', '_')
+    return accession[:_MAX_ACCESSION].rstrip('.')
 
 
 def sanitize_identifier(identifier:str) -> str:
@@ -70,14 +93,15 @@ def normalize_header(header:str, seen_accessions:set) -> tuple:
     """Return a canonical FASTA header and accession."""
     stripped = header.strip()
     parts = stripped.split(None, 1)
-    description = parts[1] if len(parts) > 1 else ''
-    accession = sanitize_identifier(derive_accession(stripped))
-    # Disambiguate duplicate accessions.
+    description = sanitize_description(parts[1]) if len(parts) > 1 else ''
+    accession = blast_safe_accession(sanitize_identifier(derive_accession(stripped)))
+    # Disambiguate duplicate accessions, keeping the suffixed form blast-safe too.
     if accession in seen_accessions:
         base, suffix = accession, 2
-        while f'{base}_{suffix}' in seen_accessions:
+        while accession in seen_accessions:
+            tail = f'_{suffix}'
+            accession = blast_safe_accession(base[:_MAX_ACCESSION - len(tail)] + tail)
             suffix += 1
-        accession = f'{base}_{suffix}'
     seen_accessions.add(accession)
     canonical = f'sp|{accession}|{accession}'
     if description:
