@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 """Runs protein function prediction with DeepFri"""
 
-import os, urllib, subprocess
+import os, urllib
 import pandas as pd
 from Bio import SeqIO
 from typing import NamedTuple
 from operator import attrgetter
-from code.Utils import build_id_index, match_protein
+from code.Utils import run_command, build_id_index, match_protein
 
 class Args(NamedTuple):
     '''Command-line arguments'''
@@ -30,15 +30,17 @@ def deep_fri(path_to_fasta, DeepFri_dir, working_dir):
     #working_dir+="/" if working_dir[-1] != "/" else ""
     if working_dir[0] == ".":
         working_dir=working_dir[working_dir.find("/")+1:]
-    # launch DeepFri
-    os.chdir(DeepFri_dir)
-    bashCmd = f'python3 predict.py --fasta_fn {path_to_fasta} -ont mf -o {os.path.join(current_dir, working_dir)}'
-    process = subprocess.Popen(bashCmd.split(), stdout=subprocess.PIPE)
-    output, error = process.communicate()
-    os.chdir(current_dir)
+    # launch DeepFri; a stale .csv would be parsed as this run's output
+    output_path = os.path.join(working_dir, '_MF_predictions.csv')
+    if os.path.exists(output_path):
+        os.remove(output_path)
+    run_command(['python3', 'predict.py', '--fasta_fn', path_to_fasta, '-ont', 'mf',
+                 '-o', os.path.join(current_dir, working_dir)], cwd=DeepFri_dir)
+    if not os.path.isfile(output_path) or os.path.getsize(output_path) == 0:
+        raise RuntimeError(f'DeepFri did not produce {output_path}')
     
     # parse DeepFri results
-    DeepFri_df = DeepFriParser(os.path.join(working_dir, '_MF_predictions.csv'))
+    DeepFri_df = DeepFriParser(output_path)
     return DeepFri_df
 
 def DeepFriParser(path_to_infile: open, treshold=0.5) -> pd.DataFrame:

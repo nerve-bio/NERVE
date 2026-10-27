@@ -160,13 +160,6 @@ def run_command(arguments, *, cwd=None):
         raise RuntimeError(f'{arguments[0]} exited {result.returncode}: {detail}')
     return result.stdout, result.stderr
 
-def bashCmdMethod(bashCmd):
-    """Run bash commands
-    param: bashCmd: bash command to be run"""
-    process = subprocess.Popen(bashCmd.split(), stdout=subprocess.PIPE)
-    output, error = process.communicate()
-    return output, error
-    
 def dir_path(path:str) -> str:
     '''Path validator'''
     if os.path.isdir(path) == False:

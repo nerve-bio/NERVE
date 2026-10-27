@@ -7,7 +7,7 @@ from typing import NamedTuple
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # disable warnings
 
 from code.Protein import Protein
-from code.Utils import bashCmdMethod, dir_path
+from code.Utils import dir_path
 from code.Function import annotation
 from code.Adhesin import extract_features, adhesin_predict
 from code.Virulent_factor import virulent_factor_predict
@@ -328,8 +328,8 @@ def main():
             try:
                 proteome_downloader(args.working_dir, args.proteome2, filename=os.path.join(args.working_dir,\
                                                                                             'proteome2.fasta'))
-            except:
-                raise logging.error(f'{args.proteome2} rised the following error:\n{e}')
+            except Exception as e:
+                raise ValueError(f'{args.proteome2} rised the following error:\n{e}')
             logging.debug(f'{args.proteome2} successfully downloaded')
             args = args._replace(proteome2=os.path.join(args.working_dir,'proteome2.fasta'))   
     print("10% done")
