@@ -127,6 +127,15 @@ def epitope_output_identifier(protein):
     """Return the safe accession used for epitope directories and filenames."""
     return sanitize_identifier(getattr(protein, 'accession', None) or derive_accession(protein.id))
 
+def run_command(arguments, *, cwd=None):
+    """Run an external tool, raising with its exit code and stderr"""
+    result = subprocess.run(arguments, cwd=cwd, stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE, text=True)
+    if result.returncode:
+        detail = result.stderr.strip()[-1000:]
+        raise RuntimeError(f'{arguments[0]} exited {result.returncode}: {detail}')
+    return result.stdout, result.stderr
+
 def bashCmdMethod(bashCmd):
     """Run bash commands
     param: bashCmd: bash command to be run"""
