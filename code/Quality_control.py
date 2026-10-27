@@ -42,7 +42,19 @@ def proteome_downloader(working_dir, proteome_id, filename='input_proteome.fasta
                 logging.debug(f'28upid is not a valid building block')
                 print(f'Unable to download proteome {proteome_id} due to invalid proteome ID, Uniprot API failure or wrong path. In case of uniprot API failure provide the proteome as file.')
                 raise SystemExit(e)
+    validate_downloaded_proteome(os.path.join(output_dir, filename), proteome_id)
     return None
+
+def validate_downloaded_proteome(path:str, proteome_id:str) -> None:
+    """A response cut after a header line is still valid fasta, with that record empty"""
+    advice = 'Retry the job, or upload the proteome as a file.'
+    try:
+        fasta_list = is_fasta(path)
+    except ValueError:
+        raise ValueError(f'The download for {proteome_id} is not in fasta format; it may be a Uniprot error page. {advice}')
+    for record in fasta_list:
+        if len(record.seq) == 0:
+            raise ValueError(f'Downloaded FASTA for {proteome_id} contains an empty record; the download may be truncated. {advice}')
 
 def download_from_url_to_file(url:str, output_dir:str, filename:str, assert_error_message:str):
     downloaded = False
