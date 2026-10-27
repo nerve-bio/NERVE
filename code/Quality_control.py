@@ -4,10 +4,8 @@
 import os, logging, requests
 from Bio import SeqIO
 from Bio.Seq import Seq
-from code.Utils import dir_path, normalize_header
-
-# iFeature's CTDT divides by len(sequence) - 1, CTDC by len(sequence)
-MIN_SEQUENCE_LENGTH = 2
+from code.Utils import dir_path, normalize_header, length_rejection, \
+                       nucleotide_fraction, MAX_NUCLEOTIDE_FRACTION
 
 class protein_element:
     """Class to handle fasta file elements similarly to the biopython fasta file parser"""
@@ -106,6 +104,11 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False) -> dir_pat
     file_name = os.path.basename(path_to_fasta)
     output_file = os.path.join(working_dir, "_".join(["cleaned",file_name]))
     output_discarded_sequences=os.path.join(working_dir, "_".join(["discarded_sequences",file_name]))
+    fraction = nucleotide_fraction(record.seq for record in fasta_list)
+    if fraction > MAX_NUCLEOTIDE_FRACTION:
+        message = f'{file_name} is {fraction:.0%} nucleotide symbols and may be a nucleotide sequence, not a proteome.'
+        print(f'WARNING: {message}')
+        logging.warning(message)
     for record in fasta_list:
         flag = True
         new_seq = ''
@@ -125,9 +128,10 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False) -> dir_pat
         record.description, record.accession = normalize_header(record.description, seen_accessions)
         record.seq = Seq(new_seq)
         
-        if len(new_seq) < MIN_SEQUENCE_LENGTH:
+        rejection = length_rejection(new_seq)
+        if rejection is not None:
             discarded_sequences.append(record)
-            logging.debug(f'Sequence {record.description} has been discarded for being shorter than {MIN_SEQUENCE_LENGTH} residues.')
+            logging.debug(f'Sequence {record.description} has been discarded for {rejection}.')
         elif flag == True:
             filtered_sequences.append(record)
         else:

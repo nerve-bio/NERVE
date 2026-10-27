@@ -9,6 +9,13 @@ _HEADER_CONTROL = re.compile(r'[\r\n\x00]+')
 _VERSIONED_ACCESSION = re.compile(r'^[^.]+(\.[0-9]+)?$')
 _NCBI_CDS_ID = re.compile(r'^(?:lcl\|)?[^|]+_prot_(.+?)_[0-9]+$')
 _MAX_ACCESSION = 30
+# iFeature's CTDT divides by len(sequence) - 1, CTDC by len(sequence)
+MIN_SEQUENCE_LENGTH = 2
+# the longest protein on record is titin, near 35,000 residues
+MAX_SEQUENCE_LENGTH = 50000
+# a proteome is 23-33% of these symbols, a nucleotide sequence 100%
+NUCLEOTIDE_SYMBOLS = frozenset('ACGTUN')
+MAX_NUCLEOTIDE_FRACTION = 0.8
 
 
 def blast_safe_accession(accession):
@@ -126,6 +133,23 @@ def match_protein(identifier, index, proteins=None):
 def epitope_output_identifier(protein):
     """Return the safe accession used for epitope directories and filenames."""
     return sanitize_identifier(getattr(protein, 'accession', None) or derive_accession(protein.id))
+
+def length_rejection(sequence, minimum=MIN_SEQUENCE_LENGTH, maximum=MAX_SEQUENCE_LENGTH):
+    """Return why a sequence cannot be scored, or None"""
+    if len(sequence) < minimum:
+        return f'being shorter than {minimum} residues'
+    if len(sequence) > maximum:
+        return f'being longer than {maximum} residues'
+    return None
+
+def nucleotide_fraction(sequences):
+    """Fraction of residues that are also nucleotide symbols"""
+    total = matched = 0
+    for sequence in sequences:
+        sequence = str(sequence).upper()
+        total += len(sequence)
+        matched += sum(1 for residue in sequence if residue in NUCLEOTIDE_SYMBOLS)
+    return matched / total if total else 0.0
 
 def run_command(arguments, *, cwd=None):
     """Run an external tool, raising with its exit code and stderr"""
