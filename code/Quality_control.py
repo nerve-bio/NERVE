@@ -6,6 +6,9 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 from code.Utils import dir_path, normalize_header
 
+# iFeature's CTDT divides by len(sequence) - 1, CTDC by len(sequence)
+MIN_SEQUENCE_LENGTH = 2
+
 class protein_element:
     """Class to handle fasta file elements similarly to the biopython fasta file parser"""
     def __init__(self, name, seq):
@@ -122,11 +125,14 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False) -> dir_pat
         record.description, record.accession = normalize_header(record.description, seen_accessions)
         record.seq = Seq(new_seq)
         
-        if flag == True:
-            filtered_sequences.append(record)
-        else:    
+        if len(new_seq) < MIN_SEQUENCE_LENGTH:
             discarded_sequences.append(record)
-            logging.debug(f'Sequence {record.description} has been discarded for the presence of non-canonical aminoacids.')     
+            logging.debug(f'Sequence {record.description} has been discarded for being shorter than {MIN_SEQUENCE_LENGTH} residues.')
+        elif flag == True:
+            filtered_sequences.append(record)
+        else:
+            discarded_sequences.append(record)
+            logging.debug(f'Sequence {record.description} has been discarded for the presence of non-canonical aminoacids.')
     # output filtered overwriting input fasta file
     filename = open(output_file, 'w')
     for sequence in filtered_sequences:
