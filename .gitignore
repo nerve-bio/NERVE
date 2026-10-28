@@ -1,11 +1,14 @@
 test_new/
 code/__pycache__/
+.pytest_cache/
 test_new.zip
-.gitignore
 Dockerfile_backup_old
-.gitignore
 test_output/
 tmp/
 tests.ipynb
 tests/output_data
 *.pyc
+# analysis tooling, kept outside the shipped tree
+harness/
+_work/
+PORT-NOTES.txt
