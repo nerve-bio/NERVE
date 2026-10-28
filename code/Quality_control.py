@@ -4,7 +4,8 @@
 import os, logging, requests
 from Bio import SeqIO
 from Bio.Seq import Seq
-from code.Utils import dir_path, normalize_header
+from code.Utils import dir_path, normalize_header, length_rejection, \
+                       nucleotide_fraction, MAX_NUCLEOTIDE_FRACTION
 
 class protein_element:
     """Class to handle fasta file elements similarly to the biopython fasta file parser"""
@@ -41,7 +42,19 @@ def proteome_downloader(working_dir, proteome_id, filename='input_proteome.fasta
                 logging.debug(f'28upid is not a valid building block')
                 print(f'Unable to download proteome {proteome_id} due to invalid proteome ID, Uniprot API failure or wrong path. In case of uniprot API failure provide the proteome as file.')
                 raise SystemExit(e)
+    validate_downloaded_proteome(os.path.join(output_dir, filename), proteome_id)
     return None
+
+def validate_downloaded_proteome(path:str, proteome_id:str) -> None:
+    """A response cut after a header line is still valid fasta, with that record empty"""
+    advice = 'Retry the job, or upload the proteome as a file.'
+    try:
+        fasta_list = is_fasta(path)
+    except ValueError:
+        raise ValueError(f'The download for {proteome_id} is not in fasta format; it may be a Uniprot error page. {advice}')
+    for record in fasta_list:
+        if len(record.seq) == 0:
+            raise ValueError(f'Downloaded FASTA for {proteome_id} contains an empty record; the download may be truncated. {advice}')
 
 def download_from_url_to_file(url:str, output_dir:str, filename:str, assert_error_message:str):
     downloaded = False
@@ -103,6 +116,11 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False) -> dir_pat
     file_name = os.path.basename(path_to_fasta)
     output_file = os.path.join(working_dir, "_".join(["cleaned",file_name]))
     output_discarded_sequences=os.path.join(working_dir, "_".join(["discarded_sequences",file_name]))
+    fraction = nucleotide_fraction(record.seq for record in fasta_list)
+    if fraction > MAX_NUCLEOTIDE_FRACTION:
+        message = f'{file_name} is {fraction:.0%} nucleotide symbols and may be a nucleotide sequence, not a proteome.'
+        print(f'WARNING: {message}')
+        logging.warning(message)
     for record in fasta_list:
         flag = True
         new_seq = ''
@@ -122,11 +140,15 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False) -> dir_pat
         record.description, record.accession = normalize_header(record.description, seen_accessions)
         record.seq = Seq(new_seq)
         
-        if flag == True:
-            filtered_sequences.append(record)
-        else:    
+        rejection = length_rejection(new_seq)
+        if rejection is not None:
             discarded_sequences.append(record)
-            logging.debug(f'Sequence {record.description} has been discarded for the presence of non-canonical aminoacids.')     
+            logging.debug(f'Sequence {record.description} has been discarded for {rejection}.')
+        elif flag == True:
+            filtered_sequences.append(record)
+        else:
+            discarded_sequences.append(record)
+            logging.debug(f'Sequence {record.description} has been discarded for the presence of non-canonical aminoacids.')
     # output filtered overwriting input fasta file
     filename = open(output_file, 'w')
     for sequence in filtered_sequences:

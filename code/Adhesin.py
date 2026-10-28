@@ -3,7 +3,7 @@
 import os
 import numpy as np
 from tensorflow import keras
-from code.Utils import bashCmdMethod, build_id_index, match_protein
+from code.Utils import run_command, build_id_index, match_protein
 
 def extract_features(list_of_proteins, NERVE_dir, iFeature_dir, working_dir, proteome1) -> list:
     """Extract features from protein sequences with iFeature and store them as numpy array in Protein.model_raw_data for subsequent preprocessing and model prediction. These features will be used by adhesin and virulent factor predictos.
@@ -16,19 +16,28 @@ def extract_features(list_of_proteins, NERVE_dir, iFeature_dir, working_dir, pro
     features = ["AAC", "DPC", "CTDC", "CTDT", "CTDD"]
     extension = ".out"
     
-    # run iFeauture
+    # run iFeauture; a stale .out would be parsed as this run's output
     for feature in features:
-        bashCmdMethod(f"python3 {os.path.join(iFeature_dir, 'iFeature.py')} --file {proteome1} --type {feature}\
-        --out {os.path.join(working_dir, feature+'.out')}")
+        output_path = os.path.join(working_dir, feature + extension)
+        if os.path.exists(output_path):
+            os.remove(output_path)
+        run_command(['python3', os.path.join(iFeature_dir, 'iFeature.py'),
+                     '--file', proteome1, '--type', feature, '--out', output_path])
+        if not os.path.isfile(output_path) or os.path.getsize(output_path) == 0:
+            raise RuntimeError(f'iFeature {feature} did not produce {output_path}')
     # parse files and update Protein entires
     protein_index = build_id_index(list_of_proteins)
     for i in range(len(features)):
         with open(os.path.join(working_dir, features[i]+extension)) as f:
             lines = f.readlines()[1:]
+            matched = set()
             for line in lines:
                 information = line.split('\t')
                 protein = match_protein(information[0], protein_index, list_of_proteins)
                 if protein is not None:
+                    if protein.accession in matched:
+                        raise ValueError(f'iFeature {features[i]} duplicated {protein.accession}')
+                    matched.add(protein.accession)
                     protein.model_raw_data.append(np.array([float(el) for el in information[1:]]))
 
     # delete files after computation
