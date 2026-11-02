@@ -257,6 +257,21 @@ def run_command(arguments, *, cwd=None):
         raise RuntimeError(f'{arguments[0]} exited {result.returncode}: {detail}')
     return result.stdout, result.stderr
 
+def distinct_input(path, other, working_dir, label):
+    """Return path, or a staging path when it would overwrite other's QC output"""
+    if not (path and other):
+        return path
+    if (os.path.abspath(path) == os.path.abspath(other)
+            or os.path.basename(path) != os.path.basename(other)):
+        return path
+    index = 1
+    candidate = os.path.join(working_dir, f'{label}.fasta')
+    while (os.path.basename(candidate) == os.path.basename(other)
+           or os.path.exists(candidate)):
+        index += 1
+        candidate = os.path.join(working_dir, f'{label}_{index}.fasta')
+    return candidate
+
 def dir_path(path:str) -> str:
     '''Path validator'''
     if os.path.isdir(path) == False:

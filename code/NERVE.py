@@ -1,13 +1,13 @@
 #!/usr/local/bin/python
 """Run NERVE, reverse vaccinology software"""
 
-import argparse, logging, os, time
+import argparse, logging, os, shutil, time
 from typing import NamedTuple
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # disable warnings
 
 from code.Protein import Protein
-from code.Utils import dir_path
+from code.Utils import dir_path, distinct_input
 from code.Function import annotation
 from code.Adhesin import extract_features, adhesin_predict
 from code.Virulent_factor import virulent_factor_predict
@@ -332,6 +332,12 @@ def main():
                 raise ValueError(f'{args.proteome2} rised the following error:\n{e}')
             logging.debug(f'{args.proteome2} successfully downloaded')
             args = args._replace(proteome2=os.path.join(args.working_dir,'proteome2.fasta'))   
+    # two inputs sharing a filename write the same QC outputs, and the second wins
+    staged = distinct_input(args.proteome2, args.proteome1, args.working_dir, 'proteome2')
+    if staged != args.proteome2:
+        shutil.copyfile(args.proteome2, staged)
+        logging.debug(f'proteome2 shares a filename with proteome1, staged as {staged}')
+        args = args._replace(proteome2=staged)
     print("10% done")
     
     # run quality control

@@ -8,9 +8,10 @@
 
 import os
 import pytest
+import shutil
 from code.Function import deep_fri
 from code.Quality_control import quality_control, validate_downloaded_proteome
-from code.Utils import MAX_AMBIGUITY_FRACTION, MAX_SEQUENCE_LENGTH, MIN_SEQUENCE_LENGTH, UNKNOWN_SUBSTITUTE, length_rejection, nucleotide_fraction, qc_sequence, sequence_case
+from code.Utils import MAX_AMBIGUITY_FRACTION, MAX_SEQUENCE_LENGTH, MIN_SEQUENCE_LENGTH, UNKNOWN_SUBSTITUTE, distinct_input, length_rejection, nucleotide_fraction, qc_sequence, sequence_case
 
 GOOD = '>sp|A1|A1 one\nMKTAYIAKQR\n>sp|A2|A2 two\nMQIFVKTLTG\n'
 FAILING_PREDICT = 'import sys\nsys.stderr.write("CUDA out of memory\\n")\nsys.exit(1)\n'
@@ -162,3 +163,48 @@ def test_quality_control_renames_repeated_identifiers(tmp_path, capsys):
     assert [sequence.accession for sequence in filtered_sequences] == ['A', 'A_2']
     assert '1 repeated identifier' in capsys.readouterr().out
 
+def test_distinct_input_leaves_unambiguous_paths_alone(tmp_path):
+    """Different filenames write different outputs, so nothing is staged"""
+    first = write(tmp_path, 'strainA.fasta', GOOD)
+    second = write(tmp_path, 'strainB.fasta', GOOD)
+    assert distinct_input(second, first, str(tmp_path), 'proteome2') == second
+    assert distinct_input(second, None, str(tmp_path), 'proteome2') == second
+    assert distinct_input(first, first, str(tmp_path), 'proteome2') == first
+
+def test_distinct_input_stages_a_shared_filename(tmp_path):
+    """Two proteomes named alike in different directories would overwrite each other"""
+    one, two = os.path.join(str(tmp_path), 'a'), os.path.join(str(tmp_path), 'b')
+    os.mkdir(one)
+    os.mkdir(two)
+    first = write(one, 'proteome.fasta', GOOD)
+    second = write(two, 'proteome.fasta', GOOD)
+    staged = distinct_input(second, first, str(tmp_path), 'proteome2')
+    assert staged != second
+    assert os.path.basename(staged) != os.path.basename(first)
+
+def test_distinct_input_escapes_a_colliding_staging_name(tmp_path):
+    """The staging name itself must not collide with proteome1"""
+    one, two = os.path.join(str(tmp_path), 'a'), os.path.join(str(tmp_path), 'b')
+    os.mkdir(one)
+    os.mkdir(two)
+    first = write(one, 'proteome2.fasta', GOOD)
+    second = write(two, 'proteome2.fasta', GOOD)
+    staged = distinct_input(second, first, str(tmp_path), 'proteome2')
+    assert os.path.basename(staged) != os.path.basename(first)
+    assert not os.path.exists(staged)
+
+def test_quality_control_outputs_stay_separate_after_staging(tmp_path):
+    """The staged path produces its own cleaned file, so conservation gets two proteomes"""
+    one, two = os.path.join(str(tmp_path), 'a'), os.path.join(str(tmp_path), 'b')
+    working = os.path.join(str(tmp_path), 'wd')
+    for directory in (one, two, working):
+        os.mkdir(directory)
+    first = write(one, 'proteome.fasta', '>sp|P1|P1 first\nMKTAYIAKQR\n')
+    second = write(two, 'proteome.fasta', '>sp|P2|P2 second\nMQIFVKTLTG\n')
+    staged = distinct_input(second, first, working, 'proteome2')
+    shutil.copyfile(second, staged)
+    _, cleaned_first = quality_control(first, working, upload=True)
+    cleaned_second = quality_control(staged, working)
+    assert os.path.abspath(cleaned_first) != os.path.abspath(cleaned_second)
+    assert 'P1' in open(cleaned_first).read()
+    assert 'P2' in open(cleaned_second).read()
