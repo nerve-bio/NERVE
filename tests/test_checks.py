@@ -208,3 +208,12 @@ def test_quality_control_outputs_stay_separate_after_staging(tmp_path):
     assert os.path.abspath(cleaned_first) != os.path.abspath(cleaned_second)
     assert 'P1' in open(cleaned_first).read()
     assert 'P2' in open(cleaned_second).read()
+
+def test_quality_control_accepts_a_bare_header(tmp_path):
+    """A header that is only '>' splits to no fields, so the duplicate count must not index it"""
+    working = os.path.join(str(tmp_path), 'wd')
+    os.mkdir(working)
+    source = write(str(tmp_path), 'bare.fasta', '>\nMKTAYIAKQR\n>sp|P1|P1 named\nMQIFVKTLTG\n')
+    kept, cleaned = quality_control(source, working, upload=True)
+    assert len(kept) == 2
+    assert 'MKTAYIAKQR' in open(cleaned).read()

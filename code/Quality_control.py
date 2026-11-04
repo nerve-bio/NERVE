@@ -152,7 +152,9 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False) -> dir_pat
         new_seq, reason, message, modifications = qc_sequence(str(record.seq))
         # standardize identifier and retain original name
         record.original_description = record.description
-        token = record.description.split(None, 1)[0]
+        # a header can be a bare '>', which splits to nothing; normalize_header renames those too
+        fields = record.description.split(None, 1)
+        token = fields[0] if fields else ''
         if token in seen_tokens:
             duplicates += 1
         seen_tokens.add(token)
