@@ -4,8 +4,9 @@
 import os, logging, requests
 from Bio import SeqIO
 from Bio.Seq import Seq
-from code.Utils import dir_path, normalize_header, length_rejection, \
-                       nucleotide_fraction, MAX_NUCLEOTIDE_FRACTION
+from code.Utils import dir_path, normalize_header, nucleotide_fraction, \
+                       qc_sequence, MAX_NUCLEOTIDE_FRACTION, MAX_STOP_SHARE, \
+                       MIN_STOP_RECORDS, MIN_STOP_SHARE
 
 class protein_element:
     """Class to handle fasta file elements similarly to the biopython fasta file parser"""
@@ -87,10 +88,35 @@ def is_fasta(filename:str):
             return fasta
         else:
             raise ValueError(f'{filename} is not in fasta format or the input fasta file is empy.')
+def warn(message:str) -> None:
+    """Report a proteome-level observation without refusing the job"""
+    print(f'WARNING: {message}')
+    logging.warning(message)
+
+def write_audit(path:str, header:str, rows:list) -> None:
+    """Write one per-record audit table, or nothing when there is nothing to record"""
+    if not rows:
+        return
+    with open(path, 'w') as handle:
+        handle.write(f'{header}\n')
+        for row in rows:
+            handle.write('\t'.join(map(str, row)) + '\n')
+
+def stop_warning(file_name:str, discard_rows:list, records:int) -> None:
+    """Internal stops are a file-level symptom, so report the share and never refuse"""
+    stops = sum(1 for row in discard_rows if row[1] == 'internal_stop')
+    if records < MIN_STOP_RECORDS or stops / records < MIN_STOP_SHARE:
+        return
+    share = stops / records
+    message = f'{file_name}: {stops} of {records} records ({share:.0%}) carry an internal stop codon.'
+    if share > MAX_STOP_SHARE:
+        message += (' The translation table is probably wrong; genetic code 4 reads TGA as'
+                    ' tryptophan. Check the table and the reading frame.')
+    warn(message)
 
 def quality_control(path_to_fasta:str, working_dir:str, upload=False) -> dir_path:
     """
-    Remove sequences with non-canonical aminoacid symbols. U (Se-Cys) is substituted with C (Cys). Returns
+    Normalize sequences and discard what cannot be scored. Returns
     {working_dir}/discarded_sequences_{input_fasta_file_name}.fasta containing discarded sequences and\
     {working_dir}/cleaned_{input_fasta_file_name}.fasta with cleaned sequences
     param: path_to_fasta: full path to fasta file containing the proteome with .fasta extension. Input fasta file\
@@ -104,64 +130,63 @@ def quality_control(path_to_fasta:str, working_dir:str, upload=False) -> dir_pat
                         filemode='a',
                         level=logging.DEBUG,
                         force=True)
-    
-    aa_dic = {'C': 'C', 'D': 'D', 'S': 'S', 'Q': 'Q', 'K': 'K', 'I': 'I', 'P': 'P', 'T': 'T', 'F': 'F', 'N': 'N', 
-              'G': 'G', 'H': 'H', 'L': 'L', 'R': 'R', 'W': 'W', 'A': 'A', 'V': 'V', 'E': 'E', 'Y': 'Y', 'M': 'M', 
-              'U':'C'}
+
     filtered_sequences, discarded_sequences = [],[]
-    seen_accessions = set()
+    seen_accessions, seen_tokens = set(), set()
+    discard_rows, modification_rows = [], []
+    duplicates = 0
     # control formatting
-    fasta_list = is_fasta(path_to_fasta)    
+    fasta_list = is_fasta(path_to_fasta)
     # filename needed to create the output file
     file_name = os.path.basename(path_to_fasta)
     output_file = os.path.join(working_dir, "_".join(["cleaned",file_name]))
     output_discarded_sequences=os.path.join(working_dir, "_".join(["discarded_sequences",file_name]))
+    base_name = os.path.splitext(file_name)[0]
+    discard_log = os.path.join(working_dir, f'qc_discard_log_{base_name}.tsv')
+    modification_log = os.path.join(working_dir, f'qc_modifications_log_{base_name}.tsv')
+    # measured over the raw records, before any substitution puts C, N or G in them
     fraction = nucleotide_fraction(record.seq for record in fasta_list)
     if fraction > MAX_NUCLEOTIDE_FRACTION:
-        message = f'{file_name} is {fraction:.0%} nucleotide symbols and may be a nucleotide sequence, not a proteome.'
-        print(f'WARNING: {message}')
-        logging.warning(message)
+        warn(f'{file_name} is {fraction:.0%} nucleotide symbols and may be a nucleotide sequence, not a proteome.')
     for record in fasta_list:
-        flag = True
-        new_seq = ''
-        # check sequence
-        for aa in str(record.seq):
-            if aa not in aa_dic:
-                flag = False
-                new_seq+=aa
-                logging.debug(f'Found non-canonical aminoacid "{aa}" in sequence: {record.description}')
-            elif aa == "U":
-                logging.debug(f'Found non-canonical aminoacid "{aa}" (Selenocysteine) in sequence: {record.description}, substituting to Cysteine')
-                new_seq+=aa_dic[aa]
-            else:
-                new_seq+=aa_dic[aa]
+        new_seq, reason, message, modifications = qc_sequence(str(record.seq))
         # standardize identifier and retain original name
         record.original_description = record.description
+        # a header can be a bare '>', which splits to nothing; normalize_header renames those too
+        fields = record.description.split(None, 1)
+        token = fields[0] if fields else ''
+        if token in seen_tokens:
+            duplicates += 1
+        seen_tokens.add(token)
         record.description, record.accession = normalize_header(record.description, seen_accessions)
-        record.seq = Seq(new_seq)
-        
-        rejection = length_rejection(new_seq)
-        if rejection is not None:
-            discarded_sequences.append(record)
-            logging.debug(f'Sequence {record.description} has been discarded for {rejection}.')
-        elif flag == True:
+        if new_seq is not None:
+            record.seq = Seq(new_seq)
             filtered_sequences.append(record)
+            for position, original, substituted, rule in modifications:
+                modification_rows.append((record.accession, position, original, substituted, rule))
         else:
             discarded_sequences.append(record)
-            logging.debug(f'Sequence {record.description} has been discarded for the presence of non-canonical aminoacids.')
+            discard_rows.append((record.accession, reason, message))
+            logging.debug(f'Sequence {record.description} has been discarded for {reason}: {message}.')
+    stop_warning(file_name, discard_rows, len(fasta_list))
+    if duplicates:
+        warn(f'{file_name} contains {duplicates} repeated identifier(s), renamed to keep them distinct.')
+    write_audit(discard_log, 'accession\treason_code\tmessage', discard_rows)
+    write_audit(modification_log, 'accession\tposition\toriginal\tsubstituted\trule', modification_rows)
+    logging.info(f'QC of {file_name}: {len(filtered_sequences)}/{len(fasta_list)} sequences kept, '
+                 f'{len(discarded_sequences)} discarded, '
+                 f'{len(set(row[0] for row in modification_rows))} modified.')
     # output filtered overwriting input fasta file
     filename = open(output_file, 'w')
     for sequence in filtered_sequences:
         filename.write(f'>{str(sequence.description)}\n')
         filename.write(f'{str(sequence.seq)}\n')
-    #SeqIO.write(filtered_sequences, filename, "fasta")
     filename.close()
     # output discarded sequences
     filename = open(output_discarded_sequences, 'w')
     for sequence in discarded_sequences:
         filename.write(f'>{str(sequence.description)}\n')
         filename.write(f'{str(sequence.seq)}\n')
-    #SeqIO.write(discarded_sequences, filename, "fasta")
     filename.close()
     # repath output_file to be absolute
     output_file=os.path.join('/', os.path.relpath(output_file, start = '/'))

@@ -151,6 +151,103 @@ def nucleotide_fraction(sequences):
         matched += sum(1 for residue in sequence if residue in NUCLEOTIDE_SYMBOLS)
     return matched / total if total else 0.0
 
+CANONICAL_AA = frozenset('ACDEFGHIKLMNPQRSTVWY')
+# identity is known, so the mapping is a tool concession and costs no information
+DETERMINATE_SUBSTITUTIONS = {'U': 'C', 'O': 'K'}
+# Asx and Glx take the amide form, Xle takes leucine; see nerve-local/QC-THREE-WAY.md
+AMBIGUOUS_SUBSTITUTIONS = {'B': 'N', 'Z': 'Q', 'J': 'L'}
+# glycine is near neutral on Kyte-Doolittle, alanine is +1.8 and can fake a TM helix
+UNKNOWN_SUBSTITUTE = 'G'
+MAX_UNKNOWN_FRACTION = 0.05
+# three times the unknown budget, from the B/Z distribution of 1,596,204 records
+MAX_AMBIGUITY_FRACTION = 0.15
+_STRIPPED = re.compile(r'[\s.\-\d]')
+# a code-4 proteome sits at 70-76% internal stops, real pseudogene load tops out near 19%
+MIN_STOP_SHARE = 0.05
+MAX_STOP_SHARE = 0.50
+# a share needs records to be a share; genome-scale arms clear this floor
+MIN_STOP_RECORDS = 10
+
+
+def sequence_case(sequence):
+    """Return 'upper', 'lower' or 'mixed' for the cased residues of a sequence"""
+    letters = [character for character in str(sequence) if character.isalpha()]
+    if not letters:
+        return 'upper'
+    lower = sum(1 for character in letters if character.islower())
+    if lower == 0:
+        return 'upper'
+    return 'lower' if lower == len(letters) else 'mixed'
+
+
+def qc_sequence(sequence, max_unknown_fraction=MAX_UNKNOWN_FRACTION,
+                max_ambiguity_fraction=MAX_AMBIGUITY_FRACTION):
+    """Normalize one sequence and return (cleaned, reason, message, changes)"""
+    changes = []
+    source = str(sequence)
+    case = sequence_case(source)
+    if case == 'mixed':
+        lower = sum(1 for character in source if character.islower())
+        changes.append((0, f'{lower} of {len(source)} lowercase', '', 'mixed_case_uppercased'))
+    source = source.upper()
+    cleaned = _STRIPPED.sub('', source)
+    if len(cleaned) != len(source):
+        changes.append((0, f'{len(source) - len(cleaned)} char(s)', '',
+                        'gaps_whitespace_digits_removed'))
+    if not cleaned:
+        return None, 'empty_sequence', 'sequence is empty after normalization', changes
+    if '*' in cleaned:
+        body = cleaned.rstrip('*')
+        trailing = len(cleaned) - len(body)
+        if '*' in body:
+            position = body.index('*') + 1
+            return None, 'internal_stop', (
+                f'internal stop codon at position {position}/{len(cleaned)}'), changes
+        if not body:
+            return None, 'empty_after_stop_removal', 'sequence contained only stop symbols', changes
+        changes.append((len(body) + 1, '*' * trailing, '', 'terminal_stop_removed'))
+        cleaned = body
+    # length is measured here so a terminator cannot carry a record over the floor
+    rejection = length_rejection(cleaned)
+    if rejection is not None:
+        return None, 'unscorable_length', rejection, changes
+    # '?' claims a position of unknown content, so it joins the unknown budget
+    if '?' in cleaned:
+        changes.append((cleaned.index('?') + 1, '?', 'X', 'missing_marked_unknown'))
+        cleaned = cleaned.replace('?', 'X')
+    # anything left outside the alphabet is not a residue code and is not filled
+    symbol = next((character for character in cleaned if not character.isalpha()), None)
+    if symbol is not None:
+        return None, 'non_residue_symbol', (
+            f'"{symbol}" at position {cleaned.index(symbol) + 1} is not a residue symbol'), changes
+    chars = list(cleaned)
+    for index, amino_acid in enumerate(chars):
+        if amino_acid in DETERMINATE_SUBSTITUTIONS:
+            chars[index] = DETERMINATE_SUBSTITUTIONS[amino_acid]
+            changes.append((index + 1, amino_acid, chars[index],
+                            f'determinate_{amino_acid}_to_{chars[index]}'))
+    ambiguous = [index for index, amino_acid in enumerate(chars)
+                 if amino_acid in AMBIGUOUS_SUBSTITUTIONS]
+    if ambiguous and len(ambiguous) / len(chars) > max_ambiguity_fraction:
+        return None, 'excessive_ambiguity_residues', (
+            f'{len(ambiguous)}/{len(chars)} residues ({len(ambiguous) / len(chars):.1%}) are '
+            f'ambiguous, above the {max_ambiguity_fraction:.1%} limit'), changes
+    for index in ambiguous:
+        amino_acid = chars[index]
+        chars[index] = AMBIGUOUS_SUBSTITUTIONS[amino_acid]
+        changes.append((index + 1, amino_acid, chars[index],
+                        f'ambiguity_{amino_acid}_to_{chars[index]}'))
+    unknown = [index for index, amino_acid in enumerate(chars) if amino_acid not in CANONICAL_AA]
+    if unknown and len(unknown) / len(chars) > max_unknown_fraction:
+        return None, 'excessive_unknown_residues', (
+            f'{len(unknown)}/{len(chars)} residues ({len(unknown) / len(chars):.1%}) are unknown, '
+            f'above the {max_unknown_fraction:.1%} limit'), changes
+    for index in unknown:
+        changes.append((index + 1, chars[index], UNKNOWN_SUBSTITUTE, 'sparse_unknown_substituted'))
+        chars[index] = UNKNOWN_SUBSTITUTE
+    cleaned = ''.join(chars)
+    return cleaned, ('cleaned' if changes else 'ok'), '', changes
+
 def run_command(arguments, *, cwd=None):
     """Run an external tool, raising with its exit code and stderr"""
     result = subprocess.run(arguments, cwd=cwd, stdout=subprocess.PIPE,
@@ -159,6 +256,21 @@ def run_command(arguments, *, cwd=None):
         detail = result.stderr.strip()[-1000:]
         raise RuntimeError(f'{arguments[0]} exited {result.returncode}: {detail}')
     return result.stdout, result.stderr
+
+def distinct_input(path, other, working_dir, label):
+    """Return path, or a staging path when it would overwrite other's QC output"""
+    if not (path and other):
+        return path
+    if (os.path.abspath(path) == os.path.abspath(other)
+            or os.path.basename(path) != os.path.basename(other)):
+        return path
+    index = 1
+    candidate = os.path.join(working_dir, f'{label}.fasta')
+    while (os.path.basename(candidate) == os.path.basename(other)
+           or os.path.exists(candidate)):
+        index += 1
+        candidate = os.path.join(working_dir, f'{label}_{index}.fasta')
+    return candidate
 
 def dir_path(path:str) -> str:
     '''Path validator'''
